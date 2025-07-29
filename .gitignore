@@ -1,0 +1,56 @@
+# Sub-repositories (managed separately)
+gli_user-frontend/
+gli_admin-frontend/
+gli_api-server/
+gli_ai-core/
+gli_database/
+gli_docs/
+gli_infra/
+gli_rabbitmq/
+gli_ws-server/
+
+# Ignore node modules
+node_modules/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment files
+.env
+.env.*
+
+# Taskmaster configuration
+.taskmaster/
+
+# VSCode settings
+.vscode/
+
+# Cursor files
+.cursor/
+.cursor/mcp.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+logs/
+*.log
+
+# Docker override
+docker-compose.override.yml
+
+# Cookie jars
+cookies.txt
+
+# IDE files
+.idea/
+
+# Build outputs
+/dist
+/build
+
+# Temporary files
+*.tmp
+*.swp
