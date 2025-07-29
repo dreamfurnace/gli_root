@@ -27,15 +27,15 @@ for repo in "${REPOS[@]}"; do
 
   echo "✅ 작업 중: $NAME"
 
-  # 1. GitHub에 리포 생성
+  # 루트 리포는 따로 생성 로직
   if ! gh repo view "$GITHUB_ORG/$NAME" &>/dev/null; then
-    echo "📦 GitHub에 레포 생성: $GITHUB_ORG/$NAME"
-    gh repo create "$GITHUB_ORG/$NAME" --public --source="$DIR" --remote=origin --push -y || echo "⚠️ GitHub 생성 실패 또는 이미 존재"
+    echo "📦 GitHub에 리포 생성: $GITHUB_ORG/$NAME"
+    gh repo create "$GITHUB_ORG/$NAME" --public --confirm
   else
     echo "✅ GitHub에 이미 존재: $NAME"
   fi
 
-  # 2. Git 초기화 및 푸시
+  # 로컬 Git 초기화 및 push
   cd "$DIR"
   if [ ! -d ".git" ]; then
     git init
@@ -46,10 +46,10 @@ for repo in "${REPOS[@]}"; do
   git add .
   git commit -m "init" || echo "📝 커밋할 변경사항 없음"
   git branch -M main
-  git push -u origin main
+  git push -u origin main || echo "⚠️ push 실패: 권한 또는 GitHub 설정 확인"
   cd - > /dev/null
 
   echo "✅ 완료: $NAME"
 done
 
-echo "🎉 루트 + 모든 GLI 하위 레포지토리 GitHub에 생성 및 초기 푸시 완료!"
+echo "🎉 루트 포함 모든 리포 생성 및 push 완료"
