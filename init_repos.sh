@@ -27,7 +27,7 @@ for repo in "${REPOS[@]}"; do
 
   echo "✅ 작업 중: $NAME"
 
-  # 루트 리포는 따로 생성 로직
+  # GitHub에 리포 생성
   if ! gh repo view "$GITHUB_ORG/$NAME" &>/dev/null; then
     echo "📦 GitHub에 리포 생성: $GITHUB_ORG/$NAME"
     gh repo create "$GITHUB_ORG/$NAME" --public --confirm
@@ -35,7 +35,12 @@ for repo in "${REPOS[@]}"; do
     echo "✅ GitHub에 이미 존재: $NAME"
   fi
 
-  # 로컬 Git 초기화 및 push
+  # 로컬 디렉토리 없으면 clone
+  if [ "$DIR" != "." ] && [ ! -d "$DIR" ]; then
+    echo "📥 로컬에 없어서 클론: $DIR"
+    git clone git@github.com:$GITHUB_ORG/$NAME.git "$DIR"
+  fi
+
   cd "$DIR"
   if [ ! -d ".git" ]; then
     git init
