@@ -1,0 +1,195 @@
+# Django API Server Migration Project - GLI Project Setup
+
+## Project Overview
+This project involves migrating a complete Django API server from a reference implementation (`gli_api-server/ref_api_ref`) to create a clean, production-ready Django API server for the GLI project using UV package manager. The goal is to establish a robust foundation for the GLI API server while removing all legacy references and preparing the codebase for new GLI-specific functionality.
+
+## Current State Analysis
+The reference implementation (`ref_api_ref`) contains:
+- A fully functioning Django server with multiple apps
+- Complex business logic for settlement management, member management, and data analysis
+- Legacy project-specific data models, migrations, and configurations
+- Static files, media files, and existing database fixtures
+- UV-based dependency management (pyproject.toml, uv.lock)
+
+## Project Objectives
+
+### Primary Goals
+1. **Complete Migration**: Copy all functional Django code from `ref_api_ref` to the main `gli_api-server` directory
+2. **Clean Project Setup**: Remove all legacy project references, data models, and business logic
+3. **Fresh Database State**: Clean all migrations and create a fresh database schema foundation
+4. **UV Integration**: Ensure proper UV package management configuration
+5. **GLI Branding**: Update project configuration for GLI-specific naming and settings
+6. **Production Ready**: Prepare the server for GLI project requirements
+
+### Secondary Goals
+- Maintain Django best practices and project structure
+- Preserve useful utilities and common functionality
+- Ensure proper static file and media handling setup
+- Clean and organize codebase for future development
+
+## Technical Requirements
+
+### Environment Setup
+- **Package Manager**: UV (mandatory requirement)
+- **Python Framework**: Django (maintain current version)
+- **Database**: PostgreSQL (prepare for production database)
+- **Static Files**: Proper static file serving configuration
+- **Media Files**: Clean media directory setup
+
+### Migration Scope
+
+#### Files to Copy (Complete Migration)
+- All Django application code (`apps/` directory)
+- Configuration files (`config/` directory)
+- Management scripts (`manage.py`, shell scripts)
+- Dependency management (`pyproject.toml`, `uv.lock`)
+- Static file configurations
+- Template structures
+
+#### Content to Clean/Remove
+- All legacy project-specific data models
+- All existing migration files (start fresh)
+- Legacy fixtures and initial data
+- Project-specific business logic references
+- Old project naming conventions
+- Existing media files and uploads
+- Legacy configuration values
+
+#### Content to Preserve/Adapt
+- Django project structure and organization
+- Common utilities and helper functions
+- Static file handling setup
+- Template structure (adapt for GLI)
+- Authentication and permission frameworks
+- API serialization patterns
+
+## Detailed Task Breakdown
+
+### Phase 1: File System Migration
+1. **Backup Current State**: Ensure current `gli_api-server` content is preserved if needed
+2. **Complete Copy Operation**: Copy all contents from `ref_api_ref` to `gli_api-server` root
+3. **Directory Structure Verification**: Ensure proper Django project structure is maintained
+4. **Permission and Ownership**: Set appropriate file permissions
+
+### Phase 2: Project Configuration Cleanup
+1. **Settings Configuration**: Update Django settings for GLI project
+   - Change project name references
+   - Update database configurations
+   - Clean environment-specific settings
+   - Update static/media file paths
+
+2. **URL Configuration**: Clean and prepare URL patterns
+   - Remove legacy app-specific URLs
+   - Prepare for GLI-specific routing
+   - Maintain admin and API framework URLs
+
+3. **WSGI/ASGI Configuration**: Update application configuration
+   - Update project name references
+   - Ensure proper deployment configuration
+
+### Phase 3: Application Cleanup
+1. **App Directory Review**: Analyze each Django app for cleanup needs
+   - `a_admin_management`: Clean admin-specific logic, preserve framework
+   - `b_settlement_management`: Remove entirely (legacy business logic)
+   - `c_calculation_logic_management`: Remove entirely (legacy business logic)
+   - `common`: Preserve utilities, clean project-specific code
+   - `d_member_management`: Clean member-specific logic, preserve user framework
+   - `e_itpr_management`: Remove entirely (legacy business logic)
+   - `f_data_analysis`: Remove entirely (legacy business logic)
+
+2. **Model Cleanup**: Remove all legacy data models
+   - Delete all model definitions
+   - Prepare for GLI-specific models
+   - Maintain Django admin integration structure
+
+3. **View and Serializer Cleanup**: Clean API endpoints
+   - Remove legacy business logic views
+   - Preserve authentication and common views
+   - Clean serializer definitions
+   - Maintain REST framework integration
+
+### Phase 4: Database Migration Reset
+1. **Migration File Removal**: Delete all existing migration files
+2. **Fresh Migration Setup**: Prepare for initial GLI project migrations
+3. **Database Configuration**: Update database settings for GLI project
+4. **Fixture Cleanup**: Remove legacy initial data fixtures
+
+### Phase 5: Static and Media File Management
+1. **Static File Cleanup**: Remove legacy static files, preserve framework assets
+2. **Media Directory Reset**: Clean existing media files
+3. **Static File Configuration**: Ensure proper static file serving setup
+4. **Template Cleanup**: Remove legacy templates, preserve base structure
+
+### Phase 6: Dependency and Configuration Management
+1. **UV Configuration Review**: Verify pyproject.toml for GLI project needs
+2. **Dependency Cleanup**: Remove unnecessary legacy dependencies
+3. **Environment Configuration**: Prepare environment variable setup
+4. **Deployment Configuration**: Update deployment scripts and configurations
+
+### Phase 7: Testing and Validation
+1. **Server Startup Test**: Ensure Django server starts without errors
+2. **Admin Interface Test**: Verify Django admin accessibility
+3. **API Framework Test**: Ensure DRF endpoints are accessible
+4. **Static File Serving Test**: Verify static file serving functionality
+5. **UV Dependency Test**: Confirm UV package management works correctly
+
+### Phase 8: Final Cleanup and Organization
+1. **Code Organization**: Ensure proper code structure and organization
+2. **Documentation Update**: Update README and documentation for GLI project
+3. **Git Integration**: Prepare for version control integration
+4. **Reference Directory Removal**: Delete the `ref_api_ref` directory completely
+
+## Success Criteria
+
+### Functional Requirements
+- Django server starts successfully without errors
+- Django admin interface is accessible
+- REST framework is properly configured and accessible
+- Static files are served correctly
+- UV package management works correctly
+- All legacy project references are removed
+
+### Code Quality Requirements
+- Clean, organized codebase structure
+- No legacy business logic or data models
+- Proper Django project naming conventions
+- Clean migration state (ready for fresh migrations)
+- Proper error handling and logging setup
+
+### Documentation Requirements
+- Updated project documentation
+- Clear setup instructions for GLI project
+- Proper API documentation structure
+- Development workflow documentation
+
+## Risk Assessment and Mitigation
+
+### Potential Risks
+1. **Data Loss**: Accidentally removing important utilities or configurations
+   - Mitigation: Careful review of each component before removal
+2. **Dependency Issues**: UV configuration problems or missing dependencies
+   - Mitigation: Thorough testing of UV setup and dependency resolution
+3. **Configuration Errors**: Incorrect Django settings causing startup failures
+   - Mitigation: Step-by-step configuration validation and testing
+
+### Quality Assurance
+- Systematic testing at each phase
+- Code review of cleaned components
+- Functional testing of core Django features
+- Documentation verification
+
+## Timeline and Dependencies
+
+### Sequential Dependencies
+1. File migration must complete before cleanup begins
+2. Configuration cleanup must complete before app cleanup  
+3. Database migration reset requires completed app cleanup
+4. Testing phases require all previous phases complete
+
+### Critical Path Items
+- Complete file system migration
+- Django configuration cleanup
+- Database migration reset
+- Final validation and testing
+
+This PRD establishes a comprehensive plan for creating a clean, production-ready Django API server for the GLI project while maintaining all necessary framework functionality and removing legacy business logic.

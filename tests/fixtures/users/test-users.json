@@ -1,0 +1,16 @@
+[
+  {
+    "id": "test-user-1",
+    "wallet_address": "DjVE6JNiYqPL2QXyCUEwD9uKhAYpVy2xEf5jKNiVSB7U",
+    "username": "test_user_1",
+    "email": "user1@gli-test.com",
+    "membership_level": "premium"
+  },
+  {
+    "id": "test-admin-1",
+    "wallet_address": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
+    "username": "test_admin_1",
+    "email": "admin1@gli-test.com",
+    "role": "admin"
+  }
+]

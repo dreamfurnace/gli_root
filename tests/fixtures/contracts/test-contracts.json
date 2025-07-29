@@ -1,0 +1,9 @@
+[
+  {
+    "id": "contract-1",
+    "type": "real_estate_sale",
+    "title": "테스트 부동산 매매계약서",
+    "status": "draft",
+    "created_by": "test-user-1"
+  }
+]
