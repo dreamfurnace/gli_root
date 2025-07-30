@@ -71,7 +71,12 @@
       "Bash(docker rm:*)",
       "Bash(./start-database.sh:*)",
       "Bash(true)",
-      "Bash(/dev/null)"
+      "Bash(/dev/null)",
+      "Bash(git rm:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(./git-multi-push.sh:*)"
     ],
     "deny": []
   },
