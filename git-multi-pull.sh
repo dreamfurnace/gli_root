@@ -25,7 +25,7 @@ for repo in "${REPOS[@]}"; do
   fi
 
   if [ ! -d "$repo" ]; then
-    echo "📥 Cloning $repo…"
+    echo "📥 Cloning $repo!"
     git clone "git@github.com:$GITHUB_ORG/$repo.git" "$repo"
   fi
 
