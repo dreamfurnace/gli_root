@@ -4,15 +4,13 @@ set -euo pipefail
 GITHUB_ORG="dreamfurnace"
 REPOS=(
   .
+  gli_database
+  gli_redis
+  gli_rabbitmq
+  gli_websocket
+  gli_api-server
   gli_user-frontend
   gli_admin-frontend
-  gli_api-server
-  gli_ai-core
-  gli_database
-  gli_docs
-  gli_infra
-  gli_rabbitmq
-  gli_ws-server
 )
 
 for repo in "${REPOS[@]}"; do
