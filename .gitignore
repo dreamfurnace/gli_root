@@ -6,6 +6,10 @@ gli_websocket/
 gli_api-server/
 gli_user-frontend/
 gli_admin-frontend/
+gli_ai-core/
+gli_docs/
+gli_infra/
+gli_ws-server/
 
 # Ignore node modules
 node_modules/

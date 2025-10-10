@@ -4,7 +4,7 @@ set -euo pipefail
 # 기본값
 TAG="${TAG:-gli_websocket}"         # ps/pgrep에서 식별할 태그
 PORT="${PORT:-8080}"                   # WebSocket 서버 실행 포트
-APP_DIR="${APP_DIR:-gli_ws-server}" # WebSocket 서버 디렉토리
+APP_DIR="${APP_DIR:-gli_websocket}" # WebSocket 서버 디렉토리
 WAIT_STOP="${WAIT_STOP:-3}"           # 종료 대기 초
 BF=0                                   # 0=포그라운드, 1=백그라운드
 
