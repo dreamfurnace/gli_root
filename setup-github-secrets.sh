@@ -1,213 +1,245 @@
 #!/bin/bash
 
-# GLI Project - GitHub Secrets Setup Helper Script
-# GitHub Secrets 설정을 위한 가이드 및 자동화 스크립트
-# ⚠️  gh CLI가 설치되어 있어야 합니다: brew install gh
+# GLI Project - GitHub Secrets Setup Script
+# 모든 GitHub Secrets를 체계적으로 설정합니다.
 
 set -e
 
-REGION="ap-northeast-2"
-GITHUB_ORG="your-github-org"  # TODO: 실제 조직명으로 변경
-
 echo "================================================"
-echo "GLI GitHub Secrets Setup Helper"
+echo "GLI GitHub Secrets 설정"
 echo "================================================"
 echo ""
-echo "이 스크립트는 GitHub Secrets 설정을 도와줍니다."
-echo "gh CLI를 사용하여 자동으로 설정할 수 있습니다."
+echo "이 스크립트는 다음 리포지토리에 Secrets를 설정합니다:"
+echo "  1. gli_api-server"
+echo "  2. gli_websocket"
+echo "  3. gli_user-frontend"
+echo "  4. gli_admin-frontend"
+echo ""
+echo "⚠️  주의사항:"
+echo "  - GitHub CLI (gh)가 인증되어 있어야 합니다"
+echo "  - AWS 자격 증명이 필요합니다"
+echo "  - .secrets/ 디렉토리에 생성된 키가 있어야 합니다"
 echo ""
 
-# Check if gh is installed
+# Check if gh CLI is available and authenticated
 if ! command -v gh &> /dev/null; then
-  echo "❌ gh CLI가 설치되어 있지 않습니다."
+  echo "❌ GitHub CLI (gh)가 설치되어 있지 않습니다"
   echo "   설치: brew install gh"
-  echo "   또는: https://cli.github.com"
   exit 1
 fi
 
-# Check if authenticated
 if ! gh auth status &> /dev/null; then
-  echo "⚠️  GitHub에 로그인이 필요합니다."
+  echo "❌ GitHub CLI가 인증되어 있지 않습니다"
   echo "   실행: gh auth login"
   exit 1
 fi
 
-echo "✅ gh CLI 인증 확인 완료"
-echo ""
-
-# Get AWS Account ID
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-echo "AWS Account ID: $AWS_ACCOUNT_ID"
-echo ""
-
-# Get ECR Registry
-ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
-echo "ECR Registry: $ECR_REGISTRY"
-echo ""
-
-echo "================================================"
-echo "공통 Secrets (모든 리포지토리)"
-echo "================================================"
-echo ""
-echo "다음 Secrets를 설정해야 합니다:"
-echo "  1. AWS_ACCESS_KEY_ID"
-echo "  2. AWS_SECRET_ACCESS_KEY"
-echo "  3. AWS_REGION"
-echo ""
-
-# Function to set secret
-set_secret() {
-  local repo=$1
-  local secret_name=$2
-  local secret_value=$3
-
-  echo "  Setting $secret_name in $repo..."
-
-  if gh secret set "$secret_name" -b"$secret_value" -R "$GITHUB_ORG/$repo" 2>/dev/null; then
-    echo "    ✅ Set: $secret_name"
-  else
-    echo "    ⚠️  Failed to set: $secret_name"
-  fi
-}
-
-# Common secrets for all repos
-REPOS=(
-  "gli_api-server"
-  "gli_websocket"
-  "gli_user-frontend"
-  "gli_admin-frontend"
-)
-
-echo ""
-read -p "공통 Secrets를 설정하시겠습니까? (yes/no): " -r
-if [[ $REPLY == "yes" ]]; then
-  echo ""
-  read -p "AWS_ACCESS_KEY_ID를 입력하세요: " AWS_ACCESS_KEY
-  read -sp "AWS_SECRET_ACCESS_KEY를 입력하세요: " AWS_SECRET_KEY
-  echo ""
-
-  for repo in "${REPOS[@]}"; do
-    echo "Configuring $repo..."
-    set_secret "$repo" "AWS_ACCESS_KEY_ID" "$AWS_ACCESS_KEY"
-    set_secret "$repo" "AWS_SECRET_ACCESS_KEY" "$AWS_SECRET_KEY"
-    set_secret "$repo" "AWS_REGION" "$REGION"
-    echo ""
-  done
+# Check if secrets directory exists
+if [ ! -d ".secrets" ]; then
+  echo "❌ .secrets 디렉토리가 없습니다"
+  echo "   먼저 ./generate-secrets.sh를 실행하세요"
+  exit 1
 fi
 
-echo ""
-echo "================================================"
-echo "API Server Secrets"
-echo "================================================"
-echo ""
-echo "gli_api-server 리포지토리에 다음 Secrets를 설정해야 합니다:"
-echo "  - STG_ECR_REPOSITORY: gli-api-staging"
-echo "  - PROD_ECR_REPOSITORY: gli-api-production"
-echo "  - DB_SECRET_NAME_STAGING: gli/db/staging"
-echo "  - DB_SECRET_NAME_PRODUCTION: gli/db/production"
+echo "✅ GitHub CLI 인증 확인 완료"
 echo ""
 
-read -p "API Server Secrets를 설정하시겠습니까? (yes/no): " -r
-if [[ $REPLY == "yes" ]]; then
-  REPO="gli_api-server"
-  set_secret "$REPO" "STG_ECR_REPOSITORY" "gli-api-staging"
-  set_secret "$REPO" "PROD_ECR_REPOSITORY" "gli-api-production"
-  set_secret "$REPO" "DB_SECRET_NAME_STAGING" "gli/db/staging"
-  set_secret "$REPO" "DB_SECRET_NAME_PRODUCTION" "gli/db/production"
+# Prompt for AWS credentials
+echo "================================================"
+echo "AWS 자격 증명 입력"
+echo "================================================"
+echo ""
+read -p "AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
+read -sp "AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
+echo ""
+echo ""
+
+if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+  echo "❌ AWS 자격 증명이 입력되지 않았습니다"
+  exit 1
 fi
 
-echo ""
-echo "================================================"
-echo "WebSocket Server Secrets"
-echo "================================================"
-echo ""
-echo "gli_websocket 리포지토리에 다음 Secrets를 설정해야 합니다:"
-echo "  - STG_ECR_REPOSITORY: gli-websocket-staging"
-echo "  - PROD_ECR_REPOSITORY: gli-websocket-production"
-echo ""
+# Read generated secrets
+DJANGO_SECRET_STAGING=$(cat .secrets/django_secret_staging.txt)
+DJANGO_SECRET_PRODUCTION=$(cat .secrets/django_secret_production.txt)
+JWT_PRIVATE_STAGING=$(cat .secrets/jwt_private_staging.pem)
+JWT_PUBLIC_STAGING=$(cat .secrets/jwt_public_staging.pem)
+JWT_PRIVATE_PRODUCTION=$(cat .secrets/jwt_private_production.pem)
+JWT_PUBLIC_PRODUCTION=$(cat .secrets/jwt_public_production.pem)
 
-read -p "WebSocket Secrets를 설정하시겠습니까? (yes/no): " -r
-if [[ $REPLY == "yes" ]]; then
-  REPO="gli_websocket"
-  set_secret "$REPO" "STG_ECR_REPOSITORY" "gli-websocket-staging"
-  set_secret "$REPO" "PROD_ECR_REPOSITORY" "gli-websocket-production"
-fi
+AWS_REGION="ap-northeast-2"
 
-echo ""
 echo "================================================"
-echo "Frontend Secrets"
+echo "1. gli_api-server Secrets 설정"
 echo "================================================"
 echo ""
-echo "⚠️  Frontend 리포지토리에는 다음 Secrets를 수동으로 설정해야 합니다:"
+
+REPO="dreamfurnace/gli_api-server"
+
+# Common AWS credentials
+gh secret set AWS_ACCESS_KEY_ID -b"$AWS_ACCESS_KEY_ID" -R "$REPO"
+echo "✅ AWS_ACCESS_KEY_ID 설정 완료"
+
+gh secret set AWS_SECRET_ACCESS_KEY -b"$AWS_SECRET_ACCESS_KEY" -R "$REPO"
+echo "✅ AWS_SECRET_ACCESS_KEY 설정 완료"
+
+gh secret set AWS_REGION -b"$AWS_REGION" -R "$REPO"
+echo "✅ AWS_REGION 설정 완료"
+
+# ECR Repositories
+gh secret set STG_ECR_REPOSITORY -b"gli-api-staging" -R "$REPO"
+echo "✅ STG_ECR_REPOSITORY 설정 완료"
+
+gh secret set PROD_ECR_REPOSITORY -b"gli-api-production" -R "$REPO"
+echo "✅ PROD_ECR_REPOSITORY 설정 완료"
+
+# Secrets Manager
+gh secret set DB_SECRET_NAME_STAGING -b"gli/db/staging" -R "$REPO"
+echo "✅ DB_SECRET_NAME_STAGING 설정 완료"
+
+gh secret set DB_SECRET_NAME_PRODUCTION -b"gli/db/production" -R "$REPO"
+echo "✅ DB_SECRET_NAME_PRODUCTION 설정 완료"
+
+# Django Staging
+gh secret set SECRET_KEY_STAGING -b"$DJANGO_SECRET_STAGING" -R "$REPO"
+echo "✅ SECRET_KEY_STAGING 설정 완료"
+
+gh secret set JWT_PRIVATE_KEY_STAGING -b"$JWT_PRIVATE_STAGING" -R "$REPO"
+echo "✅ JWT_PRIVATE_KEY_STAGING 설정 완료"
+
+gh secret set JWT_PUBLIC_KEY_STAGING -b"$JWT_PUBLIC_STAGING" -R "$REPO"
+echo "✅ JWT_PUBLIC_KEY_STAGING 설정 완료"
+
+gh secret set CORS_ALLOWED_ORIGINS_STAGING -b"https://stg.glibiz.com,https://stg-admin.glibiz.com" -R "$REPO"
+echo "✅ CORS_ALLOWED_ORIGINS_STAGING 설정 완료"
+
+gh secret set FRONTEND_BASE_URL_STAGING -b"https://stg.glibiz.com" -R "$REPO"
+echo "✅ FRONTEND_BASE_URL_STAGING 설정 완료"
+
+gh secret set AWS_STORAGE_BUCKET_NAME_STAGING -b"gli-platform-media-dev" -R "$REPO"
+echo "✅ AWS_STORAGE_BUCKET_NAME_STAGING 설정 완료"
+
+# Django Production
+gh secret set SECRET_KEY_PRODUCTION -b"$DJANGO_SECRET_PRODUCTION" -R "$REPO"
+echo "✅ SECRET_KEY_PRODUCTION 설정 완료"
+
+gh secret set JWT_PRIVATE_KEY_PRODUCTION -b"$JWT_PRIVATE_PRODUCTION" -R "$REPO"
+echo "✅ JWT_PRIVATE_KEY_PRODUCTION 설정 완료"
+
+gh secret set JWT_PUBLIC_KEY_PRODUCTION -b"$JWT_PUBLIC_PRODUCTION" -R "$REPO"
+echo "✅ JWT_PUBLIC_KEY_PRODUCTION 설정 완료"
+
+gh secret set CORS_ALLOWED_ORIGINS_PRODUCTION -b"https://glibiz.com,https://www.glibiz.com,https://admin.glibiz.com" -R "$REPO"
+echo "✅ CORS_ALLOWED_ORIGINS_PRODUCTION 설정 완료"
+
+gh secret set FRONTEND_BASE_URL_PRODUCTION -b"https://glibiz.com" -R "$REPO"
+echo "✅ FRONTEND_BASE_URL_PRODUCTION 설정 완료"
+
+gh secret set AWS_STORAGE_BUCKET_NAME_PRODUCTION -b"gli-platform-media-prod" -R "$REPO"
+echo "✅ AWS_STORAGE_BUCKET_NAME_PRODUCTION 설정 완료"
+
 echo ""
-echo "gli_user-frontend:"
-echo "  - STG_S3_BUCKET: gli-user-frontend-staging"
-echo "  - PROD_S3_BUCKET: gli-user-frontend-production"
-echo "  - STG_CLOUDFRONT_DISTRIBUTION_ID: (CloudFront 생성 후)"
-echo "  - PROD_CLOUDFRONT_DISTRIBUTION_ID: (CloudFront 생성 후)"
-echo ""
-echo "gli_admin-frontend:"
-echo "  - STG_S3_BUCKET: gli-admin-frontend-staging"
-echo "  - PROD_S3_BUCKET: gli-admin-frontend-production"
-echo "  - STG_CLOUDFRONT_DISTRIBUTION_ID: (CloudFront 생성 후)"
-echo "  - PROD_CLOUDFRONT_DISTRIBUTION_ID: (CloudFront 생성 후)"
+echo "================================================"
+echo "2. gli_websocket Secrets 설정"
+echo "================================================"
 echo ""
 
-read -p "Frontend S3 Bucket Secrets를 설정하시겠습니까? (yes/no): " -r
-if [[ $REPLY == "yes" ]]; then
-  # User Frontend
-  REPO="gli_user-frontend"
-  set_secret "$REPO" "STG_S3_BUCKET" "gli-user-frontend-staging"
-  set_secret "$REPO" "PROD_S3_BUCKET" "gli-user-frontend-production"
+REPO="dreamfurnace/gli_websocket"
 
-  echo ""
-  echo "CloudFront Distribution ID를 입력하세요 (나중에 설정하려면 Enter):"
-  read -p "  Staging Distribution ID: " STG_CF_ID
-  read -p "  Production Distribution ID: " PROD_CF_ID
+gh secret set AWS_ACCESS_KEY_ID -b"$AWS_ACCESS_KEY_ID" -R "$REPO"
+echo "✅ AWS_ACCESS_KEY_ID 설정 완료"
 
-  if [ -n "$STG_CF_ID" ]; then
-    set_secret "$REPO" "STG_CLOUDFRONT_DISTRIBUTION_ID" "$STG_CF_ID"
-  fi
+gh secret set AWS_SECRET_ACCESS_KEY -b"$AWS_SECRET_ACCESS_KEY" -R "$REPO"
+echo "✅ AWS_SECRET_ACCESS_KEY 설정 완료"
 
-  if [ -n "$PROD_CF_ID" ]; then
-    set_secret "$REPO" "PROD_CLOUDFRONT_DISTRIBUTION_ID" "$PROD_CF_ID"
-  fi
+gh secret set AWS_REGION -b"$AWS_REGION" -R "$REPO"
+echo "✅ AWS_REGION 설정 완료"
 
-  echo ""
+gh secret set STG_ECR_REPOSITORY -b"gli-websocket-staging" -R "$REPO"
+echo "✅ STG_ECR_REPOSITORY 설정 완료"
 
-  # Admin Frontend
-  REPO="gli_admin-frontend"
-  set_secret "$REPO" "STG_S3_BUCKET" "gli-admin-frontend-staging"
-  set_secret "$REPO" "PROD_S3_BUCKET" "gli-admin-frontend-production"
+gh secret set PROD_ECR_REPOSITORY -b"gli-websocket-production" -R "$REPO"
+echo "✅ PROD_ECR_REPOSITORY 설정 완료"
 
-  echo ""
-  echo "CloudFront Distribution ID를 입력하세요 (나중에 설정하려면 Enter):"
-  read -p "  Staging Distribution ID: " STG_CF_ID
-  read -p "  Production Distribution ID: " PROD_CF_ID
+echo ""
+echo "================================================"
+echo "3. gli_user-frontend Secrets 설정"
+echo "================================================"
+echo ""
 
-  if [ -n "$STG_CF_ID" ]; then
-    set_secret "$REPO" "STG_CLOUDFRONT_DISTRIBUTION_ID" "$STG_CF_ID"
-  fi
+REPO="dreamfurnace/gli_user-frontend"
 
-  if [ -n "$PROD_CF_ID" ]; then
-    set_secret "$REPO" "PROD_CLOUDFRONT_DISTRIBUTION_ID" "$PROD_CF_ID"
-  fi
-fi
+gh secret set AWS_ACCESS_KEY_ID -b"$AWS_ACCESS_KEY_ID" -R "$REPO"
+echo "✅ AWS_ACCESS_KEY_ID 설정 완료"
+
+gh secret set AWS_SECRET_ACCESS_KEY -b"$AWS_SECRET_ACCESS_KEY" -R "$REPO"
+echo "✅ AWS_SECRET_ACCESS_KEY 설정 완료"
+
+gh secret set AWS_REGION -b"$AWS_REGION" -R "$REPO"
+echo "✅ AWS_REGION 설정 완료"
+
+gh secret set STG_S3_BUCKET -b"gli-user-frontend-staging" -R "$REPO"
+echo "✅ STG_S3_BUCKET 설정 완료"
+
+gh secret set PROD_S3_BUCKET -b"gli-user-frontend-production" -R "$REPO"
+echo "✅ PROD_S3_BUCKET 설정 완료"
+
+gh secret set STG_CLOUDFRONT_DISTRIBUTION_ID -b"E2M2F8O36YCDX" -R "$REPO"
+echo "✅ STG_CLOUDFRONT_DISTRIBUTION_ID 설정 완료"
+
+gh secret set PROD_CLOUDFRONT_DISTRIBUTION_ID -b"EUY0BEWJK212R" -R "$REPO"
+echo "✅ PROD_CLOUDFRONT_DISTRIBUTION_ID 설정 완료"
+
+echo ""
+echo "================================================"
+echo "4. gli_admin-frontend Secrets 설정"
+echo "================================================"
+echo ""
+
+REPO="dreamfurnace/gli_admin-frontend"
+
+gh secret set AWS_ACCESS_KEY_ID -b"$AWS_ACCESS_KEY_ID" -R "$REPO"
+echo "✅ AWS_ACCESS_KEY_ID 설정 완료"
+
+gh secret set AWS_SECRET_ACCESS_KEY -b"$AWS_SECRET_ACCESS_KEY" -R "$REPO"
+echo "✅ AWS_SECRET_ACCESS_KEY 설정 완료"
+
+gh secret set AWS_REGION -b"$AWS_REGION" -R "$REPO"
+echo "✅ AWS_REGION 설정 완료"
+
+gh secret set STG_S3_BUCKET -b"gli-admin-frontend-staging" -R "$REPO"
+echo "✅ STG_S3_BUCKET 설정 완료"
+
+gh secret set PROD_S3_BUCKET -b"gli-admin-frontend-production" -R "$REPO"
+echo "✅ PROD_S3_BUCKET 설정 완료"
+
+gh secret set STG_CLOUDFRONT_DISTRIBUTION_ID -b"E1UMP4GMPQCQ0G" -R "$REPO"
+echo "✅ STG_CLOUDFRONT_DISTRIBUTION_ID 설정 완료"
+
+gh secret set PROD_CLOUDFRONT_DISTRIBUTION_ID -b"E31LKUK6NABDLS" -R "$REPO"
+echo "✅ PROD_CLOUDFRONT_DISTRIBUTION_ID 설정 완료"
 
 echo ""
 echo "================================================"
 echo "Summary"
 echo "================================================"
-echo "✅ GitHub Secrets 설정 도움말 완료!"
+echo "✅ 모든 GitHub Secrets 설정 완료!"
 echo ""
-echo "⚠️  확인사항:"
-echo "  1. 각 리포지토리의 Settings > Secrets and variables > Actions에서 설정 확인"
-echo "  2. CloudFront Distribution ID는 CloudFront 생성 후 추가 설정 필요"
-echo "  3. 환경별 변수는 SECRETS_MANAGEMENT.md 문서 참고"
+echo "설정된 리포지토리:"
+echo "  - dreamfurnace/gli_api-server (18개 secrets)"
+echo "  - dreamfurnace/gli_websocket (5개 secrets)"
+echo "  - dreamfurnace/gli_user-frontend (7개 secrets)"
+echo "  - dreamfurnace/gli_admin-frontend (7개 secrets)"
+echo ""
+echo "확인 방법:"
+echo "  gh secret list -R dreamfurnace/gli_api-server"
+echo "  gh secret list -R dreamfurnace/gli_websocket"
+echo "  gh secret list -R dreamfurnace/gli_user-frontend"
+echo "  gh secret list -R dreamfurnace/gli_admin-frontend"
 echo ""
 echo "다음 단계:"
-echo "  1. CloudFront Distributions 생성"
-echo "  2. Frontend 리포지토리에 CloudFront Distribution ID 추가"
-echo "  3. 첫 배포 테스트 (./multigit-merge-dev-to-stg.sh)"
+echo "  1. 각 리포지토리의 Secrets 목록 확인"
+echo "  2. 첫 배포 실행 (./multigit-push-stg.sh)"
+echo "  3. GitHub Actions 워크플로우 실행 확인"
 echo ""
 echo "================================================"
