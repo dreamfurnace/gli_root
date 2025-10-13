@@ -179,6 +179,13 @@ stg → main 머지를 모든 리포지토리에서 일괄 수행합니다. (프
 ./multigit-merge-stg-to-main.sh
 ```
 
+#### `multigit-merge-stg-to-dev.sh`
+stg → dev 머지를 모든 리포지토리에서 일괄 수행합니다. (검증된 내용 동기화)
+```bash
+./multigit-merge-stg-to-dev.sh
+```
+**용도**: 스테이징에서 추가 수정/검증된 내용을 dev에 반영할 때
+
 #### `multigit-merge-main-to-stg.sh`
 main → stg 머지를 모든 리포지토리에서 일괄 수행합니다. (핫픽스 동기화)
 ```bash
