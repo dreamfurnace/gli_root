@@ -44,20 +44,36 @@ fi
 echo "✅ GitHub CLI 인증 확인 완료"
 echo ""
 
-# Prompt for AWS credentials
+# Prompt for AWS credentials (or use environment variables)
 echo "================================================"
-echo "AWS 자격 증명 입력"
+echo "AWS 자격 증명 확인"
 echo "================================================"
 echo ""
-read -p "AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
-read -sp "AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
-echo ""
-echo ""
+
+if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+  AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id 2>/dev/null)
+fi
+
+if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+  AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key 2>/dev/null)
+fi
+
+if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+  echo "⚠️  환경변수나 AWS 설정에서 자격 증명을 찾을 수 없습니다."
+  echo ""
+  read -p "AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
+  read -sp "AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
+  echo ""
+  echo ""
+fi
 
 if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
   echo "❌ AWS 자격 증명이 입력되지 않았습니다"
   exit 1
 fi
+
+echo "✅ AWS 자격 증명 확인 완료"
+echo ""
 
 # Read generated secrets
 DJANGO_SECRET_STAGING=$(cat .secrets/django_secret_staging.txt)
