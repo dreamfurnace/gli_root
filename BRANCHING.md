@@ -89,11 +89,15 @@ git commit -m "hotfix: fix critical authentication bug"
 git push origin hotfix/critical-bug-fix
 
 # main으로 PR 생성 및 배포
-# 배포 후 stg와 dev에도 반영
+# 배포 후 stg에도 반영 (multigit 스크립트 사용)
+./multigit-merge-main-to-stg.sh
+
+# 또는 수동으로
 git checkout stg
 git merge main
 git push origin stg
 
+# dev에도 반영 필요 시
 git checkout dev
 git merge main
 git push origin dev
@@ -141,14 +145,46 @@ git commit -m "docs: update API documentation for token endpoints"
 
 여러 리포지토리를 동시에 관리하기 위한 스크립트:
 
-### `multigit-pull-dev.sh`
+### 일반 워크플로우
+
+#### `multigit-pull-dev.sh`
 dev 브랜치의 최신 변경사항을 모든 리포지토리에서 가져옵니다.
+```bash
+./multigit-pull-dev.sh
+```
 
-### `multigit-merge-dev-to-stg.sh`
-dev → stg 머지를 모든 리포지토리에서 일괄 수행합니다.
+#### `multigit-pull-stg.sh`
+stg 브랜치의 최신 변경사항을 모든 리포지토리에서 가져옵니다.
+```bash
+./multigit-pull-stg.sh
+```
 
-### `multigit-merge-stg-to-main.sh`
+#### `multigit-push-stg.sh`
+로컬 stg 브랜치의 커밋을 원격에 푸시합니다. (스테이징 배포)
+```bash
+./multigit-push-stg.sh
+```
+
+### 머지 스크립트
+
+#### `multigit-merge-dev-to-stg.sh`
+dev → stg 머지를 모든 리포지토리에서 일괄 수행합니다. (스테이징 배포)
+```bash
+./multigit-merge-dev-to-stg.sh
+```
+
+#### `multigit-merge-stg-to-main.sh`
 stg → main 머지를 모든 리포지토리에서 일괄 수행합니다. (프로덕션 배포)
+```bash
+./multigit-merge-stg-to-main.sh
+```
+
+#### `multigit-merge-main-to-stg.sh`
+main → stg 머지를 모든 리포지토리에서 일괄 수행합니다. (핫픽스 동기화)
+```bash
+./multigit-merge-main-to-stg.sh
+```
+⚠️ **주의**: 이 스크립트는 역방향 머지입니다. 프로덕션 핫픽스를 스테이징에 반영할 때만 사용하세요.
 
 ## GitHub Actions CI/CD
 
