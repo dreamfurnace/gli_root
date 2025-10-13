@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # GLI Project - Pull latest changes from dev branch
-# 모든 GLI 리포지토리의 dev 브랜치를 최신 상태로 업데이트
+# 모든 GLI 리포지토리의 dev 브랜치에서 로컬 변경사항을 커밋하고 최신 상태로 업데이트
 
 set -e
 
@@ -49,9 +49,32 @@ for repo in "${REPOS[@]}"; do
       git checkout -b dev origin/dev > /dev/null 2>&1
     fi
 
-    # Switch to dev and pull
+    # Switch to dev
     git checkout dev > /dev/null 2>&1
 
+    # Check for uncommitted changes
+    if [ -n "$(git status --porcelain)" ]; then
+      echo "  📝 로컬 변경사항 발견, 커밋 중..."
+
+      # Remove .DS_Store files
+      find . -name ".DS_Store" -delete 2>/dev/null || true
+      if ! grep -q "^\.DS_Store$" .gitignore 2>/dev/null; then
+        echo ".DS_Store" >> .gitignore
+      fi
+      git rm --cached .DS_Store 2>/dev/null || true
+
+      git add -A
+
+      COMMIT_MSG="dev: auto commit before pull
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+      git commit -m "$COMMIT_MSG" > /dev/null 2>&1 || echo "  ⚠️  커밋할 변경사항 없음"
+    fi
+
+    # Pull from remote
     if git pull origin dev; then
       echo "  ✅ Pull 성공"
       SUCCESS_REPOS+=("$REPO_NAME")

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # GLI Project - Push stg branch across all repositories
-# 모든 리포지토리의 stg 브랜치를 원격에 푸시
-# ⚠️  주의: 이미 커밋된 변경사항만 푸시됩니다
+# 모든 리포지토리의 stg 브랜치에 변경사항을 add, commit, push
+# ⚠️  주의: 자동으로 커밋 및 푸시되어 스테이징 환경에 배포됩니다
 
 set -e
 
@@ -67,22 +67,49 @@ for repo in "${REPOS[@]}"; do
     continue
   fi
 
-  # Check if there are local commits to push
-  echo "  2️⃣ 푸시할 커밋 확인..."
-  LOCAL_COMMITS=$(git rev-list origin/stg..stg 2>/dev/null | wc -l | tr -d ' ')
+  # Check for changes (both uncommitted and unpushed)
+  echo "  2️⃣ 변경사항 확인..."
+  HAS_UNCOMMITTED=$(git status --porcelain 2>/dev/null)
+  HAS_UNPUSHED=$(git log origin/stg..stg 2>/dev/null)
 
-  if [ "$LOCAL_COMMITS" -eq 0 ]; then
-    echo "  ℹ️  푸시할 새 커밋이 없습니다. 건너뜁니다."
-    SKIPPED_REPOS+=("$REPO_NAME (no new commits)")
+  if [ -z "$HAS_UNCOMMITTED" ] && [ -z "$HAS_UNPUSHED" ]; then
+    echo "  ℹ️  변경사항이 없습니다. 건너뜁니다."
+    SKIPPED_REPOS+=("$REPO_NAME (no changes)")
     cd - > /dev/null
     echo ""
     continue
   fi
 
-  echo "  📝 푸시할 커밋: $LOCAL_COMMITS개"
+  # Add all changes
+  if [ -n "$HAS_UNCOMMITTED" ]; then
+    echo "  3️⃣ 변경사항 staging..."
+    # Remove .DS_Store files
+    find . -name ".DS_Store" -delete 2>/dev/null || true
+    if ! grep -q "^\.DS_Store$" .gitignore 2>/dev/null; then
+      echo ".DS_Store" >> .gitignore
+    fi
+    git rm --cached .DS_Store 2>/dev/null || true
+
+    git add -A
+    echo "  ✅ staging 완료"
+
+    # Commit changes
+    echo "  4️⃣ 변경사항 커밋..."
+    COMMIT_MSG="stg: auto commit and deploy
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+    if git commit -m "$COMMIT_MSG" > /dev/null 2>&1; then
+      echo "  ✅ 커밋 완료"
+    else
+      echo "  ⚠️  커밋할 변경사항 없음"
+    fi
+  fi
 
   # Push to remote
-  echo "  3️⃣ 원격 저장소에 푸시..."
+  echo "  5️⃣ 원격 저장소에 푸시..."
   if git push origin stg; then
     echo "  ✅ 푸시 성공 (스테이징 환경 배포 시작됨)"
     SUCCESS_REPOS+=("$REPO_NAME")
