@@ -40,11 +40,25 @@ for repo in "${REPOS[@]}"; do
 
   # Check if stg branch exists
   if ! git rev-parse --verify stg > /dev/null 2>&1; then
-    echo "  ⚠️  stg 브랜치가 존재하지 않습니다. 건너뜁니다."
-    FAILED_REPOS+=("$REPO_NAME (no stg branch)")
-    cd - > /dev/null
-    echo ""
-    continue
+    # Check if remote stg branch exists
+    if git rev-parse --verify origin/stg > /dev/null 2>&1; then
+      echo "  🔄 리모트 origin/stg 브랜치를 기반으로 로컬 stg 브랜치 생성..."
+      if git checkout -b stg origin/stg > /dev/null 2>&1; then
+        echo "  ✅ 로컬 stg 브랜치 생성 완료"
+      else
+        echo "  ❌ 로컬 stg 브랜치 생성 실패"
+        FAILED_REPOS+=("$REPO_NAME (failed to create stg branch)")
+        cd - > /dev/null
+        echo ""
+        continue
+      fi
+    else
+      echo "  ⚠️  stg 브랜치가 존재하지 않습니다 (로컬/리모트 모두). 건너뜁니다."
+      FAILED_REPOS+=("$REPO_NAME (no stg branch)")
+      cd - > /dev/null
+      echo ""
+      continue
+    fi
   fi
 
   # Switch to stg branch
