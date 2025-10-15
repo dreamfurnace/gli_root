@@ -41,20 +41,9 @@ for repo in "${REPOS[@]}"; do
   if git ls-remote --heads origin dev | grep -q "dev"; then
     echo "🌿 원격 dev 브랜치가 존재합니다"
 
-    # Check if dev branch exists locally
-    if git show-ref --verify --quiet refs/heads/dev; then
-      echo "  로컬 dev 브랜치 존재"
-    else
-      echo "  로컬 dev 브랜치 생성 중..."
-      git checkout -b dev origin/dev > /dev/null 2>&1
-    fi
-
-    # Switch to dev
-    git checkout dev > /dev/null 2>&1
-
-    # Check for uncommitted changes
+    # Check for uncommitted changes in current branch BEFORE switching
     if [ -n "$(git status --porcelain)" ]; then
-      echo "  📝 로컬 변경사항 발견, 커밋 중..."
+      echo "  📝 현재 브랜치에 로컬 변경사항 발견, 커밋 중..."
 
       # Remove .DS_Store files
       find . -name ".DS_Store" -delete 2>/dev/null || true
@@ -65,7 +54,8 @@ for repo in "${REPOS[@]}"; do
 
       git add -A
 
-      COMMIT_MSG="dev: auto commit before pull
+      CURRENT_BRANCH=$(git branch --show-current)
+      COMMIT_MSG="$CURRENT_BRANCH: auto commit before switching to dev
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
@@ -74,7 +64,27 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
       git commit -m "$COMMIT_MSG" > /dev/null 2>&1 || echo "  ⚠️  커밋할 변경사항 없음"
     fi
 
+    # Check if dev branch exists locally
+    if git show-ref --verify --quiet refs/heads/dev; then
+      echo "  로컬 dev 브랜치 존재"
+    else
+      echo "  로컬 dev 브랜치 생성 중..."
+      git checkout -b dev origin/dev > /dev/null 2>&1
+    fi
+
+    # Switch to dev
+    echo "  🔄 dev 브랜치로 전환..."
+    if ! git checkout dev > /dev/null 2>&1; then
+      echo "  ❌ dev 브랜치로 전환 실패"
+      FAILED_REPOS+=("$REPO_NAME")
+      FAIL_REASONS+=("Failed to checkout dev branch")
+      cd - > /dev/null
+      echo ""
+      continue
+    fi
+
     # Pull from remote
+    echo "  📥 원격에서 Pull 중..."
     if git pull origin dev; then
       echo "  ✅ Pull 성공"
       SUCCESS_REPOS+=("$REPO_NAME")

@@ -41,6 +41,11 @@ fi
 
 echo ""
 
+# Create staging deployment tag
+STG_DEPLOY_TAG="stg-deploy-$(date +%Y%m%d-%H%M%S)"
+echo "📌 스테이징 배포 태그 생성: $STG_DEPLOY_TAG"
+echo ""
+
 for repo in "${REPOS[@]}"; do
   if [ "$repo" = "." ]; then
     REPO_NAME="gli_root"
@@ -68,10 +73,15 @@ for repo in "${REPOS[@]}"; do
   if git merge dev --no-ff -m "$COMMIT_MSG"; then
     echo "  ✅ 머지 성공"
 
-    # Push to remote
-    echo "  4️⃣ 원격 저장소에 푸시..."
-    if git push origin stg; then
+    # Create staging deployment tag
+    echo "  4️⃣ 스테이징 배포 태그 생성..."
+    git tag -a "$STG_DEPLOY_TAG" -m "Staging deployment on $(date)" > /dev/null 2>&1
+
+    # Push to remote with tags
+    echo "  5️⃣ 원격 저장소에 푸시 (태그 포함)..."
+    if git push origin stg && git push origin --tags; then
       echo "  ✅ 푸시 성공 (스테이징 환경 배포 시작됨)"
+      echo "  📌 태그: $STG_DEPLOY_TAG"
       SUCCESS_REPOS+=("$REPO_NAME")
     else
       echo "  ❌ 푸시 실패"
@@ -85,7 +95,9 @@ for repo in "${REPOS[@]}"; do
     echo "    # 충돌 해결 후"
     echo "    git add ."
     echo "    git commit"
+    echo "    git tag -a '$STG_DEPLOY_TAG' -m 'Staging deployment'"
     echo "    git push origin stg"
+    echo "    git push origin --tags"
     FAILED_REPOS+=("$REPO_NAME")
   fi
 
@@ -94,8 +106,10 @@ for repo in "${REPOS[@]}"; do
 done
 
 echo "================================================"
-echo "Summary"
+echo "Deployment Summary"
 echo "================================================"
+echo "📌 Staging Deployment Tag: $STG_DEPLOY_TAG"
+echo ""
 echo "✅ 성공한 리포지토리 (${#SUCCESS_REPOS[@]}):"
 for repo in "${SUCCESS_REPOS[@]}"; do
   echo "  - $repo"
