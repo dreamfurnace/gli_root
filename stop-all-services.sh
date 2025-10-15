@@ -86,7 +86,7 @@ echo ""
 echo -e "${BLUE}🐳 Stopping Docker containers...${NC}"
 stop_docker_container "gli_redis" "Redis"
 stop_docker_container "gli_rabbitmq" "RabbitMQ"
-stop_docker_container "gli_database_postgres" "PostgreSQL"
+stop_docker_container "gli_DB_local" "PostgreSQL"
 
 # 2. Application 프로세스 중지
 echo ""
