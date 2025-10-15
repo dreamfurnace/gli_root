@@ -3,8 +3,12 @@
 # GLI Project - Merge stg to main across all repositories
 # stg → main 머지를 모든 리포지토리에 일괄 적용
 # ⚠️  PRODUCTION 배포 스크립트 - 신중하게 사용!
+# 사용법: ./multigit-merge-stg-to-main.sh ["커밋 메시지"]
 
 set -e
+
+# 커밋 메시지 (인자로 전달되지 않으면 기본 메시지 사용)
+COMMIT_MSG="${1:-Merge stg into main (production deployment)}"
 
 REPOS=(
   .
@@ -24,6 +28,8 @@ echo "================================================"
 echo "GLI MultiGit: Merge stg → main (PRODUCTION)"
 echo "================================================"
 echo ""
+echo "📝 커밋 메시지: $COMMIT_MSG"
+echo ""
 echo "🚨 경고: 이 작업은 PRODUCTION 환경에 배포됩니다!"
 echo ""
 echo "배포 전 체크리스트:"
@@ -36,13 +42,6 @@ echo "  ✅ 팀원들에게 배포 일정을 공유했는가?"
 echo ""
 read -p "⚠️ 위 체크리스트를 모두 확인했으며 PRODUCTION 배포를 진행하시겠습니까? (yes 입력 필요): " -r
 if [[ ! $REPLY == "yes" ]]; then
-  echo "❌ 배포가 취소되었습니다"
-  exit 1
-fi
-
-echo ""
-read -p "🔴 정말로 PRODUCTION에 배포하시겠습니까? (DEPLOY 입력 필요): " -r
-if [[ ! $REPLY == "DEPLOY" ]]; then
   echo "❌ 배포가 취소되었습니다"
   exit 1
 fi
@@ -80,7 +79,7 @@ for repo in "${REPOS[@]}"; do
 
   # Merge stg into main
   echo "  3️⃣ stg → main 머지 시도..."
-  if git merge stg --no-edit; then
+  if git merge stg --no-ff -m "$COMMIT_MSG"; then
     echo "  ✅ 머지 성공"
 
     # Create deployment tag

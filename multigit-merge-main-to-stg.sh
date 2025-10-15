@@ -3,8 +3,12 @@
 # GLI Project - Merge main to stg across all repositories
 # main → stg 머지를 모든 리포지토리에 일괄 적용
 # 🔧 프로덕션 핫픽스를 스테이징에 반영할 때 사용
+# 사용법: ./multigit-merge-main-to-stg.sh ["커밋 메시지"]
 
 set -e
+
+# 커밋 메시지 (인자로 전달되지 않으면 기본 메시지 사용)
+COMMIT_MSG="${1:-Merge main into stg (hotfix sync)}"
 
 REPOS=(
   .
@@ -23,6 +27,8 @@ FAILED_REPOS=()
 echo "================================================"
 echo "GLI MultiGit: Merge main → stg (Hotfix Sync)"
 echo "================================================"
+echo ""
+echo "📝 커밋 메시지: $COMMIT_MSG"
 echo ""
 echo "🔧 이 작업은 프로덕션 핫픽스를 스테이징에 반영합니다."
 echo "   main 브랜치의 변경사항을 stg 브랜치로 머지합니다."
@@ -77,7 +83,7 @@ for repo in "${REPOS[@]}"; do
 
   # Merge main into stg
   echo "  3️⃣ main → stg 머지 시도..."
-  if git merge main --no-edit; then
+  if git merge main --no-ff -m "$COMMIT_MSG"; then
     echo "  ✅ 머지 성공"
 
     # Push to remote
