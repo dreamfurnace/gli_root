@@ -59,7 +59,7 @@ for repo in "${REPOS[@]}"; do
 
   # Merge dev into stg
   echo "  3️⃣ dev → stg 머지 시도..."
-  if git merge dev --no-edit; then
+  if git merge dev --no-ff --no-edit; then
     echo "  ✅ 머지 성공"
 
     # Push to remote

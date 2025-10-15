@@ -41,13 +41,6 @@ if [[ ! $REPLY == "yes" ]]; then
 fi
 
 echo ""
-read -p "🔴 정말로 PRODUCTION에 배포하시겠습니까? (DEPLOY 입력 필요): " -r
-if [[ ! $REPLY == "DEPLOY" ]]; then
-  echo "❌ 배포가 취소되었습니다"
-  exit 1
-fi
-
-echo ""
 echo "🚀 PRODUCTION 배포를 시작합니다..."
 echo ""
 
@@ -80,7 +73,7 @@ for repo in "${REPOS[@]}"; do
 
   # Merge stg into main
   echo "  3️⃣ stg → main 머지 시도..."
-  if git merge stg --no-edit; then
+  if git merge stg --no-ff --no-edit; then
     echo "  ✅ 머지 성공"
 
     # Create deployment tag

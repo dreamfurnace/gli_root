@@ -77,7 +77,7 @@ for repo in "${REPOS[@]}"; do
 
   # Merge main into stg
   echo "  3️⃣ main → stg 머지 시도..."
-  if git merge main --no-edit; then
+  if git merge main --no-ff --no-edit; then
     echo "  ✅ 머지 성공"
 
     # Push to remote
