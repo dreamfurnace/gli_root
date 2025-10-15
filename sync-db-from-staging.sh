@@ -49,7 +49,7 @@ if ! docker ps | grep -q gli_DB_local; then
     sleep 5
 fi
 
-if docker exec gli_database_postgres pg_isready -U gli -d gli > /dev/null 2>&1; then
+if docker exec gli_DB_local pg_isready -U gli -d gli > /dev/null 2>&1; then
     echo -e "${GREEN}  ✅ PostgreSQL 실행 중${NC}"
 else
     echo -e "${RED}  ❌ PostgreSQL 연결 실패${NC}"

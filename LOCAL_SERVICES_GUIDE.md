@@ -536,7 +536,7 @@ docker-compose up -d
 psql -h localhost -p 5433 -U postgres -d gli
 
 # 4. 로그 확인
-docker logs gli_database_postgres_1
+docker logs gli_DB_local
 ```
 
 ### 6.5 AWS S3 접근 오류

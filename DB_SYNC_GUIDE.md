@@ -270,7 +270,7 @@ docker ps | grep gli_DB_local
 ./restart-database.sh --bf
 
 # 헬스 체크
-docker exec gli_database_postgres pg_isready -U gli -d gli
+docker exec gli_DB_local pg_isready -U gli -d gli
 ```
 
 ---
