@@ -53,8 +53,8 @@ Local Docker PostgreSQL (gli_DB_local)
 
 ECS Exec 실행 후 컨테이너 안에서:
 ```bash
-export DJANGO_ENV=staging
-cd /var/app/current
+cd /app
+source .venv/bin/activate
 python manage.py sync_db --dump
 exit
 ```
@@ -104,8 +104,8 @@ aws ecs execute-command \
     --command "/bin/bash"
 
 # 3. 컨테이너 안에서 덤프
-export DJANGO_ENV=staging
-cd /var/app/current
+cd /app
+source .venv/bin/activate
 python manage.py sync_db --dump
 exit
 ```
