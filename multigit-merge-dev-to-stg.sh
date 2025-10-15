@@ -3,8 +3,12 @@
 # GLI Project - Merge dev to stg across all repositories
 # dev → stg 머지를 모든 리포지토리에 일괄 적용
 # 이 작업 후 자동으로 스테이징 환경에 배포됩니다
+# 사용법: ./multigit-merge-dev-to-stg.sh ["커밋 메시지"]
 
 set -e
+
+# 커밋 메시지 (인자로 전달되지 않으면 기본 메시지 사용)
+COMMIT_MSG="${1:-Merge dev into stg}"
 
 REPOS=(
   .
@@ -23,6 +27,8 @@ FAILED_REPOS=()
 echo "================================================"
 echo "GLI MultiGit: Merge dev → stg"
 echo "================================================"
+echo ""
+echo "📝 커밋 메시지: $COMMIT_MSG"
 echo ""
 echo "⚠️  주의: 이 작업은 stg 브랜치에 dev를 머지합니다."
 echo "         스테이징 환경에 자동 배포됩니다."
@@ -59,7 +65,7 @@ for repo in "${REPOS[@]}"; do
 
   # Merge dev into stg
   echo "  3️⃣ dev → stg 머지 시도..."
-  if git merge dev --no-ff --no-edit; then
+  if git merge dev --no-ff -m "$COMMIT_MSG"; then
     echo "  ✅ 머지 성공"
 
     # Push to remote
