@@ -150,20 +150,52 @@ docker-compose up -d
 
 #### PostgreSQL (데이터베이스)
 
+**방법 1: restart-database.sh 사용 (권장)**:
+
 ```bash
-# 재시작
+# 프로젝트 루트에서 실행
 ./restart-database.sh --bf
 
-# 시작
-./start-database.sh
+# 상태 확인
+./gli-cli-monitor.sh
+```
 
-# 또는 Docker Compose
+**방법 2: docker-compose 직접 사용**:
+
+```bash
+# gli_database 폴더에서 실행
 cd gli_database
 docker-compose up -d
 
+# 상태 확인
+docker ps | grep gli_DB_local
+
+# 로그 확인
+docker logs gli_DB_local
+
 # 연결 테스트
-psql -h localhost -p 5433 -U postgres -d gli
+psql -h localhost -p 5433 -U gli -d gli
 ```
+
+**데이터베이스 초기화**:
+
+```bash
+# Django 마이그레이션 실행
+cd gli_api-server
+export DJANGO_ENV=development
+python manage.py migrate
+
+# 슈퍼유저 생성
+python manage.py createsuperuser
+```
+
+**연결 정보**:
+- Host: localhost
+- Port: 5433
+- Database: gli
+- User: gli
+- Password: gli123!
+- Container: gli_DB_local
 
 #### Django API Server (백엔드)
 
