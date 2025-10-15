@@ -17,7 +17,7 @@ echo -e "${BLUE}╚════════════════════�
 echo ""
 
 ECS_CLUSTER="staging-gli-cluster"
-ECS_SERVICE="staging-api-service"
+ECS_SERVICE="staging-django-api-service"
 
 echo -e "${BLUE}[1/4]${NC} Staging ECS Task 찾기..."
 

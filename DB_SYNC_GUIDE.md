@@ -92,7 +92,7 @@ exit
 # 1. Staging Task ID 찾기
 aws ecs list-tasks \
     --cluster staging-gli-cluster \
-    --service-name staging-api-service \
+    --service-name staging-django-api-service \
     --desired-status RUNNING
 
 # 2. ECS Exec으로 접속
@@ -247,7 +247,7 @@ An error occurred (AccessDeniedException) when calling the ExecuteCommand operat
 ```bash
 aws ecs update-service \
     --cluster staging-gli-cluster \
-    --service staging-api-service \
+    --service staging-django-api-service \
     --enable-execute-command \
     --force-new-deployment
 ```
@@ -355,7 +355,7 @@ Staging ECS Task에서 매일 자동으로 덤프를 생성하려면:
 ```bash
 # ECS Scheduled Task 생성
 # EventBridge Rule: 매일 오전 3시 (KST)
-# Target: ECS Task (staging-api-service)
+# Target: ECS Task (staging-django-api-service)
 # Command Override: ["python", "manage.py", "sync_db", "--dump"]
 ```
 
