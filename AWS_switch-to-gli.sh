@@ -28,4 +28,20 @@ else
 fi
 
 echo ""
-echo "💡 이 터미널 세션에서 GLI AWS 서비스를 사용할 수 있습니다."
+
+# 스크립트 실행 방식 확인 (source vs 직접 실행)
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    # 직접 실행된 경우 (./script.sh)
+    echo "⚠️  환경변수가 현재 터미널에 적용되지 않습니다."
+    echo ""
+    echo "🔧 올바른 사용법:"
+    echo "   source ./AWS_switch-to-gli.sh"
+    echo "   또는"
+    echo "   . ./AWS_switch-to-gli.sh"
+    echo ""
+    echo "💡 이렇게 하면 현재 터미널 세션에 환경변수가 적용됩니다."
+else
+    # source로 실행된 경우
+    echo "✅ 환경변수가 현재 터미널 세션에 적용되었습니다."
+    echo "💡 이제 GLI AWS 서비스를 사용할 수 있습니다."
+fi
