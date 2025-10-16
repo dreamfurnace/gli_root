@@ -23,6 +23,7 @@ REPOS=(
 
 SUCCESS_REPOS=()
 FAILED_REPOS=()
+SKIPPED_REPOS=()
 
 echo "================================================"
 echo "GLI MultiGit: Merge stg → main (PRODUCTION)"
@@ -67,15 +68,44 @@ for repo in "${REPOS[@]}"; do
 
   cd "$repo"
 
+  # Check if stg branch exists
+  if ! git rev-parse --verify stg > /dev/null 2>&1; then
+    echo "  ⚠️  stg 브랜치가 존재하지 않습니다. 건너뜁니다."
+    SKIPPED_REPOS+=("$REPO_NAME (no stg branch)")
+    cd - > /dev/null
+    echo ""
+    continue
+  fi
+
   # Ensure we're on the latest stg
   echo "  1️⃣ stg 브랜치로 전환 및 최신화..."
-  git checkout stg > /dev/null 2>&1
-  git pull origin stg > /dev/null 2>&1
+  if ! git checkout stg > /dev/null 2>&1; then
+    echo "  ❌ stg 브랜치로 전환 실패"
+    FAILED_REPOS+=("$REPO_NAME")
+    cd - > /dev/null
+    echo ""
+    continue
+  fi
+
+  # Pull from remote (may fail if local changes exist)
+  if ! git pull origin stg > /dev/null 2>&1; then
+    echo "     ⚠️  원격 동기화 실패 - 로컬 상태로 진행"
+  fi
 
   # Switch to main and pull
   echo "  2️⃣ main 브랜치로 전환 및 최신화..."
-  git checkout main > /dev/null 2>&1
-  git pull origin main > /dev/null 2>&1
+  if ! git checkout main > /dev/null 2>&1; then
+    echo "  ❌ main 브랜치로 전환 실패"
+    FAILED_REPOS+=("$REPO_NAME")
+    cd - > /dev/null
+    echo ""
+    continue
+  fi
+
+  # Pull from remote (may fail if local changes exist)
+  if ! git pull origin main > /dev/null 2>&1; then
+    echo "     ⚠️  원격 동기화 실패 - 로컬 상태로 진행"
+  fi
 
   # Merge stg into main
   echo "  3️⃣ stg → main 머지 시도..."
@@ -124,6 +154,14 @@ for repo in "${SUCCESS_REPOS[@]}"; do
   echo "  - $repo"
 done
 
+if [ ${#SKIPPED_REPOS[@]} -gt 0 ]; then
+  echo ""
+  echo "⏭️  건너뛴 리포지토리 (${#SKIPPED_REPOS[@]}):"
+  for repo in "${SKIPPED_REPOS[@]}"; do
+    echo "  - $repo"
+  done
+fi
+
 if [ ${#FAILED_REPOS[@]} -gt 0 ]; then
   echo ""
   echo "❌ 실패한 리포지토리 (${#FAILED_REPOS[@]}):"
@@ -162,4 +200,10 @@ echo "================================================"
 
 # Log deployment
 echo "[$(date)] PRODUCTION DEPLOYMENT: $DEPLOY_TAG" >> deployment.log
-echo "  Repositories: ${SUCCESS_REPOS[*]}" >> deployment.log
+echo "  Success: ${SUCCESS_REPOS[*]}" >> deployment.log
+if [ ${#SKIPPED_REPOS[@]} -gt 0 ]; then
+  echo "  Skipped: ${SKIPPED_REPOS[*]}" >> deployment.log
+fi
+if [ ${#FAILED_REPOS[@]} -gt 0 ]; then
+  echo "  Failed: ${FAILED_REPOS[*]}" >> deployment.log
+fi
