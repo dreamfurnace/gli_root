@@ -3,7 +3,7 @@ set -euo pipefail
 
 # 기본값
 TAG="${TAG:-gli_database}"
-NAME="${NAME:-gli_database}"
+NAME="${NAME:-gli_DB_local}"
 NETWORK="${NETWORK:-gli_local}"
 DB_PORT="${DB_PORT:-5433}"
 IMAGE="${IMAGE:-postgres:15}"
@@ -83,7 +83,7 @@ if ! docker network ls --format '{{.Name}}' | grep -q "^${NETWORK}\$"; then
 fi
 
 # 기존 컨테이너 정리 (모든 변종 포함)
-POSTGRES_CONTAINER="${NAME}_postgres"
+POSTGRES_CONTAINER="${NAME}"
 
 echo "🔍 기존 DB 컨테이너 검색 중..."
 ALL_DB_CONTAINERS=$(find_all_db_containers)

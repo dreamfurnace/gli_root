@@ -41,12 +41,31 @@ echo ""
 echo -e "${GREEN}🚀 동기화 프로세스 시작...${NC}"
 echo ""
 
+# PostgreSQL 컨테이너 상태 확인 함수
+check_postgresql_running() {
+    # 1. 컨테이너 이름과 상태로 정확히 확인
+    if docker ps --filter "name=^gli_DB_local$" --filter "status=running" --format "{{.Names}}" | grep -q "^gli_DB_local$"; then
+        return 0  # 실행 중
+    fi
+
+    # 2. 포트 5433이 사용 중인지 확인 (추가 검증)
+    if lsof -i :5433 >/dev/null 2>&1; then
+        # 포트는 사용 중이지만 컨테이너가 없으면 문제 상황
+        echo -e "${YELLOW}  ⚠️  포트 5433은 사용 중이지만 gli_DB_local 컨테이너를 찾을 수 없습니다.${NC}"
+        return 0  # 일단 실행 중으로 간주
+    fi
+
+    return 1  # 실행 중이 아님
+}
+
 # 1. 로컬 PostgreSQL 확인
 echo -e "${BLUE}[1/5]${NC} 로컬 PostgreSQL 상태 확인..."
-if ! docker ps | grep -q gli_DB_local; then
+if ! check_postgresql_running; then
     echo -e "${YELLOW}  PostgreSQL이 실행 중이 아닙니다. 시작합니다...${NC}"
-    "${SCRIPT_DIR}/restart-database.sh" --bf
+    "${SCRIPT_DIR}/restart-database.sh" --bf --force-port
     sleep 5
+else
+    echo -e "${GREEN}  PostgreSQL 컨테이너가 실행 중입니다.${NC}"
 fi
 
 if docker exec gli_DB_local pg_isready -U gli -d gli > /dev/null 2>&1; then
@@ -61,13 +80,23 @@ echo ""
 echo -e "${BLUE}[2/5]${NC} S3에서 최신 덤프 확인..."
 cd "${API_SERVER_DIR}"
 
-if aws s3 ls "s3://gli-platform-media-staging/db-sync/latest-dump.json.gz" > /dev/null 2>&1; then
+# 가상환경 활성화
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+    echo -e "${GREEN}  ✅ 가상환경 활성화${NC}"
+else
+    echo -e "${RED}  ❌ 가상환경을 찾을 수 없습니다: ${API_SERVER_DIR}/.venv${NC}"
+    exit 1
+fi
+
+if aws s3 ls "s3://gli-platform-media-staging/db-sync/latest-dump.json.gz" --profile gli > /dev/null 2>&1; then
     # 메타데이터 확인
     DUMP_TIME=$(aws s3api head-object \
         --bucket gli-platform-media-staging \
         --key db-sync/latest-dump.json.gz \
         --query 'LastModified' \
-        --output text 2>/dev/null || echo "Unknown")
+        --output text \
+        --profile gli 2>/dev/null || echo "Unknown")
 
     echo -e "${GREEN}  ✅ 최신 덤프 발견${NC}"
     echo -e "     생성 시간: ${DUMP_TIME}"
