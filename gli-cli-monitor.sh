@@ -98,7 +98,7 @@ check_service_status() {
         container_name="gli_rabbitmq"
         ;;
       5433)
-        container_name="gli_database_postgres"
+        container_name="gli_DB_local"
         ;;
     esac
 
