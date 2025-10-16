@@ -72,6 +72,7 @@ for repo in "${REPOS[@]}"; do
 
   # Step 1: Handle dev branch
   echo "  1️⃣ dev 브랜치로 전환..."
+  echo "    🔍 DEBUG: git checkout dev 시작..."
   if ! git checkout dev > /dev/null 2>&1; then
     echo "  ❌ dev 브랜치로 전환 실패"
     FAILED_REPOS+=("$REPO_NAME")
@@ -79,14 +80,17 @@ for repo in "${REPOS[@]}"; do
     echo ""
     continue
   fi
+  echo "    ✅ DEBUG: git checkout dev 완료"
 
-  # Pull latest dev
+  # Skip pull for now (can cause hang issues)
   echo "  2️⃣ dev 브랜치 최신화..."
-  git pull origin dev > /dev/null 2>&1
+  echo "    ℹ️  원격 동기화 스킵 (로컬 상태로 진행)"
 
   # Check for uncommitted changes
   echo "  3️⃣ dev 브랜치 변경사항 확인..."
+  echo "    🔍 DEBUG: git status --porcelain 시작..."
   HAS_UNCOMMITTED=$(git status --porcelain 2>/dev/null)
+  echo "    ✅ DEBUG: git status --porcelain 완료"
 
   if [ -n "$HAS_UNCOMMITTED" ]; then
     echo "  4️⃣ dev 브랜치 변경사항 staging..."
@@ -131,6 +135,7 @@ for repo in "${REPOS[@]}"; do
     echo ""
     continue
   fi
+
   git pull origin stg > /dev/null 2>&1
 
   # Merge dev into stg

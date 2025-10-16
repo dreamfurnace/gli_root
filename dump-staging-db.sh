@@ -27,7 +27,8 @@ TASK_ARN=$(aws ecs list-tasks \
     --service-name "${ECS_SERVICE}" \
     --desired-status RUNNING \
     --query 'taskArns[0]' \
-    --output text)
+    --output text \
+    --profile gli)
 
 if [ "${TASK_ARN}" == "None" ] || [ -z "${TASK_ARN}" ]; then
     echo -e "${RED}❌ 실행 중인 Staging Task를 찾을 수 없습니다.${NC}"
@@ -72,14 +73,15 @@ aws ecs execute-command \
     --task "${TASK_ID}" \
     --container django-api \
     --interactive \
-    --command "/bin/bash"
+    --command "/bin/bash" \
+    --profile gli
 
 echo ""
 echo -e "${BLUE}[4/4]${NC} 덤프 확인..."
 
 # S3에 덤프 파일이 생성되었는지 확인
-if aws s3 ls "s3://gli-platform-media-staging/db-sync/latest-dump.json.gz" > /dev/null 2>&1; then
-    DUMP_SIZE=$(aws s3 ls s3://gli-platform-media-staging/db-sync/latest-dump.json.gz | awk '{print $3}')
+if aws s3 ls "s3://gli-platform-media-staging/db-sync/latest-dump.json.gz" --profile gli > /dev/null 2>&1; then
+    DUMP_SIZE=$(aws s3 ls s3://gli-platform-media-staging/db-sync/latest-dump.json.gz --profile gli | awk '{print $3}')
     DUMP_SIZE_MB=$(echo "scale=2; ${DUMP_SIZE} / 1024 / 1024" | bc)
 
     echo -e "${GREEN}✅ 덤프 파일 생성 완료!${NC}"
