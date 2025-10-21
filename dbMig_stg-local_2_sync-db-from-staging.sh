@@ -124,14 +124,14 @@ echo -e "${BLUE}[3/5]${NC} 로컬 DB 백업 생성..."
 python manage.py sync_db --backup
 echo ""
 
-# 4. Staging 데이터 다운로드 및 복원
-echo -e "${BLUE}[4/5]${NC} Staging 데이터 다운로드 및 복원..."
-python manage.py sync_db --load --force
+# 4. 마이그레이션 실행 (테이블 스키마 생성)
+echo -e "${BLUE}[4/5]${NC} 마이그레이션 실행 (테이블 생성)..."
+python manage.py migrate
 echo ""
 
-# 5. 마이그레이션 실행
-echo -e "${BLUE}[5/5]${NC} 마이그레이션 실행..."
-python manage.py migrate
+# 5. Staging 데이터 다운로드 및 복원
+echo -e "${BLUE}[5/5]${NC} Staging 데이터 다운로드 및 복원..."
+python manage.py sync_db --load --force
 echo ""
 
 echo -e "${GREEN}╔════════════════════════════════════════════════════════╗${NC}"
