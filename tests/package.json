@@ -16,7 +16,6 @@
     "test:backend:api": "jest --config=config/jest.config.js __tests__/backend/api/",
     "test:backend:models": "jest --config=config/jest.config.js __tests__/backend/models/",
     "test:web3:solana": "jest --config=config/jest.config.js e2e/web3-integration/solana/",
-    "test:web3:ethereum": "jest --config=config/jest.config.js e2e/web3-integration/ethereum/",
     "test:ci": "npm run test:unit && npm run test:integration:critical",
     "test:production": "npm run test:all && npm run test:performance && npm run test:security",
     "test:debug": "jest --config=config/jest.config.js --debug",
@@ -79,8 +78,7 @@
     "jest-junit": "^16.0.0",
     "puppeteer": "^21.0.0",
     "selenium-webdriver": "^4.15.0",
-    "ts-jest": "^29.4.0",
-    "web3": "^4.2.0"
+    "ts-jest": "^29.4.0"
   },
   "engines": {
     "node": ">=18.0.0",
