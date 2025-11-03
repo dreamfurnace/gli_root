@@ -84,7 +84,8 @@ stop_process_by_tag() {
 # 1. Docker 컨테이너 중지 (Redis, RabbitMQ, PostgreSQL)
 echo ""
 echo -e "${BLUE}🐳 Stopping Docker containers...${NC}"
-stop_docker_container "gli_redis" "Redis"
+stop_docker_container "gli_redis" "Redis (standalone)"
+stop_docker_container "gli_REDIS_local" "Redis (compose)"
 stop_docker_container "gli_rabbitmq" "RabbitMQ"
 stop_docker_container "gli_DB_local" "PostgreSQL"
 
