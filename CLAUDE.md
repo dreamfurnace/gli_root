@@ -53,6 +53,33 @@
 - 임의 실행 시 포트 충돌 및 설정 누락으로 디버깅 시간 낭비
 - 팀 개발 환경의 일관성 유지
 
+## 🚨🚨🚨 AWS 작업 절대 준수사항 🚨🚨🚨
+
+### **MANDATORY: AWS CLI 명령어 실행 규칙**
+
+**모든 AWS CLI 작업은 반드시 aws-gli 스킬을 사용해야 합니다.**
+
+1. **형식**: `source AWS_switch-to-gli.sh; aws [명령어]`
+2. **계정**: GLI 계정 (917891822317)만 사용
+3. **스킬**: 모든 AWS 작업에 aws-gli 스킬 자동 적용
+
+### **❌ 절대 금지**
+```bash
+aws [명령어]  # 직접 실행 금지
+```
+
+### **✅ 올바른 방법**
+```bash
+source AWS_switch-to-gli.sh; aws ec2 describe-instances
+source AWS_switch-to-gli.sh; aws s3 ls
+source AWS_switch-to-gli.sh; aws rds describe-db-instances
+```
+
+### **🛡️ 안전장치**
+- 잘못된 계정(424438300282) 감지 시 즉시 중단
+- GLI 계정 확인 후에만 작업 진행
+- aws-gli 스킬을 통한 자동 안전성 검증
+
 ## Task Master AI Instructions
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
 @./.taskmaster/CLAUDE.md
