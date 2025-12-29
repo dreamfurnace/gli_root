@@ -30,15 +30,8 @@ afterAll(() => {
   console.error = originalError;
 });
 
-// Web3 Mock 설정
+// Solana Phantom Wallet Mock
 global.window = global.window || {};
-global.window.ethereum = {
-  request: jest.fn(),
-  on: jest.fn(),
-  removeListener: jest.fn(),
-  isMetaMask: true
-};
-
 global.window.phantom = {
   solana: {
     connect: jest.fn(),

@@ -40,19 +40,7 @@ Object.defineProperty(window, 'sessionStorage', {
   writable: true
 });
 
-// Web3 Provider Mocks
-Object.defineProperty(window, 'ethereum', {
-  value: {
-    request: vi.fn(),
-    on: vi.fn(),
-    removeListener: vi.fn(),
-    isMetaMask: true,
-    selectedAddress: null,
-    chainId: '0x1'
-  },
-  writable: true
-});
-
+// Solana Phantom Wallet Mock
 Object.defineProperty(window, 'phantom', {
   value: {
     solana: {

@@ -28,8 +28,8 @@ stop_docker_container() {
 
     echo -e "${BLUE}🔹 Stopping $service_name (Docker: $container_name)...${NC}"
 
-    # 컨테이너가 실행 중인지 확인
-    if docker ps --format '{{.Names}}' | grep -q "^${container_name}$"; then
+    # 컨테이너가 존재하는지 확인 (실행 중이거나 stopped 상태 모두 포함)
+    if docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         docker stop "$container_name" >/dev/null 2>&1
         docker rm "$container_name" >/dev/null 2>&1
         echo -e "${GREEN}✅ $service_name stopped${NC}"
@@ -84,7 +84,8 @@ stop_process_by_tag() {
 # 1. Docker 컨테이너 중지 (Redis, RabbitMQ, PostgreSQL)
 echo ""
 echo -e "${BLUE}🐳 Stopping Docker containers...${NC}"
-stop_docker_container "gli_redis" "Redis"
+stop_docker_container "gli_redis" "Redis (standalone)"
+stop_docker_container "gli_REDIS_local" "Redis (compose)"
 stop_docker_container "gli_rabbitmq" "RabbitMQ"
 stop_docker_container "gli_DB_local" "PostgreSQL"
 
