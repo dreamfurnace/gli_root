@@ -102,7 +102,6 @@ npm run test:backend:models    # 모델 테스트
 
 # Web3 테스트
 npm run test:web3:solana       # Solana 통합 테스트
-npm run test:web3:ethereum     # Ethereum 테스트
 ```
 
 ### CI/CD 테스트

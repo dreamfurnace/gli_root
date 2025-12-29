@@ -39,10 +39,10 @@ TOTAL_SERVICES=${#SERVICES[@]}
 
 # 서비스 정의 배열 (포트|서비스명|타입|경로|실행명령)
 SERVICES=(
-  "6379|Redis|DOCKER|gli_redis|docker run -d redis:7-alpine"
+  "6379|Redis|DOCKER|gli_REDIS_local|docker run -d redis:7-alpine"
   "5672|RabbitMQ (AMQP)|DOCKER|gli_rabbitmq|./restart-rabbitmq.sh"
   "15672|RabbitMQ Mgmt.|DOCKER|gli_rabbitmq|./restart-rabbitmq.sh"
-  "5433|PostgreSQL|DOCKER|gli_database|./restart-database.sh"
+  "5433|PostgreSQL|DOCKER|gli_DB_local|./restart-database.sh"
   "8000|Django API|APP|gli_api-server|uv run python manage.py runserver"
   "8080|WebSocket Server|APP|gli_websocket|npm start"
   "3000|User Frontend|APP|gli_user-frontend|npm run dev"
