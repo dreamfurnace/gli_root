@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gligateway API Test</title>
+</head>
+<body>
+    <h1>Gligateway API 호출 테스트</h1>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+
+            // 1. 프로덕션 API 테스트
+            console.log('Testing production API: https://api.glibiz.com/api/news/');
+            resultDiv.innerHTML += '<h2>프로덕션 API 테스트</h2>';
+            try {
+                const response = await fetch('https://api.glibiz.com/api/news/');
+                resultDiv.innerHTML += `<p>✅ 상태: ${response.status}</p>`;
+                const data = await response.json();
+                resultDiv.innerHTML += `<p>✅ 데이터: ${data.length}개</p>`;
+            } catch (error) {
+                resultDiv.innerHTML += `<p style="color: red;">❌ 오류: ${error.message}</p>`;
+            }
+
+            // 2. 스테이징 API 테스트
+            console.log('Testing staging API: https://stg-api.glibiz.com/api/news/');
+            resultDiv.innerHTML += '<h2>스테이징 API 테스트</h2>';
+            try {
+                const response = await fetch('https://stg-api.glibiz.com/api/news/');
+                resultDiv.innerHTML += `<p>✅ 상태: ${response.status}</p>`;
+                const data = await response.json();
+                resultDiv.innerHTML += `<p>✅ 데이터: ${data.length}개</p>`;
+            } catch (error) {
+                resultDiv.innerHTML += `<p style="color: red;">❌ 오류: ${error.message}</p>`;
+            }
+        }
+
+        testAPI();
+    </script>
+</body>
+</html>

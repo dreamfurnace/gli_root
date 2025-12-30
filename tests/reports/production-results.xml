@@ -1,0 +1,1006 @@
+<testsuites id="" name="" tests="8" failures="7" skipped="0" errors="0" time="321.874047">
+<testsuite name="production-login.spec.ts" timestamp="2025-12-29T13:09:22.780Z" hostname="production-chromium" tests="8" failures="7" skipped="0" time="289.539" errors="0">
+<testcase name="GLI Production - User Frontend Login › should load production user login page" classname="production-login.spec.ts" time="35.073">
+<failure message="production-login.spec.ts:13:7 should load production user login page" type="FAILURE">
+<![CDATA[  [production-chromium] › production-login.spec.ts:13:7 › GLI Production - User Frontend Login › should load production user login page 
+
+    Error: Timed out 10000ms waiting for expect(page).toHaveTitle(expected)
+
+    Expected pattern: /GLI/
+    Received string:  ""
+    Call log:
+      - Expect "toHaveTitle" with timeout 10000ms
+        14 × unexpected value ""
+
+
+      15 |
+      16 |     // 페이지 타이틀 확인
+    > 17 |     await expect(page).toHaveTitle(/GLI/);
+         |                        ^
+      18 |
+      19 |     // 로그인 페이지 요소 확인
+      20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(page).toHaveTitle(expected)
+
+    Expected pattern: /GLI/
+    Received string:  ""
+    Call log:
+      - Expect "toHaveTitle" with timeout 10000ms
+        14 × unexpected value ""
+
+
+      15 |
+      16 |     // 페이지 타이틀 확인
+    > 17 |     await expect(page).toHaveTitle(/GLI/);
+         |                        ^
+      18 |
+      19 |     // 로그인 페이지 요소 확인
+      20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(page).toHaveTitle(expected)
+
+    Expected pattern: /GLI/
+    Received string:  ""
+    Call log:
+      - Expect "toHaveTitle" with timeout 10000ms
+        14 × unexpected value ""
+
+
+      15 |
+      16 |     // 페이지 타이틀 확인
+    > 17 |     await expect(page).toHaveTitle(/GLI/);
+         |                        ^
+      18 |
+      19 |     // 로그인 페이지 요소 확인
+      20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="GLI Production - User Frontend Login › should login to production user frontend with valid credentials" classname="production-login.spec.ts" time="37.423">
+<failure message="production-login.spec.ts:23:7 should login to production user frontend with valid credentials" type="FAILURE">
+<![CDATA[  [production-chromium] › production-login.spec.ts:23:7 › GLI Production - User Frontend Login › should login to production user frontend with valid credentials 
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('input[type="email"], input[name="email"], input[id*="email"], input[placeholder*="이메일"]').first()
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('input[type="email"], input[name="email"], input[id*="email"], input[placeholder*="이메일"]').first()
+
+
+      33 |
+      34 |     // 폼 요소가 보이는지 확인
+    > 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });
+         |                              ^
+      36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });
+      37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });
+      38 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('input[type="email"], input[name="email"], input[id*="email"], input[placeholder*="이메일"]').first()
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('input[type="email"], input[name="email"], input[id*="email"], input[placeholder*="이메일"]').first()
+
+
+      33 |
+      34 |     // 폼 요소가 보이는지 확인
+    > 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });
+         |                              ^
+      36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });
+      37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });
+      38 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('input[type="email"], input[name="email"], input[id*="email"], input[placeholder*="이메일"]').first()
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('input[type="email"], input[name="email"], input[id*="email"], input[placeholder*="이메일"]').first()
+
+
+      33 |
+      34 |     // 폼 요소가 보이는지 확인
+    > 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });
+         |                              ^
+      36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });
+      37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });
+      38 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="GLI Production - Admin Frontend Login › should load production admin login page" classname="production-login.spec.ts" time="36.214">
+<failure message="production-login.spec.ts:56:7 should load production admin login page" type="FAILURE">
+<![CDATA[  [production-chromium] › production-login.spec.ts:56:7 › GLI Production - Admin Frontend Login › should load production admin login page 
+
+    Error: Timed out 10000ms waiting for expect(page).toHaveTitle(expected)
+
+    Expected pattern: /GLI/
+    Received string:  ""
+    Call log:
+      - Expect "toHaveTitle" with timeout 10000ms
+        14 × unexpected value ""
+
+
+      58 |
+      59 |     // 페이지 타이틀 확인
+    > 60 |     await expect(page).toHaveTitle(/GLI/);
+         |                        ^
+      61 |
+      62 |     // 관리자 로그인 페이지 요소 확인
+      63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(page).toHaveTitle(expected)
+
+    Expected pattern: /GLI/
+    Received string:  ""
+    Call log:
+      - Expect "toHaveTitle" with timeout 10000ms
+        14 × unexpected value ""
+
+
+      58 |
+      59 |     // 페이지 타이틀 확인
+    > 60 |     await expect(page).toHaveTitle(/GLI/);
+         |                        ^
+      61 |
+      62 |     // 관리자 로그인 페이지 요소 확인
+      63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(page).toHaveTitle(expected)
+
+    Expected pattern: /GLI/
+    Received string:  ""
+    Call log:
+      - Expect "toHaveTitle" with timeout 10000ms
+        14 × unexpected value ""
+
+
+      58 |
+      59 |     // 페이지 타이틀 확인
+    > 60 |     await expect(page).toHaveTitle(/GLI/);
+         |                        ^
+      61 |
+      62 |     // 관리자 로그인 페이지 요소 확인
+      63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="GLI Production - Admin Frontend Login › should login to production admin frontend with valid credentials" classname="production-login.spec.ts" time="37.345">
+<failure message="production-login.spec.ts:66:7 should login to production admin frontend with valid credentials" type="FAILURE">
+<![CDATA[  [production-chromium] › production-login.spec.ts:66:7 › GLI Production - Admin Frontend Login › should login to production admin frontend with valid credentials 
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('input[id="username"], input[name="username"], input[type="text"]').first()
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('input[id="username"], input[name="username"], input[type="text"]').first()
+
+
+      76 |
+      77 |     // 폼 요소가 보이는지 확인
+    > 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });
+         |                                 ^
+      79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });
+      80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });
+      81 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('input[id="username"], input[name="username"], input[type="text"]').first()
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('input[id="username"], input[name="username"], input[type="text"]').first()
+
+
+      76 |
+      77 |     // 폼 요소가 보이는지 확인
+    > 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });
+         |                                 ^
+      79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });
+      80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });
+      81 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('input[id="username"], input[name="username"], input[type="text"]').first()
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('input[id="username"], input[name="username"], input[type="text"]').first()
+
+
+      76 |
+      77 |     // 폼 요소가 보이는지 확인
+    > 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });
+         |                                 ^
+      79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });
+      80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });
+      81 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="GLI Staging - Django Admin Login › should load staging Django admin login page" classname="production-login.spec.ts" time="0.72">
+</testcase>
+<testcase name="GLI Staging - Django Admin Login › should login to staging Django admin with valid credentials" classname="production-login.spec.ts" time="36.142">
+<failure message="production-login.spec.ts:110:7 should login to staging Django admin with valid credentials" type="FAILURE">
+<![CDATA[  [production-chromium] › production-login.spec.ts:110:7 › GLI Staging - Django Admin Login › should login to staging Django admin with valid credentials 
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Site administration')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('text=Site administration')
+
+
+      126 |     // 로그인 성공 후 Django Admin 페이지 확인
+      127 |     await expect(page).toHaveURL(/.*\/admin\//);
+    > 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });
+          |                                                            ^
+      129 |   });
+      130 | });
+      131 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Site administration')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('text=Site administration')
+
+
+      126 |     // 로그인 성공 후 Django Admin 페이지 확인
+      127 |     await expect(page).toHaveURL(/.*\/admin\//);
+    > 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });
+          |                                                            ^
+      129 |   });
+      130 | });
+      131 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Timed out 10000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Site administration')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('text=Site administration')
+
+
+      126 |     // 로그인 성공 후 Django Admin 페이지 확인
+      127 |     await expect(page).toHaveURL(/.*\/admin\//);
+    > 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });
+          |                                                            ^
+      129 |   });
+      130 | });
+      131 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="GLI Production - Error Handling › should show error for invalid user credentials" classname="production-login.spec.ts" time="53.86">
+<failure message="production-login.spec.ts:133:7 should show error for invalid user credentials" type="FAILURE">
+<![CDATA[  [production-chromium] › production-login.spec.ts:133:7 › GLI Production - Error Handling › should show error for invalid user credentials 
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[type="email"], input[name="email"]').first()
+
+
+      141 |
+      142 |     // 잘못된 자격 증명
+    > 143 |     await emailInput.fill('invalid@user.com');
+          |                      ^
+      144 |     await passwordInput.fill('wrongpassword');
+      145 |     await loginButton.click();
+      146 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[type="email"], input[name="email"]').first()
+
+
+      141 |
+      142 |     // 잘못된 자격 증명
+    > 143 |     await emailInput.fill('invalid@user.com');
+          |                      ^
+      144 |     await passwordInput.fill('wrongpassword');
+      145 |     await loginButton.click();
+      146 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[type="email"], input[name="email"]').first()
+
+
+      141 |
+      142 |     // 잘못된 자격 증명
+    > 143 |     await emailInput.fill('invalid@user.com');
+          |                      ^
+      144 |     await passwordInput.fill('wrongpassword');
+      145 |     await loginButton.click();
+      146 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="GLI Production - Error Handling › should show error for invalid admin credentials" classname="production-login.spec.ts" time="52.762">
+<failure message="production-login.spec.ts:151:7 should show error for invalid admin credentials" type="FAILURE">
+<![CDATA[  [production-chromium] › production-login.spec.ts:151:7 › GLI Production - Error Handling › should show error for invalid admin credentials 
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[id="username"]').first()
+
+
+      159 |
+      160 |     // 잘못된 자격 증명
+    > 161 |     await usernameInput.fill('invalidadmin');
+          |                         ^
+      162 |     await passwordInput.fill('wrongpassword');
+      163 |     await loginButton.click();
+      164 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[id="username"]').first()
+
+
+      159 |
+      160 |     // 잘못된 자격 증명
+    > 161 |     await usernameInput.fill('invalidadmin');
+          |                         ^
+      162 |     await passwordInput.fill('wrongpassword');
+      163 |     await loginButton.click();
+      164 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[id="username"]').first()
+
+
+      159 |
+      160 |     // 잘못된 자격 증명
+    > 161 |     await usernameInput.fill('invalidadmin');
+          |                         ^
+      162 |     await passwordInput.fill('wrongpassword');
+      163 |     await loginButton.click();
+      164 |
+        at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/trace.zip]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/test-failed-1.png]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/video.webm]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/error-context.md]]
+
+[[ATTACHMENT|production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

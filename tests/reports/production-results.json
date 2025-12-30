@@ -1,0 +1,1522 @@
+{
+  "config": {
+    "configFile": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/config/playwright.production.config.ts",
+    "rootDir": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "../reports/production-html-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../reports/production-results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "../reports/production-results.xml"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "production-chromium",
+        "name": "production-chromium",
+        "testDir": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.54.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "production-login.spec.ts",
+      "file": "production-login.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "GLI Production - User Frontend Login",
+          "file": "production-login.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load production user login page",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11579,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 24,
+                          "line": 17
+                        },
+                        "snippet": "  15 |\n  16 |     // 페이지 타이틀 확인\n> 17 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  18 |\n  19 |     // 로그인 페이지 요소 확인\n  20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 24,
+                            "line": 17
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n\n  15 |\n  16 |     // 페이지 타이틀 확인\n> 17 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  18 |\n  19 |     // 로그인 페이지 요소 확인\n  20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:09:23.692Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 24,
+                        "line": 17
+                      }
+                    },
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11743,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 24,
+                          "line": 17
+                        },
+                        "snippet": "  15 |\n  16 |     // 페이지 타이틀 확인\n> 17 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  18 |\n  19 |     // 로그인 페이지 요소 확인\n  20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 24,
+                            "line": 17
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n\n  15 |\n  16 |     // 페이지 타이틀 확인\n> 17 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  18 |\n  19 |     // 로그인 페이지 요소 확인\n  20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-29T13:09:37.432Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 24,
+                        "line": 17
+                      }
+                    },
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11751,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 24,
+                          "line": 17
+                        },
+                        "snippet": "  15 |\n  16 |     // 페이지 타이틀 확인\n> 17 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  18 |\n  19 |     // 로그인 페이지 요소 확인\n  20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 24,
+                            "line": 17
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n\n  15 |\n  16 |     // 페이지 타이틀 확인\n> 17 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  18 |\n  19 |     // 로그인 페이지 요소 확인\n  20 |     await expect(page.locator('h1, h2').filter({ hasText: /로그인|Login/i })).toBeVisible({ timeout: 10000 });\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:17:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-12-29T13:09:50.932Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-46a9f--production-user-login-page-production-chromium-retry2/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 24,
+                        "line": 17
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-bae70bb579ccab2987d5",
+              "file": "production-login.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "should login to production user frontend with valid credentials",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 13053,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 30,
+                          "line": 35
+                        },
+                        "snippet": "  33 |\n  34 |     // 폼 요소가 보이는지 확인\n> 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });\n     |                              ^\n  36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  38 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 30,
+                            "line": 35
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n\n\n  33 |\n  34 |     // 폼 요소가 보이는지 확인\n> 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });\n     |                              ^\n  36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  38 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:10:03.919Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 30,
+                        "line": 35
+                      }
+                    },
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12181,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 30,
+                          "line": 35
+                        },
+                        "snippet": "  33 |\n  34 |     // 폼 요소가 보이는지 확인\n> 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });\n     |                              ^\n  36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  38 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 30,
+                            "line": 35
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n\n\n  33 |\n  34 |     // 폼 요소가 보이는지 확인\n> 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });\n     |                              ^\n  36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  38 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-29T13:10:18.246Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 30,
+                        "line": 35
+                      }
+                    },
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12189,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 30,
+                          "line": 35
+                        },
+                        "snippet": "  33 |\n  34 |     // 폼 요소가 보이는지 확인\n> 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });\n     |                              ^\n  36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  38 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 30,
+                            "line": 35
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"], input[id*=\"email\"], input[placeholder*=\"이메일\"]').first()\u001b[22m\n\n\n  33 |\n  34 |     // 폼 요소가 보이는지 확인\n> 35 |     await expect(emailInput).toBeVisible({ timeout: 10000 });\n     |                              ^\n  36 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  37 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  38 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:35:30"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-12-29T13:10:31.900Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-0994d-tend-with-valid-credentials-production-chromium-retry2/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 30,
+                        "line": 35
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-7c5d816ec50b629c3da0",
+              "file": "production-login.spec.ts",
+              "line": 23,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "GLI Production - Admin Frontend Login",
+          "file": "production-login.spec.ts",
+          "line": 55,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load production admin login page",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12303,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 24,
+                          "line": 60
+                        },
+                        "snippet": "  58 |\n  59 |     // 페이지 타이틀 확인\n> 60 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  61 |\n  62 |     // 관리자 로그인 페이지 요소 확인\n  63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 24,
+                            "line": 60
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n\n  58 |\n  59 |     // 페이지 타이틀 확인\n> 60 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  61 |\n  62 |     // 관리자 로그인 페이지 요소 확인\n  63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:10:45.370Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 24,
+                        "line": 60
+                      }
+                    },
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12017,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 24,
+                          "line": 60
+                        },
+                        "snippet": "  58 |\n  59 |     // 페이지 타이틀 확인\n> 60 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  61 |\n  62 |     // 관리자 로그인 페이지 요소 확인\n  63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 24,
+                            "line": 60
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n\n  58 |\n  59 |     // 페이지 타이틀 확인\n> 60 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  61 |\n  62 |     // 관리자 로그인 페이지 요소 확인\n  63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-29T13:10:59.196Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 24,
+                        "line": 60
+                      }
+                    },
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11894,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 24,
+                          "line": 60
+                        },
+                        "snippet": "  58 |\n  59 |     // 페이지 타이틀 확인\n> 60 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  61 |\n  62 |     // 관리자 로그인 페이지 요소 확인\n  63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 24,
+                            "line": 60
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/GLI/\u001b[39m\nReceived string:  \u001b[31m\"\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"\"\u001b[22m\n\n\n  58 |\n  59 |     // 페이지 타이틀 확인\n> 60 |     await expect(page).toHaveTitle(/GLI/);\n     |                        ^\n  61 |\n  62 |     // 관리자 로그인 페이지 요소 확인\n  63 |     await expect(page.locator('text=/관리자|Admin/i')).toBeVisible({ timeout: 10000 });\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:60:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-12-29T13:11:12.656Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-d6fcd-production-admin-login-page-production-chromium-retry2/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 24,
+                        "line": 60
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-9e916ef74f0038c61b1e",
+              "file": "production-login.spec.ts",
+              "line": 56,
+              "column": 7
+            },
+            {
+              "title": "should login to production admin frontend with valid credentials",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12199,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 33,
+                          "line": 78
+                        },
+                        "snippet": "  76 |\n  77 |     // 폼 요소가 보이는지 확인\n> 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });\n     |                                 ^\n  79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  81 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 33,
+                            "line": 78
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n\n\n  76 |\n  77 |     // 폼 요소가 보이는지 확인\n> 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });\n     |                                 ^\n  79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  81 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:11:25.887Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 33,
+                        "line": 78
+                      }
+                    },
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12358,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 33,
+                          "line": 78
+                        },
+                        "snippet": "  76 |\n  77 |     // 폼 요소가 보이는지 확인\n> 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });\n     |                                 ^\n  79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  81 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 33,
+                            "line": 78
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n\n\n  76 |\n  77 |     // 폼 요소가 보이는지 확인\n> 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });\n     |                                 ^\n  79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  81 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-29T13:11:39.741Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 33,
+                        "line": 78
+                      }
+                    },
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12788,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 33,
+                          "line": 78
+                        },
+                        "snippet": "  76 |\n  77 |     // 폼 요소가 보이는지 확인\n> 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });\n     |                                 ^\n  79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  81 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 33,
+                            "line": 78
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[id=\"username\"], input[name=\"username\"], input[type=\"text\"]').first()\u001b[22m\n\n\n  76 |\n  77 |     // 폼 요소가 보이는지 확인\n> 78 |     await expect(usernameInput).toBeVisible({ timeout: 10000 });\n     |                                 ^\n  79 |     await expect(passwordInput).toBeVisible({ timeout: 10000 });\n  80 |     await expect(loginButton).toBeVisible({ timeout: 10000 });\n  81 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:78:33"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-12-29T13:11:53.665Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-4ddc0-tend-with-valid-credentials-production-chromium-retry2/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 33,
+                        "line": 78
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-8204ce1c201c668befd2",
+              "file": "production-login.spec.ts",
+              "line": 66,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "GLI Staging - Django Admin Login",
+          "file": "production-login.spec.ts",
+          "line": 98,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load staging Django admin login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 720,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:12:07.980Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-aec5d4fbe092f1e3bb06",
+              "file": "production-login.spec.ts",
+              "line": 99,
+              "column": 7
+            },
+            {
+              "title": "should login to staging Django admin with valid credentials",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11904,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 60,
+                          "line": 128
+                        },
+                        "snippet": "  126 |     // 로그인 성공 후 Django Admin 페이지 확인\n  127 |     await expect(page).toHaveURL(/.*\\/admin\\//);\n> 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });\n      |                                                            ^\n  129 |   });\n  130 | });\n  131 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 60,
+                            "line": 128
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n\n\n  126 |     // 로그인 성공 후 Django Admin 페이지 확인\n  127 |     await expect(page).toHaveURL(/.*\\/admin\\//);\n> 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });\n      |                                                            ^\n  129 |   });\n  130 | });\n  131 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:12:08.996Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 60,
+                        "line": 128
+                      }
+                    },
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11676,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 60,
+                          "line": 128
+                        },
+                        "snippet": "  126 |     // 로그인 성공 후 Django Admin 페이지 확인\n  127 |     await expect(page).toHaveURL(/.*\\/admin\\//);\n> 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });\n      |                                                            ^\n  129 |   });\n  130 | });\n  131 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 60,
+                            "line": 128
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n\n\n  126 |     // 로그인 성공 후 Django Admin 페이지 확인\n  127 |     await expect(page).toHaveURL(/.*\\/admin\\//);\n> 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });\n      |                                                            ^\n  129 |   });\n  130 | });\n  131 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-29T13:12:21.932Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 60,
+                        "line": 128
+                      }
+                    },
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12562,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 60,
+                          "line": 128
+                        },
+                        "snippet": "  126 |     // 로그인 성공 후 Django Admin 페이지 확인\n  127 |     await expect(page).toHaveURL(/.*\\/admin\\//);\n> 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });\n      |                                                            ^\n  129 |   });\n  130 | });\n  131 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 60,
+                            "line": 128
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=Site administration')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Site administration')\u001b[22m\n\n\n  126 |     // 로그인 성공 후 Django Admin 페이지 확인\n  127 |     await expect(page).toHaveURL(/.*\\/admin\\//);\n> 128 |     await expect(page.locator('text=Site administration')).toBeVisible({ timeout: 10000 });\n      |                                                            ^\n  129 |   });\n  130 | });\n  131 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:128:60"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-12-29T13:12:34.760Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Stagi-7afce-dmin-with-valid-credentials-production-chromium-retry2/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 60,
+                        "line": 128
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-d8e8c370ad408515f8d1",
+              "file": "production-login.spec.ts",
+              "line": 110,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "GLI Production - Error Handling",
+          "file": "production-login.spec.ts",
+          "line": 132,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should show error for invalid user credentials",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17953,
+                      "error": {
+                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n",
+                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 22,
+                          "line": 143
+                        },
+                        "snippet": "  141 |\n  142 |     // 잘못된 자격 증명\n> 143 |     await emailInput.fill('invalid@user.com');\n      |                      ^\n  144 |     await passwordInput.fill('wrongpassword');\n  145 |     await loginButton.click();\n  146 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 22,
+                            "line": 143
+                          },
+                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n\n\n  141 |\n  142 |     // 잘못된 자격 증명\n> 143 |     await emailInput.fill('invalid@user.com');\n      |                      ^\n  144 |     await passwordInput.fill('wrongpassword');\n  145 |     await loginButton.click();\n  146 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:12:49.106Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 22,
+                        "line": 143
+                      }
+                    },
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 18307,
+                      "error": {
+                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n",
+                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 22,
+                          "line": 143
+                        },
+                        "snippet": "  141 |\n  142 |     // 잘못된 자격 증명\n> 143 |     await emailInput.fill('invalid@user.com');\n      |                      ^\n  144 |     await passwordInput.fill('wrongpassword');\n  145 |     await loginButton.click();\n  146 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 22,
+                            "line": 143
+                          },
+                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n\n\n  141 |\n  142 |     // 잘못된 자격 증명\n> 143 |     await emailInput.fill('invalid@user.com');\n      |                      ^\n  144 |     await passwordInput.fill('wrongpassword');\n  145 |     await loginButton.click();\n  146 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-29T13:13:08.445Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 22,
+                        "line": 143
+                      }
+                    },
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17600,
+                      "error": {
+                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n",
+                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 22,
+                          "line": 143
+                        },
+                        "snippet": "  141 |\n  142 |     // 잘못된 자격 증명\n> 143 |     await emailInput.fill('invalid@user.com');\n      |                      ^\n  144 |     await passwordInput.fill('wrongpassword');\n  145 |     await loginButton.click();\n  146 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 22,
+                            "line": 143
+                          },
+                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]').first()\u001b[22m\n\n\n  141 |\n  142 |     // 잘못된 자격 증명\n> 143 |     await emailInput.fill('invalid@user.com');\n      |                      ^\n  144 |     await passwordInput.fill('wrongpassword');\n  145 |     await loginButton.click();\n  146 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:143:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-12-29T13:13:27.951Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-758e9-or-invalid-user-credentials-production-chromium-retry2/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 22,
+                        "line": 143
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-6401d7f5f69606ccbad1",
+              "file": "production-login.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "should show error for invalid admin credentials",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-chromium",
+                  "projectName": "production-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17484,
+                      "error": {
+                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n",
+                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 25,
+                          "line": 161
+                        },
+                        "snippet": "  159 |\n  160 |     // 잘못된 자격 증명\n> 161 |     await usernameInput.fill('invalidadmin');\n      |                         ^\n  162 |     await passwordInput.fill('wrongpassword');\n  163 |     await loginButton.click();\n  164 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 25,
+                            "line": 161
+                          },
+                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n\n\n  159 |\n  160 |     // 잘못된 자격 증명\n> 161 |     await usernameInput.fill('invalidadmin');\n      |                         ^\n  162 |     await passwordInput.fill('wrongpassword');\n  163 |     await loginButton.click();\n  164 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-29T13:13:47.576Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 25,
+                        "line": 161
+                      }
+                    },
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17664,
+                      "error": {
+                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n",
+                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 25,
+                          "line": 161
+                        },
+                        "snippet": "  159 |\n  160 |     // 잘못된 자격 증명\n> 161 |     await usernameInput.fill('invalidadmin');\n      |                         ^\n  162 |     await passwordInput.fill('wrongpassword');\n  163 |     await loginButton.click();\n  164 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 25,
+                            "line": 161
+                          },
+                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n\n\n  159 |\n  160 |     // 잘못된 자격 증명\n> 161 |     await usernameInput.fill('invalidadmin');\n      |                         ^\n  162 |     await passwordInput.fill('wrongpassword');\n  163 |     await loginButton.click();\n  164 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-29T13:14:06.955Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 25,
+                        "line": 161
+                      }
+                    },
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17614,
+                      "error": {
+                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n",
+                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25",
+                        "location": {
+                          "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                          "column": 25,
+                          "line": 161
+                        },
+                        "snippet": "  159 |\n  160 |     // 잘못된 자격 증명\n> 161 |     await usernameInput.fill('invalidadmin');\n      |                         ^\n  162 |     await passwordInput.fill('wrongpassword');\n  163 |     await loginButton.click();\n  164 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                            "column": 25,
+                            "line": 161
+                          },
+                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[id=\"username\"]').first()\u001b[22m\n\n\n  159 |\n  160 |     // 잘못된 자격 증명\n> 161 |     await usernameInput.fill('invalidadmin');\n      |                         ^\n  162 |     await passwordInput.fill('wrongpassword');\n  163 |     await loginButton.click();\n  164 |\n    at /Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts:161:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-12-29T13:14:26.519Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/reports/production-artifacts/production-login-GLI-Produ-a3c1f-r-invalid-admin-credentials-production-chromium-retry2/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/ahndonghyun/dongfiles/ADHcode/DreamFurnace/gli_root/tests/e2e/production/production-login.spec.ts",
+                        "column": 25,
+                        "line": 161
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "511b8bf9cfcd9d360515-4eda34710e18643bbb01",
+              "file": "production-login.spec.ts",
+              "line": 151,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-29T13:09:22.743Z",
+    "duration": 321874.047,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 7,
+    "flaky": 0
+  }
+}
