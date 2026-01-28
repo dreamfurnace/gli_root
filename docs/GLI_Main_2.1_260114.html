@@ -1,0 +1,1123 @@
+<!-- 
+    GLI Main Landing Page V7.8
+    - 업데이트: 다국어 선택 메뉴 확장 (중국어 간/번체, 베트남, 태국, 인도네시아 추가)
+    - 특징: 글로벌 사용자 대응을 위한 다국어 UI 지원
+-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLI | RWA Asset Platform</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard"', '"Noto Sans KR"', 'sans-serif'],
+                        mono: ['"Rajdhani"', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 850: '#0f172a', 900: '#020617', 950: '#010409' },
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#080c14'
+                        },
+                        cyan: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 900: '#164e63' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+                        purple: { 400: '#c084fc', 500: '#a855f7', 600: '#9333ea' },
+                        primary: '#3b82f6',
+                        accent: '#a855f7',
+                        bgDark: '#080c14',
+                    },
+                    backgroundImage: {
+                        'tech-gradient': 'linear-gradient(135deg, #0f172a 0%, #020617 100%)',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: radial-gradient(circle at top right, #0f172a 0%, #080c14 100%);
+            color: #e2e8f0;
+            scroll-behavior: smooth;
+        }
+
+        .gradient-border {
+            position: relative;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .gradient-border::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), transparent, rgba(168, 85, 247, 0.5));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 50%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
+        }
+
+        .nav-blur {
+            background: rgba(8, 12, 20, 0.85);
+            backdrop-filter: blur(16px);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .token-card {
+            transition: all 0.3s ease;
+        }
+        .token-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .dropdown-container {
+            position: relative;
+            padding: 10px 0;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(10, 15, 25, 0.98);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            z-index: 50;
+        }
+
+        .dropdown-container:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0px);
+        }
+
+        .lang-container:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 10px 16px;
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .dropdown-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: white;
+            padding-left: 20px;
+        }
+
+        #walletModal, #videoModal {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        #walletModal.active, #videoModal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #walletModal.active .modal-content, #videoModal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .wallet-option {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .wallet-option:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .wallet-icon-box {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .unread-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; position: absolute; top: 0; right: 0; border: 2px solid #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        .news-card, .partner-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(15, 23, 42, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .news-card:hover, .partner-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .segment-img-box {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .segment-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .bg-navy-900:hover .segment-img-box img {
+            transform: scale(1.1);
+        }
+
+        .progress-glow {
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+        }
+        .progress-glow-purple {
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+        }
+        .progress-glow-cyan {
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
+        }
+
+        .donut-chart-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--segment1) 0deg var(--deg1),
+                var(--segment2) var(--deg1) var(--deg2),
+                var(--segment3) var(--deg2) var(--deg3),
+                var(--segment4) var(--deg3) 360deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        }
+        
+        .donut-chart-container::after {
+            content: "";
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background: #0f172a;
+            border-radius: 50%;
+        }
+
+        .donut-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .chart-glib {
+            --segment1: #22c55e;
+            --deg1: 252deg;
+            --segment2: #64748b;
+            --deg2: 324deg;
+            --segment3: #3b82f6;
+            --deg3: 360deg;
+            --segment4: transparent; 
+        }
+
+        .chart-glid {
+            --segment1: #3b82f6;
+            --deg1: 144deg;
+            --segment2: #a855f7;
+            --deg2: 216deg;
+            --segment3: #64748b;
+            --deg3: 270deg;
+            --segment4: #334155;
+        }
+
+        /* View More Button Style */
+        .view-more-btn {
+            display: inline-flex;
+            align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.02); color: #94a3b8; transition: all 0.3s ease;
+        }
+
+        .news-card:hover .view-more-btn {
+            color: white; border-color: var(--hover-color, #3b82f6); background: var(--hover-bg, rgba(59, 130, 246, 0.1));
+        }
+
+        .news-card:hover .view-more-btn i {
+            transform: translateX(4px);
+        }
+
+        .sns-icon-btn {
+            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); color: #94a3b8; font-size: 20px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .sns-icon-btn:hover {
+            transform: translateY(-5px); color: white;
+        }
+        
+        .sns-icon-btn.telegram:hover { background: #0088cc; border-color: #0088cc; box-shadow: 0 10px 20px rgba(0, 136, 204, 0.3); }
+        .sns-icon-btn.x:hover { background: #000000; border-color: #333333; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); }
+        .sns-icon-btn.discord:hover { background: #5865F2; border-color: #5865F2; box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3); }
+
+        .asset-card {
+            transition: all 0.4s ease;
+        }
+        .asset-card:hover {
+            transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-500/30" onclick="closeMenus(event)">
+
+    <!-- 지갑 연결 모달 -->
+    <div id="walletModal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+        <div class="modal-content w-full max-w-md bg-navy-950 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white">지갑 연결</h3>
+                <button onclick="closeWalletModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-gray-400 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-8 space-y-4">
+                <p class="text-gray-400 text-sm mb-6 text-center">원하시는 지갑 서비스를 선택해주세요.</p>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('Trust Wallet')">
+                    <div class="flex items-center gap-4">
+                        <div class="wallet-icon-box"><i class="fas fa-shield-alt text-blue-500 text-xl"></i></div>
+                        <span class="font-bold text-white tracking-tight">Trust Wallet</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-blue-400"></i>
+                </button>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('MetaMask')">
+                    <div class="flex items-center gap-4">
+                        <div class="wallet-icon-box"><i class="fas fa-mask text-orange-500 text-xl"></i></div>
+                        <span class="font-bold text-white tracking-tight">MetaMask</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-orange-400"></i>
+                </button>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('Phantom')">
+                    <div class="flex items-center gap-4">
+                        <div class="wallet-icon-box"><i class="fas fa-ghost text-purple-400 text-xl"></i></div>
+                        <span class="font-bold text-white tracking-tight">Phantom Wallet</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-purple-400"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 비디오 모달 -->
+    <div id="videoModal" class="fixed inset-0 z-[250] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10 modal-content">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors border border-white/10">
+                <i class="ph-bold ph-x text-xl"></i>
+            </button>
+            <iframe id="promoVideoFrame" class="w-full h-full" src="" title="GLI Promotion Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- 네비게이션 바 -->
+    <nav class="fixed w-full z-[100] nav-blur border-b border-white/5 transition-all duration-300">
+        <div class="max-w-[1600px] mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-3xl font-black tracking-tighter text-white font-mono">GLI</a>
+            </div>
+
+            <div class="flex items-center gap-10">
+                <div class="hidden lg:flex items-center gap-2 text-[14px] font-medium text-gray-400">
+                    <div class="dropdown-container px-4">
+                        <a href="#assets" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1">투자 자산목록 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">국가별</a>
+                            <a href="#" class="dropdown-link">레저</a>
+                            <a href="#" class="dropdown-link">상업</a>
+                            <a href="#" class="dropdown-link">주거</a>
+                            <a href="#" class="dropdown-link">프로젝트</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#pointmall" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1">포인트몰 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">소셜카지노</a>
+                            <a href="#" class="dropdown-link">레저상품</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#guide" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1">안내센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">공지</a>
+                            <a href="#" class="dropdown-link">가이드</a>
+                            <a href="#" class="dropdown-link">뉴스</a>
+                            <a href="#" class="dropdown-link">파트너스</a>
+                            <a href="#" class="dropdown-link">Docs</a>
+                            <a href="#" class="dropdown-link">FAQs</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#hub" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1">기능센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">토큰구입</a>
+                            <a href="#" class="dropdown-link">토큰교환</a>
+                            <a href="#" class="dropdown-link">레퍼럴</a>
+                            <a href="#" class="dropdown-link">DAO</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pl-6 border-l border-white/10">
+                    <button id="wallet-btn" onclick="openWalletModal()" class="px-5 py-2.5 bg-navy-900 border border-white/10 hover:bg-navy-800 text-white rounded-xl text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                        <span id="wallet-status-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+                        <span id="wallet-btn-text">Connect Wallet</span>
+                    </button>
+
+                    <div class="hidden sm:flex items-center gap-3 relative font-bold font-sans">
+                        <div class="text-right font-bold mr-2">
+                            <div class="text-sm font-bold text-white uppercase tracking-wide">GUEST</div>
+                            <div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="user-level-text">Lv.1 ACCESS</div>
+                        </div>
+                        
+                        <!-- 마이페이지 프로필 메뉴 -->
+                        <div class="relative h-full flex items-center font-bold">
+                            <button onclick="toggleProfileMenu(event)" class="w-10 h-10 rounded-full bg-navy-900 border-2 border-slate-700 transition-colors shadow-none relative flex items-center justify-center overflow-hidden" id="avatar-container">
+                                <div id="avatar-img-box" class="w-full h-full rounded-full overflow-hidden hidden">
+                                    <img src="https://ui-avatars.com/api/?name=User&background=0f172a&color=cbd5e1" class="w-full h-full object-cover">
+                                </div>
+                                <div id="avatar-text-box" class="w-full h-full flex items-center justify-center text-[13px] font-black text-slate-300 uppercase">GU</div>
+                                <div class="absolute -bottom-1 -right-1 bg-navy-950 text-slate-400 text-[10px] font-bold px-1 py-0.5 rounded-full border border-slate-800 shadow-md z-10 font-bold" id="level-badge">1</div>
+                            </button>
+                            
+                            <div id="profile-menu" class="absolute right-0 top-14 w-52 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in font-sans">
+                                <div class="py-1">
+                                    <div class="px-4 py-2 border-b border-white/5 text-[10px] text-slate-500 font-bold uppercase tracking-widest">My Account</div>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-user-circle text-lg text-cyan-500"></i> 마이페이지</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-list-bullets text-lg text-blue-400"></i> 자산목록</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-shopping-cart-simple text-lg text-emerald-400"></i> 장바구니</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-arrows-left-right text-lg text-purple-400"></i> 거래내역</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-shield-check text-lg text-gold-500"></i> 인증센터</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-gear-six text-lg text-slate-400"></i> 설정</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-[11px] font-black text-red-400 hover:bg-red-500/10 border-t border-white/5 transition uppercase font-bold"><i class="ph-fill ph-sign-out text-lg"></i> 로그아웃</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 알림 아이콘 -->
+                        <div class="relative font-bold">
+                            <button onclick="toggleNotification(event)" class="flex items-center justify-center w-10 h-10 rounded-full bg-navy-900/50 hover:bg-navy-900 text-slate-400 transition border border-white/10 relative font-bold" id="noti-btn">
+                                <i class="ph-fill ph-bell text-xl font-bold"></i>
+                                <span class="unread-dot" id="noti-unread-indicator"></span>
+                            </button>
+                            <div id="noti-panel" class="absolute right-0 top-14 w-80 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in font-sans">
+                                <div class="px-4 py-3 bg-navy-950 border-b border-white/5 flex justify-between items-center">
+                                    <span class="text-xs font-bold text-white uppercase tracking-widest font-mono font-bold">Notifications</span>
+                                    <button onclick="markAllNotificationsRead()" class="text-[10px] text-cyan-400 font-bold underline">전체 읽음</button>
+                                </div>
+                                <div id="noti-list" class="max-h-64 overflow-y-auto custom-scrollbar p-4 text-xs text-slate-400 font-bold">신규 알림이 없습니다.</div>
+                            </div>
+                        </div>
+
+                        <!-- 언어 선택 아이콘 (업데이트됨) -->
+                        <div class="lang-container relative font-bold">
+                            <button class="flex items-center justify-center w-10 h-10 rounded-full bg-navy-900/50 hover:bg-navy-900 text-slate-400 transition border border-white/10 relative font-bold">
+                                <i class="ph-fill ph-globe text-xl font-bold"></i>
+                            </button>
+                            <div class="lang-dropdown absolute right-0 top-full mt-2 w-44 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden opacity-0 visibility-hidden transition-all duration-300 translate-y-2 z-50 font-sans">
+                                <div class="py-1">
+                                    <button onclick="changeLang('ko')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 한국어
+                                    </button>
+                                    <button onclick="changeLang('en')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> English
+                                    </button>
+                                    <button onclick="changeLang('zh-hans')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> 简体中文 (중국어 간체)
+                                    </button>
+                                    <button onclick="changeLang('zh-hant')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> 繁體中文 (중국어 번체)
+                                    </button>
+                                    <button onclick="changeLang('vi')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> Tiếng Việt (베트남어)
+                                    </button>
+                                    <button onclick="changeLang('th')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> ภาษาไทย (태국어)
+                                    </button>
+                                    <button onclick="changeLang('id')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> Bahasa Indonesia (인도네시아어)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 히어로 섹션 -->
+    <header class="relative pt-48 pb-20 px-6 overflow-hidden">
+        <div class="hero-glow"></div>
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-8">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    </span>
+                    NEXT GENERATION RWA PLATFORM
+                </div>
+                <h1 class="text-6xl md:text-7xl font-black leading-[1.1] mb-8">
+                    Gateway to the <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Next Lifestyle</span><br>
+                    Economy.
+                </h1>
+                <p class="text-gray-400 text-xl leading-relaxed mb-10 max-w-lg">
+                    GLI는 게임(Game), 레저(Leisure), 실물 투자(Investment)를 연결하는 Web3 종합 플랫폼입니다. 실물 자산 기반의 견고한 수익 구조를 경험하세요.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="https://docs.google.com/document/d/1diDPBL620UrVAjvVJSofZzM_ehSU4ZLnmppgipgeIck/edit?tab=t.0" target="_blank" class="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center">Docs</a>
+                    <button onclick="openVideoModal()" class="px-8 py-4 bg-navy-900 border border-white/10 font-bold rounded-2xl hover:bg-navy-800 transition-all flex items-center gap-2">
+                        <i class="fas fa-play text-xs"></i> 홍보 영상 보기
+                    </button>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="animate-float">
+                    <div class="gradient-border p-8 backdrop-blur-3xl relative z-10">
+                        <div class="flex justify-between items-center mb-10">
+                            <div class="text-sm font-bold opacity-60 uppercase tracking-widest">Portfolio Value</div>
+                            <div class="text-green-400 text-sm font-bold">+12.5%</div>
+                        </div>
+                        <div class="text-5xl font-black mb-8">$420.8M <span class="text-lg font-normal text-gray-500">USD</span></div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between p-4 bg-white/5 rounded-xl">
+                                <span>레저</span>
+                                <span class="font-bold text-blue-400">45%</span>
+                            </div>
+                            <div class="flex justify-between p-4 bg-white/5 rounded-xl">
+                                <span>상업</span>
+                                <span class="font-bold text-purple-400">25%</span>
+                            </div>
+                            <div class="flex justify-between p-4 bg-white/5 rounded-xl">
+                                <span>주거</span>
+                                <span class="font-bold text-pink-400">18%</span>
+                            </div>
+                            <div class="flex justify-between p-4 bg-white/5 rounded-xl">
+                                <span>프로젝트</span>
+                                <span class="font-bold text-cyan-400">12%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600/20 rounded-full blur-[80px]"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 비즈니스 세그먼트 -->
+    <section id="about" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto text-center mb-20">
+            <h2 class="text-4xl font-bold mb-6 text-white">Our Business Segments</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">글로벌 호텔, 리조트, 골프장 및 고성장 소셜 게이밍 시장까지 아우르는 순환형 생태계</p>
+        </div>
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+            <div class="p-1 border border-white/5 rounded-[32px] bg-gradient-to-b from-white/10 to-transparent transition-all hover:scale-[1.02]">
+                <div class="bg-navy-900 rounded-[28px] p-8 h-full">
+                    <div class="segment-img-box">
+                        <img src="https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&q=80&w=800" alt="Casino Concept">
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white uppercase tracking-tight">GAME</h3>
+                    <p class="text-gray-500 leading-relaxed text-sm">참여와 보상이 공존하는 소셜 게이밍 환경 구축. Web3 기반의 투명한 보상 체계를 제공합니다.</p>
+                </div>
+            </div>
+            <div class="p-1 border border-white/5 rounded-[32px] bg-gradient-to-b from-white/10 to-transparent transition-all hover:scale-[1.02]">
+                <div class="bg-navy-900 rounded-[28px] p-8 h-full">
+                    <div class="segment-img-box">
+                        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=800" alt="Leisure Concept">
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white uppercase tracking-tight">LEISURE</h3>
+                    <p class="text-gray-500 leading-relaxed text-sm">글로벌 호텔 및 리조트 체인과의 파트너십. GLI 토큰 홀더만을 위한 독점적인 오프라인 혜택을 제공합니다.</p>
+                </div>
+            </div>
+            <div class="p-1 border border-white/5 rounded-[32px] bg-gradient-to-b from-white/10 to-transparent transition-all hover:scale-[1.02]">
+                <div class="bg-navy-900 rounded-[28px] p-8 h-full">
+                    <div class="segment-img-box">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800" alt="Investment Concept">
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white uppercase tracking-tight">INVESTMENT</h3>
+                    <p class="text-gray-500 leading-relaxed text-sm">검증된 실물 자산(RWA) 기반 투자 플랫폼. 해외 부동산 및 상업 시설 수익을 디지털화합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 투자 자산 섹션 -->
+    <section id="assets" class="py-32 px-6">
+        <div class="max-w-[1600px] mx-auto">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <h2 class="text-4xl font-bold mb-4 italic uppercase tracking-tight text-white">Investment Assets</h2>
+                    <p class="text-gray-500 font-medium">현재 운영 및 진행 중인 핵심 사업 부지 현황</p>
+                </div>
+                <a href="#" class="group flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-blue-600 hover:border-blue-500 transition-all duration-300">
+                    <span class="text-sm font-bold text-gray-300 group-hover:text-white">자산 전체보기</span>
+                    <i class="ph-bold ph-arrow-right text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 자산 1: Khlaeng Meas 1 Hotel -->
+                <div class="asset-card group relative bg-navy-900 rounded-[40px] p-5 border border-white/5 hover:border-blue-500/30">
+                    <div class="asset-img-container relative h-64 w-full bg-navy-950 rounded-[32px] mb-6 overflow-hidden">
+                         <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1600" alt="Khlaeng Meas 1 Hotel" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105 duration-700">
+                         <div class="absolute inset-0 bg-gradient-to-t from-navy-950/80 to-transparent"></div>
+                    </div>
+                    <div class="px-2">
+                        <div class="flex flex-col gap-4 mb-6">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-xl font-bold text-white leading-tight">Khlaeng Meas 1 Hotel</h3>
+                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-blue-500/20">Operational</span>
+                            </div>
+                            <div class="space-y-2.5 p-4 bg-black/20 rounded-2xl border border-white/5">
+                                <div class="flex justify-between items-end">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph-bold ph-chart-line-up text-blue-400 text-sm"></i>
+                                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-widest">Funding</span>
+                                    </div>
+                                    <div class="text-lg font-black text-white font-mono leading-none">65%</div>
+                                </div>
+                                <div class="relative w-full h-2 bg-navy-950 rounded-full overflow-hidden p-[1px]">
+                                    <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full progress-glow" style="width: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 leading-relaxed line-clamp-3">시아누크빌 중심가에 위치한 중형 호텔 매입 및 임대 운용 자산입니다. 중국인 VIP 방문객 증가에 따른 꾸준한 수요가 확보되어 있습니다.</p>
+                        <div class="grid grid-cols-2 gap-3 text-white text-xs">
+                            <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+                                <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">Type</div>
+                                <div class="font-bold">중형 호텔</div>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+                                <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">Region</div>
+                                <div class="font-bold">시아누크빌</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 자산 2: Star Bay Residences -->
+                <div class="asset-card group relative bg-navy-900 rounded-[40px] p-5 border border-white/5 hover:border-purple-500/30">
+                    <div class="asset-img-container relative h-64 w-full bg-navy-950 rounded-[32px] mb-6 overflow-hidden">
+                         <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1600" alt="Star Bay Residences" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105 duration-700">
+                         <div class="absolute inset-0 bg-gradient-to-t from-navy-950/80 to-transparent"></div>
+                    </div>
+                    <div class="px-2">
+                        <div class="flex flex-col gap-4 mb-6">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-xl font-bold text-white leading-tight">Star Bay Residences</h3>
+                                <span class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-purple-500/20">Pre-Sale</span>
+                            </div>
+                            <div class="space-y-2.5 p-4 bg-black/20 rounded-2xl border border-white/5">
+                                <div class="flex justify-between items-end">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph-bold ph-chart-line-up text-purple-400 text-sm"></i>
+                                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-widest">Funding</span>
+                                    </div>
+                                    <div class="text-lg font-black text-white font-mono leading-none">35%</div>
+                                </div>
+                                <div class="relative w-full h-2 bg-navy-950 rounded-full overflow-hidden p-[1px]">
+                                    <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full progress-glow-purple" style="width: 35%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 leading-relaxed line-clamp-3">콘도미니엄, 레지던스 호텔, 리테일 상가가 복합된 대규모 항만 중심가 랜드마크입니다. 공항 인프라 확장 지역의 핵심 요충지입니다.</p>
+                        <div class="grid grid-cols-2 gap-3 text-white text-xs">
+                            <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+                                <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">Type</div>
+                                <div class="font-bold">복합 레지던스</div>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+                                <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">Region</div>
+                                <div class="font-bold">항만구역</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 자산 3: Glory Bay Resort -->
+                <div class="asset-card group relative bg-navy-900 rounded-[40px] p-5 border border-white/5 hover:border-cyan-500/30">
+                    <div class="asset-img-container relative h-64 w-full bg-navy-950 rounded-[32px] mb-6 overflow-hidden">
+                         <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1600" alt="Glory Bay Resort" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105 duration-700">
+                         <div class="absolute inset-0 bg-gradient-to-t from-navy-950/80 to-transparent"></div>
+                    </div>
+                    <div class="px-2">
+                        <div class="flex flex-col gap-4 mb-6">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-xl font-bold text-white leading-tight">Glory Bay Resort</h3>
+                                <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-cyan-500/20">Planning</span>
+                            </div>
+                            <div class="space-y-2.5 p-4 bg-black/20 rounded-2xl border border-white/5">
+                                <div class="flex justify-between items-end">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph-bold ph-chart-line-up text-cyan-400 text-sm"></i>
+                                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-widest">Funding</span>
+                                    </div>
+                                    <div class="text-lg font-black text-white font-mono leading-none">12%</div>
+                                </div>
+                                <div class="relative w-full h-2 bg-navy-950 rounded-full overflow-hidden p-[1px]">
+                                    <div class="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 rounded-full progress-glow-cyan" style="width: 12%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 leading-relaxed line-clamp-3">프라이빗 비치를 소유한 럭셔리 리조트 및 카지노 복합 단지 개발 프로젝트입니다. 고액 자산가(VVIP)를 위한 맞춤형 휴양 시설을 지향합니다.</p>
+                        <div class="grid grid-cols-2 gap-3 text-white text-xs">
+                            <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+                                <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">Type</div>
+                                <div class="font-bold">럭셔리 리조트</div>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+                                <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">Region</div>
+                                <div class="font-bold">베이 사이드</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 토큰 이코노미 -->
+    <section id="tokens" class="py-32 px-6 bg-gradient-to-b from-transparent to-blue-900/10">
+        <div class="max-w-7xl mx-auto text-center mb-24">
+            <h2 class="text-5xl font-black mb-6 italic uppercase tracking-tighter text-white">Tokenomics</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">투명한 거버넌스와 실물 자산 수익 공유를 위한 듀얼 토큰 경제</p>
+        </div>
+
+        <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-8 text-white">
+            <!-- GLIB 카드 -->
+            <div class="token-card group relative p-8 bg-navy-900 border border-green-500/20 rounded-[32px] overflow-hidden hover:border-green-500 transition-all shadow-2xl flex flex-col items-center">
+                <div class="absolute top-6 left-6 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-green-600 flex items-center justify-center text-white font-black text-sm">B</div>
+                    <span class="text-lg font-black font-mono">GLIB</span>
+                </div>
+                <div class="absolute top-6 right-6 text-[10px] text-green-400 font-bold uppercase tracking-widest border border-green-500/30 px-3 py-1 rounded-full">Dividend</div>
+                <div class="mt-12 mb-8 relative">
+                    <div class="donut-chart-container chart-glib">
+                        <div class="donut-content">
+                            <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Asset Yield</div>
+                            <div class="text-2xl font-black text-green-400">70%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full grid grid-cols-2 gap-4 text-xs mb-8">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span class="text-gray-400">Dividends <span class="text-white font-bold ml-1">70%</span></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-slate-500"></div>
+                        <span class="text-gray-400">Ops Cost <span class="text-white font-bold ml-1">20%</span></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <span class="text-gray-400">Buyback <span class="text-white font-bold ml-1">10%</span></span>
+                    </div>
+                </div>
+                <div class="w-full space-y-4 bg-black/20 p-6 rounded-2xl border border-white/5 text-center">
+                    <div class="text-[10px] text-gray-500 font-bold uppercase mb-2">Backing Asset</div>
+                    <div class="text-sm text-gray-300 font-medium">Casinos & Luxury Resorts Revenue</div>
+                </div>
+            </div>
+
+            <!-- GLID 카드 -->
+            <div class="token-card group relative p-8 bg-navy-900 border border-blue-500/20 rounded-[32px] overflow-hidden hover:border-blue-500 transition-all shadow-2xl flex flex-col items-center">
+                <div class="absolute top-6 left-6 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-sm">D</div>
+                    <span class="text-lg font-black font-mono">GLID</span>
+                </div>
+                <div class="absolute top-6 right-6 text-[10px] text-blue-400 font-bold uppercase tracking-widest border border-blue-500/30 px-3 py-1 rounded-full">Governance</div>
+                <div class="mt-12 mb-8 relative">
+                    <div class="donut-chart-container chart-glid">
+                        <div class="donut-content">
+                            <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Total Supply</div>
+                            <div class="text-2xl font-black text-white">1.0B</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full grid grid-cols-2 gap-4 text-xs mb-8">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <span class="text-gray-400">Ecosystem <span class="text-white font-bold ml-1">40%</span></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                        <span class="text-gray-400">Public Sale <span class="text-white font-bold ml-1">20%</span></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-slate-500"></div>
+                        <span class="text-gray-400">Team <span class="text-white font-bold ml-1">15%</span></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-slate-700"></div>
+                        <span class="text-gray-400">Treasury <span class="text-white font-bold ml-1">25%</span></span>
+                    </div>
+                </div>
+                <div class="w-full space-y-4 bg-black/20 p-6 rounded-2xl border border-white/5 text-center">
+                    <div class="text-[10px] text-gray-500 font-bold uppercase mb-2">Utility</div>
+                    <div class="text-sm text-gray-300 font-medium">DAO Voting & Platform Ecosystem</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 로드맵 -->
+    <section id="guide" class="py-32 px-6">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl font-black text-center mb-24 uppercase tracking-tighter italic text-white">Strategic Roadmap</h2>
+            <div class="relative">
+                <div class="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-blue-500/50 via-purple-500/50 to-transparent hidden md:block"></div>
+                <div class="space-y-32">
+                    <div class="relative grid md:grid-cols-2 gap-16 items-center">
+                        <div class="md:text-right">
+                            <h3 class="text-5xl font-black text-blue-500 mb-4 tracking-tighter drop-shadow-[0_0_10px_rgba(59,130,246,0.2)]">PHASE 01</h3>
+                            <h4 class="text-2xl font-bold mb-4 italic text-white">Setup</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed">플랫폼 사전 예약 판매 개시. 캄보디아 시아누크빌 자산 확보 및 운영 권한 확보.</p>
+                        </div>
+                        <div class="hidden md:block"></div>
+                    </div>
+                    <div class="relative grid md:grid-cols-2 gap-16 items-center">
+                        <div class="hidden md:block order-1"></div>
+                        <div class="order-2">
+                            <h3 class="text-5xl font-black text-purple-500 mb-4 tracking-tighter drop-shadow-[0_0_10px_rgba(168,85,247,0.2)]">PHASE 02</h3>
+                            <h4 class="text-2xl font-bold mb-4 italic text-white">Ecosystem</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed">디지털 자산 거래소 정식 런칭 및 스테이킹 서비스 개시. 글로벌 파트너십 확장.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 글로벌 파트너 -->
+    <section id="partner" class="py-32 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-4 text-white">Global Partners</h2>
+                    <p class="text-gray-500 font-medium">GLI와 함께 생태계를 만들어가는 글로벌 협력사</p>
+                </div>
+                <a href="#" class="px-6 py-3 bg-navy-900 border border-white/10 rounded-xl text-sm font-bold hover:bg-purple-600 transition-all group flex items-center gap-2 text-white">
+                    View All Partners <i class="ph ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="partner-card group border border-white/5 rounded-[32px] overflow-hidden cursor-pointer">
+                    <div class="relative h-40 overflow-hidden bg-navy-950 flex items-center justify-center p-8">
+                        <div class="text-2xl font-black text-slate-500 group-hover:text-blue-400 transition-colors">PARTNER 01</div>
+                    </div>
+                    <div class="p-6 text-white border-t border-white/5">
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-blue-400 transition-colors">Goddess of Liberty</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed line-clamp-2">글로벌 호텔 및 리조트 운영 전문 그룹</p>
+                    </div>
+                </div>
+                <div class="partner-card group border border-white/5 rounded-[32px] overflow-hidden cursor-pointer">
+                    <div class="relative h-40 overflow-hidden bg-navy-950 flex items-center justify-center p-8">
+                        <div class="text-2xl font-black text-slate-500 group-hover:text-purple-400 transition-colors">PARTNER 02</div>
+                    </div>
+                    <div class="p-6 text-white border-t border-white/5">
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-purple-400 transition-colors">Sihanouk Solution</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed line-clamp-2">현지 블록체인 인프라 통합 솔루션</p>
+                    </div>
+                </div>
+                <div class="partner-card group border border-white/5 rounded-[32px] overflow-hidden cursor-pointer">
+                    <div class="relative h-40 overflow-hidden bg-navy-950 flex items-center justify-center p-8">
+                        <div class="text-2xl font-black text-slate-500 group-hover:text-cyan-400 transition-colors">PARTNER 03</div>
+                    </div>
+                    <div class="p-6 text-white border-t border-white/5">
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-cyan-400 transition-colors">Star Bay Group</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed line-clamp-2">스타베이 레지던스 개발/관리 전문사</p>
+                    </div>
+                </div>
+                <div class="partner-card group border border-white/5 rounded-[32px] overflow-hidden cursor-pointer">
+                    <div class="relative h-40 overflow-hidden bg-navy-950 flex items-center justify-center p-8">
+                        <div class="text-2xl font-black text-slate-500 group-hover:text-emerald-400 transition-colors">PARTNER 04</div>
+                    </div>
+                    <div class="p-6 text-white border-t border-white/5">
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-emerald-400 transition-colors">Global Trust Law</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed line-clamp-2">RWA 디지털화 및 법률 자문사</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 최신 뉴스 -->
+    <section id="news" class="py-32 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-4 text-white">Latest News</h2>
+                    <p class="text-gray-500 font-medium">GLI의 실물 자산 확보 및 생태계 확장 소식</p>
+                </div>
+                <a href="#" class="px-6 py-3 bg-navy-900 border border-white/10 rounded-xl text-sm font-bold hover:bg-blue-600 transition-all group flex items-center gap-2 text-white">
+                    View All News <i class="ph ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 뉴스 1 -->
+                <article class="news-card group border border-white/5 rounded-[32px] overflow-hidden cursor-pointer h-full" style="--hover-color: #3b82f6; --hover-bg: rgba(59, 130, 246, 0.1);">
+                    <div class="relative h-48 overflow-hidden bg-navy-950">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-70">
+                    </div>
+                    <div class="p-8 text-white flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold mb-4 leading-tight group-hover:text-blue-400 transition-colors">시아누크빌 'Star Bay' 핵심 자산 확보</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-8">복합 단지 스타베이 레지던스의 독점 운영권을 확보했습니다.</p>
+                        <div class="mt-auto pt-4">
+                            <button class="view-more-btn">View More <i class="ph ph-arrow-right transition-transform"></i></button>
+                        </div>
+                    </div>
+                </article>
+                <!-- 뉴스 2 -->
+                <article class="news-card group border border-white/5 rounded-[32px] overflow-hidden cursor-pointer h-full" style="--hover-color: #a855f7; --hover-bg: rgba(168, 85, 247, 0.1);">
+                    <div class="relative h-48 overflow-hidden bg-navy-950">
+                        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-70">
+                    </div>
+                    <div class="p-8 text-white flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold mb-4 leading-tight group-hover:text-purple-400 transition-colors">Goddess of Liberty와 멤버십 연동</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-8">토큰 홀더들을 위한 실제 레저 시설 이용 혜택 제공.</p>
+                        <div class="mt-auto pt-4">
+                            <button class="view-more-btn">View More <i class="ph ph-arrow-right transition-transform"></i></button>
+                        </div>
+                    </div>
+                </article>
+                <!-- 뉴스 3 -->
+                <article class="news-card group border border-white/5 rounded-[32px] overflow-hidden cursor-pointer h-full" style="--hover-color: #06b6d4; --hover-bg: rgba(6, 182, 212, 0.1);">
+                    <div class="relative h-48 overflow-hidden bg-navy-950">
+                        <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-70">
+                    </div>
+                    <div class="p-8 text-white flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold mb-4 leading-tight group-hover:text-cyan-400 transition-colors">GLI 디지털 자산 거래소 정식 런칭</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-8">자체 거래소 인프라 구축이 완료되었습니다.</p>
+                        <div class="mt-auto pt-4">
+                            <button class="view-more-btn">View More <i class="ph ph-arrow-right transition-transform"></i></button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="py-24 border-t border-white/5 bg-navy-950 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 text-white">
+            <div class="max-w-xs">
+                <div class="text-3xl font-black mb-8 flex items-center gap-2 tracking-tighter">GLI</div>
+                <p class="text-gray-500 text-sm leading-relaxed mb-8">RWA 기반 실물 자산과 디지털 생태계의 결합을 통해 지속 가능한 투자 가치를 창출합니다.</p>
+            </div>
+            <div class="flex-grow flex flex-col items-center justify-center">
+                <h5 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Join Our Community</h5>
+                <div class="flex gap-4">
+                    <a href="#" class="sns-icon-btn telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="sns-icon-btn x" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="sns-icon-btn discord" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-16">
+                <div>
+                    <h5 class="font-bold mb-6">Menu</h5>
+                    <ul class="text-gray-500 text-sm space-y-4">
+                        <li><a href="#assets" class="hover:text-blue-400">투자자산목록</a></li>
+                        <li><a href="#tokens" class="hover:text-blue-400">TOKEN</a></li>
+                        <li><a href="#guide" class="hover:text-blue-400">가이드</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-6">Legal</h5>
+                    <ul class="text-gray-500 text-sm space-y-4">
+                        <li><a href="#" class="hover:text-blue-400">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-blue-400">License</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-16 mt-16 border-t border-white/5 text-gray-600 text-[10px] uppercase tracking-widest flex justify-between">
+            <p>© 2025 GLI Project. Confidential & Proprietary.</p>
+        </div>
+    </footer>
+
+    <!-- 스크립트 -->
+    <script>
+        const walletModal = document.getElementById('walletModal');
+        const videoModal = document.getElementById('videoModal');
+        const promoVideoFrame = document.getElementById('promoVideoFrame');
+
+        function openWalletModal() { walletModal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeWalletModal() { walletModal.classList.remove('active'); document.body.style.overflow = 'auto'; }
+        
+        function openVideoModal() {
+            videoModal.classList.add('active');
+            promoVideoFrame.src = "https://www.youtube.com/embed/YsC_VS2Uy-w?autoplay=1";
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            videoModal.classList.remove('active');
+            promoVideoFrame.src = "";
+            document.body.style.overflow = 'auto';
+        }
+
+        function connectWalletMock(walletName) {
+            closeWalletModal();
+            const btnText = document.getElementById('wallet-btn-text');
+            const dot = document.getElementById('wallet-status-dot');
+            if(btnText && dot) {
+                btnText.innerText = "0x71...8A2B";
+                dot.classList.remove('bg-slate-500');
+                dot.classList.add('bg-cyan-400', 'animate-pulse');
+            }
+        }
+
+        window.onclick = function(event) { 
+            if (event.target == walletModal) closeWalletModal(); 
+            if (event.target == videoModal) closeVideoModal();
+        }
+        
+        function toggleProfileMenu(e) { 
+            e.stopPropagation(); 
+            document.getElementById('profile-menu').classList.toggle('hidden'); 
+            document.getElementById('noti-panel').classList.add('hidden'); 
+        }
+        
+        function toggleNotification(e) { 
+            e.stopPropagation(); 
+            document.getElementById('noti-panel').classList.toggle('hidden'); 
+            document.getElementById('profile-menu').classList.add('hidden'); 
+        }
+        
+        function closeMenus(e) { 
+            if (!document.getElementById('profile-menu').contains(e.target) && e.target.id !== 'avatar-container') {
+                document.getElementById('profile-menu').classList.add('hidden'); 
+            }
+            if (!document.getElementById('noti-panel').contains(e.target) && e.target.id !== 'noti-btn') {
+                document.getElementById('noti-panel').classList.add('hidden'); 
+            }
+        }
+        
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) { nav.style.height = "70px"; nav.style.background = "rgba(8, 12, 20, 0.95)"; } 
+            else { nav.style.height = "80px"; nav.style.background = "rgba(8, 12, 20, 0.85)"; }
+        });
+
+        function changeLang(code) {
+            console.log('Language changed to:', code);
+            // 여기에 실제 다국어 전환 라이브러리(i18next 등) 연동 로직이 들어갑니다.
+        }
+
+        function markAllNotificationsRead() {
+            const indicator = document.getElementById('noti-unread-indicator');
+            if(indicator) indicator.style.display = 'none';
+            document.getElementById('noti-list').innerText = '읽지 않은 알림이 없습니다.';
+        }
+    </script>
+</body>
+</html>
