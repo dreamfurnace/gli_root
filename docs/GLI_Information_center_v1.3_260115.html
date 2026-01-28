@@ -1,0 +1,863 @@
+<!-- 
+    GLI Help Center Page V2.3
+    - 업데이트: 상단 네비게이션 메뉴 명칭 변경
+    - 수정 사항: '투자 자산목록' -> '구독 자산목록'으로 변경
+-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안내센터 | GLI RWA Asset Platform</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard"', '"Noto Sans KR"', 'sans-serif'],
+                        mono: ['"Rajdhani"', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 850: '#0f172a', 900: '#020617', 950: '#010409' },
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#080c14'
+                        },
+                        cyan: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 900: '#164e63' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+                        primary: '#3b82f6',
+                        accent: '#a855f7',
+                        bgDark: '#080c14',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'zoom-in': 'zoomIn 0.2s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        zoomIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: radial-gradient(circle at top right, #0f172a 0%, #080c14 100%);
+            color: #e2e8f0;
+            scroll-behavior: smooth;
+        }
+
+        .nav-blur {
+            background: rgba(8, 12, 20, 0.85);
+            backdrop-filter: blur(16px);
+        }
+
+        .dropdown-container { position: relative; padding: 10px 0; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: rgba(10, 15, 25, 0.98); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
+            padding: 8px; min-width: 140px; opacity: 0; visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.6); z-index: 50;
+        }
+        .dropdown-container:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0px); }
+        .dropdown-link { display: block; padding: 10px 16px; border-radius: 8px; color: #94a3b8; font-size: 13px; transition: all 0.2s ease; white-space: nowrap; }
+        .dropdown-link:hover { background: rgba(59, 130, 246, 0.1); color: white; padding-left: 20px; }
+        
+        .lang-container:hover .lang-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .lang-dropdown {
+             position: absolute; right: 0; top: 100%; margin-top: 8px; width: 176px;
+             background: rgba(10, 15, 25, 0.98); border: 1px solid rgba(255, 255, 255, 0.08);
+             border-radius: 12px; opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 50;
+        }
+
+        .unread-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; position: absolute; top: 0; right: 0; border: 2px solid #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .search-box:focus-within {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .help-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .help-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .filter-tab {
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .filter-tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .filter-tab.active {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .faq-trigger:hover { color: #3b82f6; }
+
+        .sns-icon-btn {
+            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); color: #94a3b8; font-size: 20px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .sns-icon-btn:hover { transform: translateY(-5px); color: white; }
+        .sns-icon-btn.telegram:hover { background: #0088cc; border-color: #0088cc; }
+        .sns-icon-btn.x:hover { background: #000000; border-color: #333333; }
+        .sns-icon-btn.discord:hover { background: #5865F2; border-color: #5865F2; }
+
+        .step-number {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .guide-step-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .guide-step-card:hover .step-circle {
+            transform: scale(1.1);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .download-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .download-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(34, 211, 238, 0.3);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-500/30" onclick="closeMenus(event)">
+
+    <!-- 네비게이션 바 -->
+    <nav class="fixed w-full z-[100] nav-blur border-b border-white/5 transition-all duration-300">
+        <div class="max-w-[1600px] mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="help_center.html" class="text-3xl font-black tracking-tighter text-white font-mono">GLI</a>
+            </div>
+
+            <div class="flex items-center gap-10">
+                <div class="hidden lg:flex items-center gap-2 text-[14px] font-medium text-gray-400">
+                    <div class="dropdown-container px-4">
+                        <!-- '투자 자산목록'에서 '구독 자산목록'으로 변경 -->
+                        <a href="#" class="nav-item hover:text-white transition-colors flex items-center gap-1">구독 자산목록 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">국가별</a>
+                            <a href="#" class="dropdown-link">레저</a>
+                            <a href="#" class="dropdown-link">상업</a>
+                            <a href="#" class="dropdown-link">주거</a>
+                            <a href="#" class="dropdown-link">프로젝트</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#" class="nav-item hover:text-white transition-colors flex items-center gap-1">포인트몰 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">소셜카지노</a>
+                            <a href="#" class="dropdown-link">레저상품</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#" class="nav-item text-white flex items-center gap-1">안내센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">공지</a>
+                            <a href="#" class="dropdown-link">가이드</a>
+                            <a href="#" class="dropdown-link">뉴스</a>
+                            <a href="#" class="dropdown-link">파트너스</a>
+                            <a href="#" class="dropdown-link">Docs</a>
+                            <a href="#" class="dropdown-link">FAQs</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#" class="nav-item hover:text-white transition-colors flex items-center gap-1">기능센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">토큰구입</a>
+                            <a href="#" class="dropdown-link">토큰교환</a>
+                            <a href="#" class="dropdown-link">레퍼럴</a>
+                            <a href="#" class="dropdown-link">DAO</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pl-6 border-l border-white/10">
+                    <button id="wallet-btn" class="px-5 py-2.5 bg-navy-900 border border-white/10 hover:bg-navy-800 text-white rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                        <span id="wallet-status-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+                        <span id="wallet-btn-text">Connect Wallet</span>
+                    </button>
+
+                    <div class="hidden sm:flex items-center gap-3 relative">
+                        <div class="text-right mr-2">
+                            <div class="text-sm font-bold text-white uppercase tracking-wide">GUEST</div>
+                            <div class="text-[10px] text-slate-400 font-mono uppercase font-bold">Lv.1 ACCESS</div>
+                        </div>
+                        
+                        <div class="relative h-full flex items-center">
+                            <button onclick="toggleProfileMenu(event)" class="w-10 h-10 rounded-full bg-navy-900 border-2 border-slate-700 relative flex items-center justify-center overflow-hidden" id="avatar-container">
+                                <div class="w-full h-full flex items-center justify-center text-[13px] font-black text-slate-300 uppercase">GU</div>
+                                <div class="absolute -bottom-1 -right-1 bg-navy-950 text-slate-400 text-[10px] font-bold px-1 py-0.5 rounded-full border border-slate-800 shadow-md z-10">1</div>
+                            </button>
+                            <div id="profile-menu" class="absolute right-0 top-14 w-52 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in">
+                                <div class="py-1">
+                                    <div class="px-4 py-2 border-b border-white/5 text-[10px] text-slate-500 font-bold uppercase tracking-widest">My Account</div>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-user-circle text-lg text-cyan-500"></i> 마이페이지</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-list-bullets text-lg text-blue-400"></i> 자산목록</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-gear-six text-lg text-slate-400"></i> 설정</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-[11px] font-black text-red-400 hover:bg-red-500/10 border-t border-white/5 transition uppercase font-bold"><i class="ph-fill ph-sign-out text-lg"></i> 로그아웃</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <button onclick="toggleNotification(event)" class="flex items-center justify-center w-10 h-10 rounded-full bg-navy-900/50 hover:bg-navy-900 text-slate-400 transition border border-white/10 relative" id="noti-btn">
+                                <i class="ph-fill ph-bell text-xl"></i>
+                                <span class="unread-dot" id="noti-unread-indicator"></span>
+                            </button>
+                            <div id="noti-panel" class="absolute right-0 top-14 w-80 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in">
+                                <div class="px-4 py-3 bg-navy-950 border-b border-white/5 flex justify-between items-center">
+                                    <span class="text-xs font-bold text-white uppercase tracking-widest font-mono">Notifications</span>
+                                    <button onclick="markAllNotificationsRead()" class="text-[10px] text-cyan-400 font-bold underline">전체 읽음</button>
+                                </div>
+                                <div id="noti-list" class="max-h-64 overflow-y-auto custom-scrollbar p-4 text-xs text-slate-400 font-bold">신규 알림이 없습니다.</div>
+                            </div>
+                        </div>
+
+                        <div class="lang-container relative">
+                            <button class="flex items-center justify-center w-10 h-10 rounded-full bg-navy-900/50 hover:bg-navy-900 text-slate-400 transition border border-white/10">
+                                <i class="ph-fill ph-globe text-xl"></i>
+                            </button>
+                            <div class="lang-dropdown">
+                                <div class="py-1">
+                                    <button onclick="changeLang('ko')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 한국어
+                                    </button>
+                                    <button onclick="changeLang('en')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> English
+                                    </button>
+                                    <button onclick="changeLang('zh-hans')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> 简体中文
+                                    </button>
+                                    <button onclick="changeLang('vi')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition">
+                                        <span class="w-2 h-2 rounded-full bg-transparent"></span> Tiếng Việt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 안내센터 헤더 섹션 -->
+    <header class="pt-48 pb-10 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-black mb-6 text-white uppercase tracking-tight italic">How can we help you?</h1>
+            <p class="text-gray-400 mb-10 text-lg">GLI 플랫폼 이용에 관한 궁금한 점을 검색하거나 카테고리를 선택해 보세요.</p>
+            
+            <div class="search-box max-w-2xl mx-auto rounded-2xl flex items-center p-2 group transition-all h-[64px]">
+                <div class="pl-4 text-gray-500 group-focus-within:text-blue-400 transition-colors">
+                    <i class="ph-bold ph-magnifying-glass text-xl"></i>
+                </div>
+                <input type="text" placeholder="도움말 검색 (예: 지갑 연결, 토큰 구입...)" class="flex-grow bg-transparent border-none outline-none px-4 py-3 text-white placeholder:text-gray-600 font-medium">
+                <button class="whitespace-nowrap min-w-fit px-8 h-full bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl transition-all flex items-center justify-center">
+                    검색
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 빠른 바로가기 섹션 -->
+    <section class="py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-8 flex flex-col items-start">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-[2px] bg-blue-500"></div>
+                    <span class="text-xs font-black text-blue-500 uppercase tracking-[0.2em] font-mono">Quick Navigation</span>
+                </div>
+                <h2 class="text-xl font-bold text-white tracking-tight italic uppercase">서비스 바로가기</h2>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <a href="#" class="help-card p-8 rounded-[32px] text-center group">
+                    <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-500/20 transition-colors">
+                        <i class="ph-fill ph-question text-3xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-white">FAQ</h3>
+                    <p class="text-gray-500 text-sm">자주 묻는 질문 답변</p>
+                </a>
+                <a href="#user-guide" class="help-card p-8 rounded-[32px] text-center group">
+                    <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-500/20 transition-colors">
+                        <i class="ph-fill ph-book-open text-3xl text-purple-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-white">사용자 가이드</h3>
+                    <p class="text-gray-500 text-sm">단계별 플랫폼 이용 안내</p>
+                </a>
+                <a href="#download-center" class="help-card p-8 rounded-[32px] text-center group">
+                    <div class="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-cyan-500/20 transition-colors">
+                        <i class="ph-fill ph-download-simple text-3xl text-cyan-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-white">다운로드 자료</h3>
+                    <p class="text-gray-500 text-sm">백서 및 관련 서류 서식</p>
+                </a>
+                <a href="#contact-support" class="help-card p-8 rounded-[32px] text-center group">
+                    <div class="w-16 h-16 bg-gold-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-gold-500/20 transition-colors">
+                        <i class="ph-fill ph-chat-centered-text text-3xl text-gold-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-white">고객 지원</h3>
+                    <p class="text-gray-500 text-sm">전문 상담 및 실시간 지원</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ & Announcements -->
+    <section class="py-20 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-16">
+            <div class="lg:col-span-2">
+                <div class="flex flex-col mb-10">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-white italic uppercase tracking-tighter">
+                            <i class="ph-bold ph-star mr-2 text-blue-500"></i> Popular Questions
+                        </h2>
+                        <a href="#" class="text-sm text-gray-500 hover:text-white font-bold transition-colors">전체보기 <i class="ph ph-caret-right"></i></a>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterFaq('all', this)" class="filter-tab active">전체</button>
+                        <button onclick="filterFaq('getting-started', this)" class="filter-tab">시작하기</button>
+                        <button onclick="filterFaq('wallet', this)" class="filter-tab">지갑</button>
+                        <button onclick="filterFaq('token', this)" class="filter-tab">토큰</button>
+                        <button onclick="filterFaq('shop', this)" class="filter-tab">쇼핑몰</button>
+                        <button onclick="filterFaq('support', this)" class="filter-tab">기술 지원</button>
+                    </div>
+                </div>
+
+                <div class="space-y-2" id="faq-list-container">
+                    <div class="faq-item" data-category="wallet">
+                        <button class="faq-trigger w-full flex justify-between items-center py-6 text-left transition-colors">
+                            <span class="font-bold pr-8">GLI 플랫폼에서 지갑을 어떻게 연결하나요?</span>
+                            <i class="ph ph-plus opacity-40"></i>
+                        </button>
+                    </div>
+                    <div class="faq-item" data-category="token">
+                        <button class="faq-trigger w-full flex justify-between items-center py-6 text-left transition-colors">
+                            <span class="font-bold pr-8">GLIB 토큰의 배당은 어떤 방식으로 지급되나요?</span>
+                            <i class="ph ph-plus opacity-40"></i>
+                        </button>
+                    </div>
+                    <div class="faq-item" data-category="getting-started">
+                        <button class="faq-trigger w-full flex justify-between items-center py-6 text-left transition-colors">
+                            <span class="font-bold pr-8">RWA(실물 자산) 투자의 법적 안정성은 어떻게 보장되나요?</span>
+                            <i class="ph ph-plus opacity-40"></i>
+                        </button>
+                    </div>
+                    <div class="faq-item" data-category="shop">
+                        <button class="faq-trigger w-full flex justify-between items-center py-6 text-left transition-colors">
+                            <span class="font-bold pr-8">포인트몰에서 사용할 수 있는 포인트는 어떻게 획득하나요?</span>
+                            <i class="ph ph-plus opacity-40"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-12">
+                <div>
+                    <h2 class="text-xl font-bold text-white mb-6 uppercase tracking-widest italic">Latest Announcements</h2>
+                    <div class="space-y-4">
+                        <a href="#" class="block p-5 bg-white/5 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all">
+                            <div class="text-[10px] text-blue-400 font-bold mb-2 uppercase tracking-widest">Update</div>
+                            <h4 class="font-bold text-sm mb-2 text-white">V2.1 메인 네트워크 업그레이드 안내</h4>
+                            <span class="text-[10px] text-gray-600 font-mono">2025.01.14</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="p-8 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-[32px] border border-white/10 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-xl font-bold mb-4 text-white italic uppercase tracking-tighter">추가적인 도움이 필요하신가요?</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-6 font-medium">원하시는 답변을 찾지 못하셨나요? <span class="text-blue-400">24시간</span> 열려있는 공식 커뮤니티에서 실시간 지원을 받으세요.</p>
+                        <div class="flex gap-3">
+                            <a href="#" class="sns-icon-btn telegram"><i class="fa-brands fa-telegram"></i></a>
+                            <a href="#" class="sns-icon-btn discord"><i class="fa-brands fa-discord"></i></a>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 text-white opacity-[0.03] scale-[4] rotate-12">
+                        <i class="ph-fill ph-chat-circle-dots"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 사용자 가이드 단계별 섹션 -->
+    <section id="user-guide" class="py-24 px-6 border-t border-white/5 bg-navy-900/20">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="mb-16">
+                <h2 class="text-3xl font-black text-white italic uppercase tracking-tighter mb-4">Step-by-Step User Guide</h2>
+                <p class="text-gray-500">각 단계를 클릭하여 상세 가이드를 확인해 보세요.</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8 relative">
+                <div class="hidden md:block absolute top-1/4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent -z-10"></div>
+                
+                <!-- Step 1 -->
+                <div class="guide-step-card flex flex-col items-center" onclick="openGuideModal(1)">
+                    <div class="step-circle w-16 h-16 rounded-full bg-navy-900 border border-white/10 flex items-center justify-center mb-6 relative shadow-xl transition-all duration-300">
+                        <span class="step-number text-2xl font-black">01</span>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-4 border-navy-950"></div>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-3">지갑 연결</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">MetaMask, Phantom 또는 Coinbase를 통해 지갑을 연동합니다.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="guide-step-card flex flex-col items-center" onclick="openGuideModal(2)">
+                    <div class="step-circle w-16 h-16 rounded-full bg-navy-900 border border-white/10 flex items-center justify-center mb-6 relative shadow-xl transition-all duration-300">
+                        <span class="step-number text-2xl font-black">02</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-3">자산 선택</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">투자 자산목록에서 원하는 실물 자산 프로젝트를 분석하고 선택합니다.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="guide-step-card flex flex-col items-center" onclick="openGuideModal(3)">
+                    <div class="step-circle w-16 h-16 rounded-full bg-navy-900 border border-white/10 flex items-center justify-center mb-6 relative shadow-xl transition-all duration-300">
+                        <span class="step-number text-2xl font-black">03</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-3">토큰 교환/구입</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">선택한 자산의 토큰을 구입하여 소유권을 분할 획득합니다.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="guide-step-card flex flex-col items-center" onclick="openGuideModal(4)">
+                    <div class="step-circle w-16 h-16 rounded-full bg-navy-900 border border-white/10 flex items-center justify-center mb-6 relative shadow-xl transition-all duration-300">
+                        <span class="step-number text-2xl font-black">04</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-3">수익 실현</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">자산 운영에 따른 배당 수익 및 가치 상승분을 실시간 확인하세요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 가이드 상세 모달 (Popup) -->
+    <div id="guide-modal" class="fixed inset-0 z-[200] flex items-center justify-center px-6 hidden">
+        <!-- 배경 오버레이 -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeGuideModal()"></div>
+        <!-- 모달 컨텐츠 -->
+        <div class="relative bg-navy-900 border border-white/10 w-full max-w-lg rounded-[40px] shadow-2xl overflow-hidden animate-zoom-in">
+            <div class="p-8 md:p-12">
+                <div class="flex justify-between items-start mb-8">
+                    <div class="flex items-center gap-4">
+                        <div id="modal-step-badge" class="w-12 h-12 rounded-2xl bg-blue-600/20 flex items-center justify-center">
+                            <span id="modal-step-number" class="step-number text-xl font-black italic">01</span>
+                        </div>
+                        <h3 id="modal-title" class="text-2xl font-black text-white italic tracking-tighter uppercase">지갑 연결 안내</h3>
+                    </div>
+                    <button onclick="closeGuideModal()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                        <i class="ph ph-x text-xl"></i>
+                    </button>
+                </div>
+
+                <div id="modal-content" class="space-y-6 text-gray-400 text-sm leading-relaxed">
+                    <!-- 상세 내용이 스크립트로 삽입됨 -->
+                </div>
+
+                <div class="mt-12">
+                    <button onclick="closeGuideModal()" class="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-2xl transition-all">확인했습니다</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 다운로드 자료 섹션 -->
+    <section id="download-center" class="py-24 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <h2 class="text-3xl font-black text-white italic uppercase tracking-tighter mb-4">Download Center</h2>
+                    <p class="text-gray-500">GLI 프로젝트의 공식 문서와 브랜드 자산을 다운로드하세요.</p>
+                </div>
+                <div class="hidden md:block">
+                    <span class="text-[10px] font-mono text-cyan-500 font-bold uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">Last Updated: 2025.01.15</span>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="download-card p-6 rounded-2xl flex items-center justify-between group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-file-pdf text-2xl"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-white mb-1">GLI Project Whitepaper</h5>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-tighter font-mono">PDF • 4.2 MB • KO/EN</p>
+                        </div>
+                    </div>
+                    <button class="w-10 h-10 rounded-lg bg-white/5 hover:bg-cyan-500 text-gray-400 hover:text-white transition-all flex items-center justify-center">
+                        <i class="ph-bold ph-download-simple"></i>
+                    </button>
+                </div>
+                <div class="download-card p-6 rounded-2xl flex items-center justify-between group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-file-pdf text-2xl"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-white mb-1">User Manual V1.5</h5>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-tighter font-mono">PDF • 2.8 MB • KO</p>
+                        </div>
+                    </div>
+                    <button class="w-10 h-10 rounded-lg bg-white/5 hover:bg-cyan-500 text-gray-400 hover:text-white transition-all flex items-center justify-center">
+                        <i class="ph-bold ph-download-simple"></i>
+                    </button>
+                </div>
+                <div class="download-card p-6 rounded-2xl flex items-center justify-between group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-gold-500 group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-file-zip text-2xl"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-white mb-1">Brand Assets (Logo/Font)</h5>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-tighter font-mono">ZIP • 15.4 MB • AI/PNG</p>
+                        </div>
+                    </div>
+                    <button class="w-10 h-10 rounded-lg bg-white/5 hover:bg-cyan-500 text-gray-400 hover:text-white transition-all flex items-center justify-center">
+                        <i class="ph-bold ph-download-simple"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 연락처 및 지원 섹션 -->
+    <section id="contact-support" class="py-24 px-6 border-t border-white/5 bg-navy-900/10">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-20">
+                <!-- 왼쪽: 연락처 정보 -->
+                <div>
+                    <h2 class="text-3xl font-black text-white italic uppercase tracking-tighter mb-6">Contact & Support</h2>
+                    <p class="text-gray-400 mb-10 leading-relaxed">원하시는 답변을 찾지 못하셨나요? 아래 채널을 통해 GLI 지원팀에 문의하시거나 실시간 상담을 받으실 수 있습니다.</p>
+                    
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-5 group">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                                <i class="ph-fill ph-envelope-simple text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">이메일 지원</h4>
+                                <p class="text-gray-500 text-sm">support@gli-project.com</p>
+                                <p class="text-[10px] text-gray-600 mt-1 font-bold uppercase tracking-widest font-mono">Response within 24h</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-5 group">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+                                <i class="ph-fill ph-chat-circle-dots text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">실시간 채팅</h4>
+                                <p class="text-gray-500 text-sm">웹사이트 우측 하단 상담 아이콘 클릭</p>
+                                <p class="text-[10px] text-cyan-500/80 mt-1 font-bold uppercase tracking-widest font-mono">Available: 09:00 - 18:00 (KST)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-5 group">
+                            <div class="w-12 h-12 rounded-xl bg-[#0088cc]/10 flex items-center justify-center text-[#0088cc] group-hover:bg-[#0088cc] group-hover:text-white transition-all duration-300">
+                                <i class="fa-brands fa-telegram text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">텔레그램</h4>
+                                <p class="text-gray-500 text-sm">@GLI_Official_Support</p>
+                                <p class="text-[10px] text-gray-600 mt-1 font-bold uppercase tracking-widest font-mono">24시간 글로벌 커뮤니티 지원</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 오른쪽: 상담 폼 -->
+                <div class="p-8 md:p-10 bg-navy-900 border border-white/10 rounded-[40px] shadow-2xl">
+                    <h3 class="text-xl font-bold text-white mb-8">Send us a message</h3>
+                    <form class="space-y-5">
+                        <div class="grid md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Name</label>
+                                <input type="text" placeholder="성함" class="input-field">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Email</label>
+                                <input type="email" placeholder="이메일 주소" class="input-field">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Subject</label>
+                            <select class="input-field appearance-none">
+                                <option>일반 문의</option>
+                                <option>기술 지원</option>
+                                <option>비즈니스 협업</option>
+                                <option>기타</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Message</label>
+                            <textarea rows="4" placeholder="문의 내용을 상세히 적어주세요." class="input-field"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-500/20">보내기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="py-24 border-t border-white/5 bg-navy-950 px-6 font-sans">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 text-white">
+            <div class="max-w-xs">
+                <div class="text-3xl font-black mb-8 flex items-center gap-2 tracking-tighter font-mono">GLI</div>
+                <p class="text-gray-500 text-sm leading-relaxed mb-8 font-medium">RWA 기반 실물 자산과 디지털 생태계의 결합을 통해 지속 가능한 투자 가치를 창출합니다.</p>
+            </div>
+            <div class="flex-grow flex flex-col items-center justify-center">
+                <h5 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Join Our Community</h5>
+                <div class="flex gap-4">
+                    <a href="#" class="sns-icon-btn telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="sns-icon-btn x" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="sns-icon-btn discord" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-16">
+                <div>
+                    <h5 class="font-bold mb-6 text-sm uppercase">Menu</h5>
+                    <ul class="text-gray-500 text-sm space-y-4 font-medium">
+                        <li><a href="#" class="hover:text-blue-400">구독 자산목록</a></li>
+                        <li><a href="#" class="hover:text-blue-400">TOKEN</a></li>
+                        <li><a href="#" class="hover:text-blue-400">안내센터</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-6 text-sm uppercase">Legal</h5>
+                    <ul class="text-gray-500 text-sm space-y-4 font-medium">
+                        <li><a href="#" class="hover:text-blue-400">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-blue-400">License</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-16 mt-16 border-t border-white/5 text-gray-600 text-[10px] uppercase tracking-widest flex justify-between font-mono font-bold">
+            <p>© 2025 GLI Project. Confidential & Proprietary.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 모달 데이터 정의
+        const guideDetails = {
+            1: {
+                title: "지갑 연결 안내",
+                content: `
+                    <p>GLI 플랫폼을 이용하기 위해서는 가상자산 지갑 연동이 필수적입니다.</p>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
+                        <p class="text-white font-bold">지원 지갑</p>
+                        <ul class="list-disc ml-4 space-y-1">
+                            <li>메타마스크 (MetaMask)</li>
+                            <li>팬텀 (Phantom)</li>
+                            <li>코인베이스 (Coinbase)</li>
+                        </ul>
+                    </div>
+                    <p>우측 상단의 'Connect Wallet' 버튼을 클릭하고 지갑 서명을 완료하면 본인의 자산 현황을 실시간으로 확인할 수 있습니다.</p>
+                `
+            },
+            2: {
+                title: "자산 선택 상세 안내",
+                content: `
+                    <p>다양한 RWA(실물 자산) 중 본인의 투자 성향에 맞는 자산을 선택하세요.</p>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
+                        <p class="text-white font-bold">분석 포인트</p>
+                        <ul class="list-disc ml-4 space-y-1">
+                            <li>연간 기대 수익률 (Estimated APR)</li>
+                            <li>자산 소재지 및 프로젝트 현황</li>
+                            <li>최소 투자 금액 및 잔여 토큰 수량</li>
+                        </ul>
+                    </div>
+                    <p>각 프로젝트의 '상세보기'를 클릭하면 법적 공시 문서와 투자 구조를 확인하실 수 있습니다.</p>
+                `
+            },
+            3: {
+                title: "토큰 구입 상세 안내",
+                content: `
+                    <p>선택한 실물 자산을 소유하기 위해 GLIB 토큰을 구입하는 과정입니다.</p>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
+                        <p class="text-white font-bold">구입 방법</p>
+                        <ul class="list-disc ml-4 space-y-1">
+                            <li>스테이블 코인(USDT/USDC)을 이용한 직접 구매</li>
+                            <li>보유 토큰과의 스왑(Swap) 기능을 통한 교환</li>
+                        </ul>
+                    </div>
+                    <p>구입 즉시 블록체인 상에 스마트 컨트랙트를 통해 본인의 소유권이 증명되며 자산 목록에 반영됩니다.</p>
+                `
+            },
+            4: {
+                title: "수익 실현 상세 안내",
+                content: `
+                    <p>보유한 토큰에 따라 발생하는 수익은 실시간으로 대시보드에 집계됩니다.</p>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
+                        <p class="text-white font-bold">수익 구조</p>
+                        <ul class="list-disc ml-4 space-y-1">
+                            <li>임대 및 운영 수익 (매월 또는 매일 지급)</li>
+                            <li>자산 가치 상승에 따른 토큰 시세 차익</li>
+                            <li>스테이킹 추가 리워드</li>
+                        </ul>
+                    </div>
+                    <p>발생한 수익은 언제든지 스테이블 코인으로 인출하거나 다른 자산에 재투자할 수 있습니다.</p>
+                `
+            }
+        };
+
+        // 모달 열기 함수
+        function openGuideModal(step) {
+            const data = guideDetails[step];
+            if (!data) return;
+
+            document.getElementById('modal-step-number').innerText = step.toString().padStart(2, '0');
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-content').innerHTML = data.content;
+            
+            const modal = document.getElementById('guide-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // 스크롤 방지
+        }
+
+        // 모달 닫기 함수
+        function closeGuideModal() {
+            const modal = document.getElementById('guide-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = ''; // 스크롤 복구
+        }
+
+        function toggleProfileMenu(e) { 
+            e.stopPropagation(); 
+            document.getElementById('profile-menu').classList.toggle('hidden'); 
+            document.getElementById('noti-panel').classList.add('hidden'); 
+        }
+        
+        function toggleNotification(e) { 
+            e.stopPropagation(); 
+            document.getElementById('noti-panel').classList.toggle('hidden'); 
+            document.getElementById('profile-menu').classList.add('hidden'); 
+        }
+        
+        function closeMenus(e) { 
+            if (!document.getElementById('profile-menu').contains(e.target) && e.target.id !== 'avatar-container') {
+                document.getElementById('profile-menu').classList.add('hidden'); 
+            }
+            if (!document.getElementById('noti-panel').contains(e.target) && e.target.id !== 'noti-btn') {
+                document.getElementById('noti-panel').classList.add('hidden'); 
+            }
+        }
+
+        function filterFaq(category, btn) {
+            const tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            btn.classList.add('active');
+
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) { 
+                nav.style.height = "70px"; nav.style.background = "rgba(8, 12, 20, 0.95)"; 
+            } else { 
+                nav.style.height = "80px"; nav.style.background = "rgba(8, 12, 20, 0.85)"; 
+            }
+        });
+
+        function changeLang(code) { console.log('Language changed to:', code); }
+
+        function markAllNotificationsRead() {
+            const indicator = document.getElementById('noti-unread-indicator');
+            if(indicator) indicator.style.display = 'none';
+            document.getElementById('noti-list').innerText = '읽지 않은 알림이 없습니다.';
+        }
+    </script>
+</body>
+</html>

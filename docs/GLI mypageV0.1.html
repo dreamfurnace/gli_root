@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLI | My Page</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard"', '"Noto Sans KR"', 'sans-serif'],
+                        mono: ['"Rajdhani"', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' },
+                        slate: { 850: '#0f172a' },
+                        primary: '#3b82f6', // GLI Blue
+                        accent: '#a855f7',  // GLI Purple
+                    },
+                    backgroundImage: {
+                        'page-gradient': 'radial-gradient(circle at top center, #1e293b 0%, #020617 80%)',
+                        'card-gradient': 'linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        scan: {
+                            '0%, 100%': { top: '0%' },
+                            '50%': { top: '100%' }
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'scan': 'scan 2s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .menu-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .menu-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(59, 130, 246, 0.3);
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+            box-shadow: 0 5px 15px -3px rgba(59, 130, 246, 0.15);
+        }
+        .menu-card.active {
+            border-color: #3b82f6;
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .menu-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .menu-card:hover::before, .menu-card.active::before { opacity: 1; }
+        .construction-pattern {
+            background-image: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 10px, rgba(0, 0, 0, 0.3) 10px, rgba(0, 0, 0, 0.3) 20px);
+        }
+        .profile-glow { box-shadow: 0 0 40px rgba(59, 130, 246, 0.15); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-table th { padding: 12px; text-align: left; font-size: 12px; font-weight: 700; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; }
+        .custom-table td { padding: 16px 12px; font-size: 13px; color: #e2e8f0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .custom-table tr:last-child td { border-bottom: none; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
+            z-index: 100; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-blue-500/30">
+
+    <!-- Navbar -->
+    <nav class="w-full h-20 border-b border-white/5 bg-navy-950/50 backdrop-blur-md flex items-center justify-between px-6 lg:px-12 fixed top-0 z-50">
+        <a href="#" class="text-2xl font-black tracking-tighter text-white font-mono flex items-center gap-2">
+            <i class="ph-fill ph-caret-left text-gray-500 hover:text-white transition-colors cursor-pointer text-xl"></i>
+            GLI <span class="text-blue-500 text-xs font-sans font-bold px-2 py-0.5 bg-blue-500/10 rounded-full border border-blue-500/20">MY PAGE</span>
+        </a>
+        <div class="flex items-center gap-4">
+            <button class="p-2 text-gray-400 hover:text-white transition"><i class="ph-fill ph-bell text-xl"></i></button>
+            <button class="p-2 text-gray-400 hover:text-white transition"><i class="ph-fill ph-gear text-xl"></i></button>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <main class="flex-grow pt-32 pb-20 px-4 sm:px-6">
+        <div class="max-w-[1400px] mx-auto space-y-8">
+            
+            <!-- 1. Upper Section: Profile Summary -->
+            <section class="glass-panel rounded-3xl p-8 relative overflow-hidden profile-glow max-w-5xl mx-auto">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+                <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8">
+                    <!-- Avatar Area -->
+                    <div class="relative group cursor-pointer" onclick="openModal('upgrade')">
+                        <div class="w-28 h-28 rounded-full p-[2px] bg-gradient-to-br from-blue-400 via-purple-500 to-slate-800">
+                            <div class="w-full h-full rounded-full overflow-hidden border-4 border-navy-900 bg-navy-800 relative">
+                                <img src="https://ui-avatars.com/api/?name=Guest+User&background=0f172a&color=3b82f6&bold=true" alt="Profile" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i class="ph-bold ph-arrow-circle-up text-white text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-1 right-1 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full border border-navy-900 shadow-lg font-mono">
+                            Lv.1
+                        </div>
+                    </div>
+
+                    <!-- Info Area -->
+                    <div class="flex-grow text-center md:text-left space-y-4">
+                        <div>
+                            <div class="flex items-center justify-center md:justify-start gap-3 mb-1">
+                                <h1 class="text-3xl font-bold text-white tracking-tight">Guest User</h1>
+                                <button class="text-gray-500 hover:text-blue-400 transition"><i class="ph-bold ph-pencil-simple"></i></button>
+                            </div>
+                            <p class="text-gray-400 font-medium tracking-wide">guest_user_01@gli-project.io</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap justify-center md:justify-start gap-3">
+                            <div class="px-4 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg text-blue-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer hover:bg-blue-500/20 transition" onclick="openModal('upgrade')">
+                                <i class="ph-fill ph-crown"></i> Basic Access
+                            </div>
+                            <div class="px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                                <i class="ph-fill ph-check-circle"></i> KYC Verified
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="hidden md:flex gap-8 border-l border-white/10 pl-8">
+                        <div class="text-center">
+                            <div class="text-gray-500 text-xs font-bold uppercase mb-1">Total Assets</div>
+                            <div class="text-xl font-mono font-bold text-white">0 <span class="text-xs text-gray-500">GLIB</span></div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-gray-500 text-xs font-bold uppercase mb-1">Points</div>
+                            <div class="text-xl font-mono font-bold text-white">1,500 <span class="text-xs text-gray-500">P</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Lower Section: 9-Grid Menu -->
+            <section class="flex flex-nowrap lg:grid lg:grid-cols-9 gap-2 overflow-x-auto pb-4 lg:pb-0 scrollbar-hide snap-x w-full">
+                <button onclick="switchTab('profile')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-profile">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-user-gear text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">회원 정보</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">개인정보</p></div>
+                </button>
+                <button onclick="switchTab('security')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-security">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:scale-110 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-shield-check text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">보안 설정</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">계정 보호</p></div>
+                </button>
+                <button onclick="switchTab('referral')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-referral">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-users-three text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">추천 코드</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">친구 초대</p></div>
+                </button>
+                <button onclick="switchTab('dashboard')" class="menu-card active rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-dashboard">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-chart-pie-slice text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">대시 보드</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">자산 현황</p></div>
+                </button>
+                <button onclick="switchTab('portfolio')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-portfolio">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-buildings text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">포트폴리오</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">구독 관리</p></div>
+                </button>
+                <button onclick="switchTab('shopping')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 relative min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-shopping">
+                    <div class="absolute top-1 right-1 bg-yellow-500 text-navy-950 text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Dev</div>
+                    <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 construction-pattern group-hover:text-yellow-400 transition-all duration-300"><i class="ph-duotone ph-shopping-bag text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-400 group-hover:text-white mb-0.5 whitespace-nowrap">GLIL 쇼핑</h3><p class="text-[9px] text-gray-600 font-medium hidden xl:block">준비중</p></div>
+                </button>
+                <button onclick="switchTab('usage')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-usage">
+                    <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-receipt text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">이용 내역</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">사용 기록</p></div>
+                </button>
+                <button onclick="switchTab('transaction')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-transaction">
+                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400 group-hover:scale-110 group-hover:bg-pink-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-scroll text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">거래 내역</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">P2P 기록</p></div>
+                </button>
+                <button onclick="switchTab('wallet')" class="menu-card rounded-xl p-3 group flex flex-col items-center text-center gap-3 min-w-[100px] lg:min-w-0 flex-1 snap-start" id="tab-btn-wallet">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-white transition-all duration-300"><i class="ph-duotone ph-arrows-left-right text-xl"></i></div>
+                    <div><h3 class="text-xs font-bold text-gray-200 group-hover:text-white mb-0.5 whitespace-nowrap">입출금</h3><p class="text-[9px] text-gray-500 font-medium hidden xl:block">지갑 전송</p></div>
+                </button>
+            </section>
+
+            <!-- 3. Dynamic Content Display Area -->
+            <section class="glass-panel rounded-3xl p-6 md:p-8 min-h-[400px] relative animate-fade-in">
+                
+                <!-- 1. 회원 정보 (Profile) -->
+                <div id="content-profile" class="content-panel hidden">
+                    <div class="flex items-center gap-3 mb-8 border-b border-white/5 pb-4">
+                        <i class="ph-duotone ph-user-gear text-2xl text-blue-400"></i>
+                        <h2 class="text-xl font-bold text-white">회원 정보 관리</h2>
+                    </div>
+                    <!-- (Content same as before) -->
+                    <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+                        <div class="space-y-8">
+                            <div class="space-y-4">
+                                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2"><i class="ph-fill ph-identification-card"></i> 기본 정보</h3>
+                                <div><label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1">이메일 주소</label><input type="email" value="guest_user_01@gli-project.io" class="w-full bg-navy-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-300 focus:border-blue-500 outline-none transition cursor-not-allowed" readonly></div>
+                                <div><label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1">휴대폰 번호</label><input type="text" value="+82 10-****-5678" class="w-full bg-navy-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-300 focus:border-blue-500 outline-none transition cursor-not-allowed" readonly></div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1">가입일</label><div class="px-4 py-3 text-sm font-bold text-white bg-navy-950 border border-white/10 rounded-xl">2024. 12. 15</div></div>
+                                    <div><label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1">최근 로그인</label><div class="px-4 py-3 text-sm font-bold text-white bg-navy-950 border border-white/10 rounded-xl">2025. 01. 14</div></div>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-white/5">
+                                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2"><i class="ph-fill ph-desktop-tower"></i> 최근 로그인 세션</h3>
+                                <div class="bg-navy-950 border border-white/10 rounded-xl p-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400"><i class="ph-bold ph-laptop text-xl"></i></div><div><div class="text-sm font-bold text-white">Chrome on Windows</div><div class="text-xs text-gray-500">Seoul, KR • 121.134.xxx.xxx</div></div></div>
+                                    <span class="text-[10px] font-bold text-green-400 bg-green-500/10 px-2 py-1 rounded-full border border-green-500/20">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col h-full">
+                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2"><i class="ph-fill ph-shield-check"></i> 보안 설정</h3>
+                            <div class="flex-grow space-y-3">
+                                <div class="p-4 bg-navy-950 border border-white/10 rounded-xl flex items-center justify-between group hover:border-blue-500/30 transition"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400"><i class="ph-bold ph-lock-key"></i></div><div><div class="text-sm font-bold text-white">비밀번호 변경</div><div class="text-[10px] text-gray-500">주기적인 변경을 권장합니다</div></div></div><button onclick="openModal('password')" class="px-4 py-2 bg-white/5 hover:bg-blue-600 hover:text-white border border-white/10 rounded-lg text-xs font-bold text-gray-300 transition">변경하기</button></div>
+                                <div class="p-4 bg-navy-950 border border-white/10 rounded-xl flex items-center justify-between group hover:border-blue-500/30 transition"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400"><i class="ph-bold ph-device-mobile"></i></div><div><div class="text-sm font-bold text-white">휴대 전화 인증</div><div class="text-[10px] text-gray-500">본인 확인을 위한 필수 절차</div></div></div><button onclick="openModal('phone')" class="px-4 py-2 bg-white/5 hover:bg-blue-600 hover:text-white border border-white/10 rounded-lg text-xs font-bold text-gray-300 transition">인증하기</button></div>
+                                <div class="p-4 bg-navy-950 border border-white/10 rounded-xl flex items-center justify-between group hover:border-blue-500/30 transition cursor-pointer" onclick="switchTab('security')"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400"><i class="ph-bold ph-shield-check"></i></div><div><div class="text-sm font-bold text-white">통합 보안 설정</div><div class="text-[10px] text-gray-500">얼굴인증, OTP, PIN 관리</div></div></div><i class="ph-bold ph-caret-right text-gray-600"></i></div>
+                            </div>
+                            <div class="mt-8 pt-6 border-t border-white/5"><button class="w-full py-4 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-bold transition flex items-center justify-center gap-2 group"><i class="ph-bold ph-sign-out text-lg group-hover:scale-110 transition-transform"></i> 로그아웃 (Sign Out)</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 통합 보안 설정 (Security Center) -->
+                <div id="content-security" class="content-panel hidden">
+                    <div class="flex items-center justify-between gap-3 mb-8 border-b border-white/5 pb-4">
+                        <div class="flex items-center gap-3"><i class="ph-duotone ph-shield-check text-2xl text-purple-400"></i><h2 class="text-xl font-bold text-white">통합 보안 설정</h2></div>
+                        <div class="flex items-center gap-3 bg-black/20 px-4 py-2 rounded-full border border-white/5"><span class="text-xs text-gray-400">보안 등급</span><div class="flex gap-1" id="security-level-bars"><div class="w-8 h-2 rounded-full bg-red-500 transition-all duration-500"></div><div class="w-8 h-2 rounded-full bg-gray-700 transition-all duration-500" id="sec-bar-2"></div><div class="w-8 h-2 rounded-full bg-gray-700 transition-all duration-500" id="sec-bar-3"></div></div><span class="text-xs font-bold text-red-400 w-12 text-center" id="security-level-text">위험</span></div>
+                    </div>
+                    <div class="grid lg:grid-cols-3 gap-6">
+                        <div class="bg-navy-950 rounded-2xl p-6 border border-green-500/30 relative overflow-hidden flex flex-col justify-between h-[320px]">
+                            <div class="absolute top-0 right-0 p-4"><span class="text-[10px] font-bold text-green-400 bg-green-500/10 px-2 py-1 rounded border border-green-500/20">Active</span></div>
+                            <div class="mt-4"><div class="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-400 mb-4"><i class="ph-duotone ph-scan text-3xl"></i></div><h3 class="text-lg font-bold text-white mb-1">얼굴 인증</h3><p class="text-xs text-gray-400 leading-relaxed">생체 정보를 통한 빠르고 안전한 로그인 및 고액 이체 승인</p></div>
+                            <div class="mt-6 space-y-3"><div class="flex justify-between text-xs border-b border-white/5 pb-2"><span class="text-gray-500">Last Verified</span><span class="text-white">2024. 12. 20</span></div><div class="flex gap-2"><button onclick="openModal('face')" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs transition">인증하기</button><button class="flex-1 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold rounded-xl text-xs transition border border-red-500/20">해지</button></div></div>
+                        </div>
+                        <div id="card-otp" class="bg-navy-950 rounded-2xl p-6 border border-white/10 relative overflow-hidden flex flex-col justify-between h-[320px] transition-all duration-500">
+                            <div class="absolute top-0 right-0 p-4" id="badge-otp"><span class="text-[10px] font-bold text-gray-500 bg-white/5 px-2 py-1 rounded border border-white/10">Inactive</span></div>
+                            <div class="mt-4"><div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-gray-400 mb-4" id="icon-otp"><i class="ph-duotone ph-device-mobile-camera text-3xl"></i></div><h3 class="text-lg font-bold text-gray-300 mb-1" id="title-otp">2FA 인증 (OTP)</h3><p class="text-xs text-gray-500 leading-relaxed">Google Authenticator를 이용한 이중 보안. 기기 변경 및 출금 시 필수</p></div>
+                            <div class="mt-6"><button onclick="openModal('2fa')" id="btn-otp" class="w-full py-2.5 bg-white/5 hover:bg-blue-600 hover:text-white border border-white/10 hover:border-blue-500 text-gray-400 font-bold rounded-xl text-xs transition">설정하기</button></div>
+                        </div>
+                        <div id="card-pin" class="bg-navy-950 rounded-2xl p-6 border border-white/10 relative overflow-hidden flex flex-col justify-between h-[320px] transition-all duration-500">
+                            <div class="absolute top-0 right-0 p-4" id="badge-pin"><span class="text-[10px] font-bold text-gray-500 bg-white/5 px-2 py-1 rounded border border-white/10">Inactive</span></div>
+                            <div class="mt-4"><div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-gray-400 mb-4" id="icon-pin"><i class="ph-duotone ph-numpad text-3xl"></i></div><h3 class="text-lg font-bold text-gray-300 mb-1" id="title-pin">PIN 번호</h3><p class="text-xs text-gray-500 leading-relaxed">6자리 숫자로 간편하게 앱 잠금 해제 및 소액 결제 승인</p></div>
+                            <div class="mt-6"><button onclick="openModal('pin')" id="btn-pin" class="w-full py-2.5 bg-white/5 hover:bg-blue-600 hover:text-white border border-white/10 hover:border-blue-500 text-gray-400 font-bold rounded-xl text-xs transition">설정하기</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 추천 코드 (Referral) -->
+                <div id="content-referral" class="content-panel hidden">
+                    <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4"><i class="ph-duotone ph-users-three text-2xl text-cyan-400"></i><h2 class="text-xl font-bold text-white">친구 초대 리워드</h2></div>
+                    <div class="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl p-6 mb-8 flex items-center justify-between shadow-lg shadow-cyan-500/10 relative overflow-hidden group">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition duration-500"></div>
+                        <div class="relative z-10"><h3 class="text-2xl font-black text-white italic tracking-tight mb-1">GLI CLUB INVITATION</h3><p class="text-sm text-cyan-50 font-medium">소중한 지인에게 <strong class="text-white text-lg ml-1">Premium 멤버십</strong>을 선물하세요.</p></div>
+                        <div class="relative z-10 bg-white/10 border border-white/20 p-2 rounded-xl backdrop-blur-sm"><i class="ph-fill ph-envelope-open text-4xl text-white drop-shadow-md"></i></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-navy-950 border border-white/10 rounded-2xl p-6 flex flex-col justify-center">
+                            <p class="text-xs font-bold text-cyan-400 uppercase mb-2">My Invitation Code</p>
+                            <div class="flex items-center gap-3 mb-6"><div class="flex-grow bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-2xl font-mono font-black text-white tracking-widest text-center">GLI-8829-XJ</div><button onclick="navigator.clipboard.writeText('GLI-8829-XJ'); alert('코드가 복사되었습니다.');" class="p-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl transition shadow-lg shadow-cyan-900/20"><i class="ph-bold ph-copy text-xl"></i></button></div>
+                            <div class="grid grid-cols-2 gap-3"><button onclick="openModal('qr')" class="py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-bold text-gray-300 transition flex items-center justify-center gap-2"><i class="ph-bold ph-qr-code"></i> 현장 QR</button><button onclick="copyInviteText()" class="py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-bold text-gray-300 transition flex items-center justify-center gap-2"><i class="ph-bold ph-paper-plane-right"></i> 초대장 복사</button></div>
+                        </div>
+                        <div class="bg-navy-950 border border-white/10 rounded-2xl p-6 flex flex-col justify-center">
+                            <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-star text-yellow-400"></i> 함께 누리는 혜택</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 flex-shrink-0"><i class="ph-bold ph-user-plus"></i></div><div><p class="text-xs font-bold text-gray-300">친구 (Invitee)</p><p class="text-[11px] text-gray-500">가입 즉시 <span class="text-blue-400 font-bold">5,000 P</span> 웰컴 포인트 지급</p></div></li>
+                                <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 flex-shrink-0"><i class="ph-bold ph-gift"></i></div><div><p class="text-xs font-bold text-gray-300">나 (Inviter)</p><p class="text-[11px] text-gray-500">초대 보상 <span class="text-purple-400 font-bold">2,000 P</span> 및 커뮤니티 등급 점수</p></div></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 mb-8 flex gap-3 items-start"><i class="ph-fill ph-info text-blue-400 mt-0.5"></i><p class="text-xs text-gray-400 leading-relaxed">GLI는 건전한 투자 문화를 지향합니다. 무리한 권유보다는 GLI의 가치를 함께할 수 있는 분들을 초대해주세요. 리워드 포인트는 친구가 가입 및 본인인증(KYC)을 완료하면 자동으로 지급됩니다.</p></div>
+                    <div class="flex items-center justify-between mb-4"><h3 class="text-sm font-bold text-gray-400 uppercase">초대 현황</h3><span class="text-xs text-gray-500">Total: <strong class="text-white">0</strong>명</span></div>
+                    <div class="overflow-x-auto"><table class="w-full custom-table"><thead><tr><th>Date</th><th>User</th><th>Status</th><th>Reward</th></tr></thead><tbody><tr><td colspan="4" class="text-center py-8 text-gray-500">아직 초대 내역이 없습니다. GLI의 가치를 공유해보세요!</td></tr></tbody></table></div>
+                </div>
+
+                <!-- 4. 대시보드 (Dashboard) - Active by Default -->
+                <div id="content-dashboard" class="content-panel">
+                    <div class="flex items-center justify-between gap-3 mb-6 border-b border-white/5 pb-4">
+                        <div class="flex items-center gap-3">
+                            <i class="ph-duotone ph-chart-pie-slice text-2xl text-emerald-400"></i>
+                            <h2 class="text-xl font-bold text-white">자산 현황 (Asset Overview)</h2>
+                        </div>
+                        <div class="text-xs font-bold text-gray-500 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+                            Token Economy
+                        </div>
+                    </div>
+
+                    <!-- 1. Total Value (Hero Card) -->
+                    <div class="bg-gradient-to-r from-navy-900 to-navy-800 p-8 rounded-3xl border border-white/10 group cursor-pointer hover:border-emerald-500/30 transition-all mb-6 relative overflow-hidden shadow-2xl">
+                        <div class="absolute top-0 right-0 p-6 opacity-10">
+                            <i class="ph-fill ph-wallet text-9xl text-white"></i>
+                        </div>
+                        <p class="text-xs font-bold text-gray-400 uppercase mb-2 flex items-center gap-2 relative z-10">
+                            Total Asset Value (Est.)
+                            <i class="ph-fill ph-arrows-left-right text-emerald-500 animate-pulse"></i>
+                        </p>
+                        <div class="text-4xl md:text-5xl font-black text-white group-hover:hidden transition-all relative z-10 font-mono tracking-tight">
+                            1,250,000 <span class="text-lg md:text-2xl font-bold text-gray-500 font-sans">GLIB</span>
+                        </div>
+                        <div class="text-4xl md:text-5xl font-black text-emerald-400 hidden group-hover:block animate-fade-in relative z-10 font-mono tracking-tight">
+                            $12,500.00 <span class="text-lg md:text-2xl font-bold text-emerald-600 font-sans">USD</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 relative z-10">* 실시간 토큰 시세 및 스테이킹 가치 합산 기준</p>
+                    </div>
+
+                    <!-- 2. Token Breakdown (View Only Cards) - Fixed Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        
+                        <!-- GLIB Card (Updated with Upgrade Action Only) -->
+                        <div class="bg-navy-950 p-6 rounded-2xl border border-white/10 flex flex-col justify-between hover:bg-white/[0.02] transition h-full">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-green-600/20 text-green-500 flex items-center justify-center text-lg font-bold border border-green-500/20">B</div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white">GLIB</h3>
+                                        <p class="text-[10px] text-gray-500 font-medium">Business / Staking</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-bold text-green-400 bg-green-900/30 px-2 py-1 rounded border border-green-500/20">PREMIUM</span>
+                            </div>
+                            <div class="space-y-3 flex-grow">
+                                <p class="text-[10px] text-gray-400 leading-relaxed mb-2">
+                                    스테이킹 이자 및 세일즈 보상 토큰.<br>
+                                    <span class="text-green-400">GLID와 1:1 가치 연동</span>되며, 상장 시 시세 차익을 기대할 수 있습니다.
+                                </p>
+                                <div>
+                                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Total Balance</p>
+                                    <p class="text-xl font-bold text-white font-mono">1,000,000</p>
+                                </div>
+                                <div class="p-3 bg-black/20 rounded-xl border border-white/5">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-[9px] text-gray-400 uppercase font-bold">Lock-up Ratio</span>
+                                        <span class="text-[9px] text-green-400 font-bold">85%</span>
+                                    </div>
+                                    <div class="w-full bg-navy-900 rounded-full h-1.5 mb-2 overflow-hidden">
+                                        <div class="bg-gradient-to-r from-green-600 to-green-400 h-1.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-[10px]">
+                                        <span class="text-gray-400">My Staked</span>
+                                        <span class="text-white font-bold">850,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Single Action Button -->
+                            <div class="mt-4">
+                                <a href="#" class="w-full py-2.5 bg-green-600 hover:bg-green-500 text-white border border-green-500 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-green-900/20 group">
+                                    <i class="ph-bold ph-arrow-circle-up"></i> 구독 등급 업그레이드
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- GLID Card (Disabled for Listing Pending) -->
+                        <div class="bg-navy-950 p-6 rounded-2xl border border-white/10 flex flex-col justify-between hover:bg-white/[0.02] transition h-full opacity-80">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-600/20 text-blue-500 flex items-center justify-center text-lg font-bold border border-blue-500/20">D</div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white">GLID</h3>
+                                        <p class="text-[10px] text-gray-500 font-medium">Dollar / Dividend</p>
+                                    </div>
+                                </div>
+                                <div class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[10px] text-blue-400 font-bold">Listing Soon</div>
+                            </div>
+                            <div class="space-y-3 flex-grow">
+                                <p class="text-[10px] text-gray-400 leading-relaxed mb-2">
+                                    상장 예정 핵심 자산.<br>
+                                    거래소 상장 후 자유로운 거래가 가능합니다.
+                                </p>
+                                <div class="opacity-50">
+                                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Platform Balance</p>
+                                    <p class="text-xl font-bold text-gray-400 font-mono">0.00 <span class="text-xs text-blue-400">($)</span></p>
+                                </div>
+                                <div class="p-3 bg-black/20 rounded-xl border border-white/5 flex items-center justify-center h-20">
+                                    <div class="text-center">
+                                        <i class="ph-duotone ph-lock-key text-2xl text-gray-500 mb-1"></i>
+                                        <p class="text-[10px] text-gray-500">상장 대기 중 (Locked)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="w-full mt-4 py-2.5 bg-gray-800 text-gray-500 font-bold rounded-xl text-xs cursor-not-allowed border border-white/5" disabled>
+                                상장 후 활성화됩니다
+                            </button>
+                        </div>
+
+                        <!-- GLIL Card (Updated with Shopping Action) -->
+                        <div class="bg-navy-950 p-6 rounded-2xl border border-white/10 flex flex-col justify-between hover:bg-white/[0.02] transition h-full">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-purple-600/20 text-purple-500 flex items-center justify-center text-lg font-bold border border-purple-500/20">L</div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white">GLIL</h3>
+                                        <p class="text-[10px] text-gray-500 font-medium">Lifestyle / Leisure</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-3 flex-grow">
+                                <p class="text-[10px] text-gray-400 leading-relaxed mb-2">
+                                    여행, 골프 등 <span class="text-purple-400">실물 레저 서비스 이용</span> 토큰.<br>
+                                    보유한 GLIB/GLID를 전환하여 즉시 사용할 수 있습니다.
+                                </p>
+                                <div class="flex items-center justify-between p-2 bg-yellow-500/5 border border-yellow-500/20 rounded-xl">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph-fill ph-coins text-yellow-500"></i>
+                                        <div>
+                                            <div class="text-[9px] text-yellow-500/80 font-bold uppercase">Gold (Game)</div>
+                                            <div class="text-sm font-bold text-white font-mono">50,000 G</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph-fill ph-ticket text-emerald-500"></i>
+                                        <div>
+                                            <div class="text-[9px] text-emerald-500/80 font-bold uppercase">Sweeps (Redeem)</div>
+                                            <div class="text-sm font-bold text-white font-mono">1,200 S</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Two Action Buttons -->
+                            <div class="mt-4 flex flex-col gap-2">
+                                <a href="#" class="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white border border-purple-500 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-purple-900/20">
+                                    <i class="ph-bold ph-game-controller"></i> 소셜 카지노 이동
+                                </a>
+                                <button onclick="alert('GLIL 레저 쇼핑몰은 현재 준비 중입니다.\n곧 더 많은 혜택으로 찾아뵙겠습니다!');" class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition flex items-center justify-center gap-2">
+                                    <i class="ph-bold ph-shopping-cart"></i> 레저 쇼핑하러 가기 <span class="text-[9px] bg-yellow-500 text-black px-1.5 rounded ml-1">Soon</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 3. New Action Section: Compact Swap Widget (Consolidated) -->
+                    <h3 class="text-sm font-bold text-gray-400 uppercase mb-4 flex items-center gap-2">
+                        <i class="ph-fill ph-arrows-left-right text-yellow-400"></i> 자산 교환 (Asset Swap)
+                    </h3>
+                    
+                    <div class="bg-navy-950 border border-white/10 rounded-2xl p-6 relative overflow-hidden">
+                        <!-- Wallet Connection Header -->
+                        <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/5">
+                            <div class="flex items-center gap-2">
+                                <i class="ph-bold ph-wallet text-blue-400"></i>
+                                <span class="text-sm font-bold text-white">내 지갑 연결</span>
+                            </div>
+                            <!-- Wallet Status: Disconnected (Default) -->
+                            <div id="wallet-status-disconnected" class="flex items-center gap-2">
+                                <div class="flex -space-x-2 mr-2">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" class="w-6 h-6 border-2 border-navy-950 rounded-full bg-white p-0.5" title="MetaMask">
+                                    <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" class="w-6 h-6 border-2 border-navy-950 rounded-full bg-white p-0.5" title="Trust Wallet">
+                                </div>
+                                <button onclick="connectSwapWallet()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition">연동하기</button>
+                            </div>
+                            <!-- Wallet Status: Connected (Hidden initially) -->
+                            <div id="wallet-status-connected" class="hidden flex items-center gap-2">
+                                <div class="text-right mr-2">
+                                    <p class="text-[10px] text-gray-400">Connected</p>
+                                    <p class="text-xs font-mono font-bold text-blue-400">0x71...976F</p>
+                                </div>
+                                <button class="px-3 py-1.5 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 text-xs font-bold rounded-lg transition border border-white/10">해제</button>
+                            </div>
+                        </div>
+
+                        <!-- Swap Interface -->
+                        <div class="grid md:grid-cols-7 gap-4 items-center">
+                            <!-- FROM -->
+                            <div class="md:col-span-3 bg-black/20 p-4 rounded-xl border border-white/5">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-[10px] text-gray-400 font-bold">보낼 자산 (From)</span>
+                                    <span class="text-[10px] text-gray-500">Balance: <span id="swap-balance-from" class="text-gray-300">0.00</span></span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <div class="relative w-1/3 min-w-[100px]">
+                                        <select id="swap-token-from" onchange="updateSwapRate()" class="w-full bg-navy-900 border border-white/10 rounded-lg py-2 pl-3 pr-8 text-xs font-bold text-white outline-none appearance-none cursor-pointer">
+                                            <option value="USDT">USDT</option>
+                                            <option value="GLIB">GLIB</option>
+                                            <option value="GLID">GLID</option>
+                                        </select>
+                                        <i class="ph-bold ph-caret-down absolute right-2 top-2.5 text-gray-500 pointer-events-none text-xs"></i>
+                                    </div>
+                                    <input type="number" id="swap-amount-from" oninput="calculateSwapOutput()" placeholder="0.00" class="w-2/3 bg-transparent border-b border-white/10 py-2 text-right text-lg font-bold text-white outline-none focus:border-blue-500 transition placeholder-gray-700">
+                                </div>
+                                <div id="swap-warning" class="hidden mt-2 text-[10px] text-red-400 flex items-center gap-1">
+                                    <i class="ph-fill ph-warning-circle"></i> <span>최소 10.00 이상 입력해주세요.</span>
+                                </div>
+                            </div>
+
+                            <!-- Swap Icon -->
+                            <div class="md:col-span-1 flex justify-center">
+                                <button onclick="swapDirection()" class="p-2 bg-navy-800 hover:bg-blue-600 rounded-full border border-white/10 text-gray-400 hover:text-white transition shadow-lg">
+                                    <i class="ph-bold ph-arrows-left-right md:rotate-0 rotate-90 text-lg"></i>
+                                </button>
+                            </div>
+
+                            <!-- TO -->
+                            <div class="md:col-span-3 bg-black/20 p-4 rounded-xl border border-white/5">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-[10px] text-gray-400 font-bold">받을 자산 (To)</span>
+                                    <span class="text-[10px] text-gray-500">Balance: <span id="swap-balance-to" class="text-gray-300">2,500.00</span></span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <div class="relative w-1/3 min-w-[100px]">
+                                        <select id="swap-token-to" class="w-full bg-navy-900 border border-white/10 rounded-lg py-2 pl-3 pr-8 text-xs font-bold text-white outline-none appearance-none cursor-pointer">
+                                            <option value="GLID">GLID</option>
+                                            <option value="GLIB">GLIB</option>
+                                            <option value="GLIL">GLIL</option>
+                                        </select>
+                                        <i class="ph-bold ph-caret-down absolute right-2 top-2.5 text-gray-500 pointer-events-none text-xs"></i>
+                                    </div>
+                                    <input type="text" id="swap-amount-to" placeholder="0.00" class="w-2/3 bg-transparent border-b border-white/10 py-2 text-right text-lg font-bold text-blue-400 outline-none cursor-default" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Swap Details & Action -->
+                        <div class="mt-6 bg-white/5 rounded-xl p-4">
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 mb-1">
+                                <span>환율 (Rate)</span>
+                                <span class="font-mono text-gray-300" id="swap-rate-display">1 USDT ≈ 1 GLID</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 mb-1">
+                                <span>수수료 (Fee)</span>
+                                <span class="font-mono text-gray-300">0% (Promotion)</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 mb-4">
+                                <span>최소 수령액 (Minimum Received)</span>
+                                <span class="font-mono text-gray-300" id="swap-min-received">0.00</span>
+                            </div>
+                            <button id="btn-execute-swap" onclick="executeSwapAction()" class="w-full py-3 bg-gray-700 text-gray-400 font-bold rounded-xl text-sm transition cursor-not-allowed" disabled>
+                                금액을 입력해주세요
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 4. Investment Status (Execution Brokerage) - UPDATED -->
+                    <div class="bg-navy-950 rounded-2xl border border-white/10 p-6 mt-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                    <i class="ph-fill ph-briefcase text-blue-400"></i> 실행 프로젝트 관리 현황 (Project Execution Status)
+                                </h3>
+                                <p class="text-[10px] text-gray-500 mt-1">GLI가 관리/감독 중인 자산의 실시간 진행 리포트입니다.</p>
+                            </div>
+                            <a href="#" class="text-[10px] text-gray-500 hover:text-white transition">전체 리포트 보기 <i class="ph-bold ph-caret-right"></i></a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>Project Name</th>
+                                        <th>Location</th>
+                                        <th>Current Stage</th>
+                                        <th>Est. Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="group hover:bg-white/5 transition cursor-pointer">
+                                        <td class="font-bold text-white flex items-center gap-2">
+                                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> Khlaeng Meas 1
+                                        </td>
+                                        <td class="text-gray-400">Sihanoukville</td>
+                                        <td>
+                                            <div class="flex flex-col gap-1">
+                                                <div class="flex justify-between text-[9px] text-gray-400">
+                                                    <span>Operating (운영 중)</span>
+                                                    <span class="text-green-400 font-bold">100%</span>
+                                                </div>
+                                                <div class="w-24 h-1.5 bg-navy-800 rounded-full overflow-hidden">
+                                                    <div class="bg-green-500 h-full rounded-full" style="width: 100%"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-white font-mono">$10,000</td>
+                                    </tr>
+                                    <tr class="group hover:bg-white/5 transition cursor-pointer">
+                                        <td class="font-bold text-white flex items-center gap-2">
+                                            <div class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div> Star Bay Residences
+                                        </td>
+                                        <td class="text-gray-400">Sihanoukville</td>
+                                        <td>
+                                            <div class="flex flex-col gap-1">
+                                                <div class="flex justify-between text-[9px] text-gray-400">
+                                                    <span>Structuring (구조화)</span>
+                                                    <span class="text-purple-400 font-bold">35%</span>
+                                                </div>
+                                                <div class="w-24 h-1.5 bg-navy-800 rounded-full overflow-hidden">
+                                                    <div class="bg-purple-500 h-full rounded-full" style="width: 35%"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-white font-mono">$2,500 (Deposit)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. 포트폴리오 (Portfolio) -->
+                <div id="content-portfolio" class="content-panel hidden">
+                    <div class="flex items-center justify-between gap-3 mb-6 border-b border-white/5 pb-4">
+                        <div class="flex items-center gap-3"><i class="ph-duotone ph-buildings text-2xl text-indigo-400"></i><h2 class="text-xl font-bold text-white">구독 및 자산 관리 (Subscription Management)</h2></div>
+                        <div class="text-xs font-bold text-gray-500 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">Total Staked: <span class="text-white">850,000 GLIB</span></div>
+                    </div>
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-400 uppercase mb-4 flex items-center gap-2"><i class="ph-fill ph-check-circle text-green-500"></i> 구독 중인 자산 (Active Staking)</h3>
+                            <div class="bg-navy-950 border border-green-500/30 rounded-2xl p-6 relative overflow-hidden group hover:bg-white/[0.02] transition">
+                                <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/20 border-b border-l border-green-500/30 rounded-bl-xl text-[10px] font-bold text-green-400 uppercase tracking-wider">Subscribed (Running)</div>
+                                <div class="flex flex-col md:flex-row gap-6 items-start">
+                                    <div class="w-full md:w-48 h-32 rounded-xl overflow-hidden relative flex-shrink-0"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><span class="px-3 py-1 bg-indigo-600/90 rounded-full text-[10px] font-bold text-white border border-white/20 shadow-lg">PREMIUM ACCESS</span></div></div>
+                                    <div class="flex-grow w-full">
+                                        <div class="flex justify-between items-start mb-2"><div><h4 class="text-lg font-bold text-white flex items-center gap-2">Khlaeng Meas 1 Hotel<span class="px-2 py-0.5 rounded-full bg-blue-500/10 text-[9px] text-blue-400 border border-blue-500/20">Operational</span></h4><p class="text-xs text-gray-500 mt-1"><i class="ph-fill ph-map-pin text-gray-600"></i> Sihanoukville, Cambodia</p></div><div class="text-right hidden md:block"><p class="text-[10px] text-gray-500 uppercase">Risk Level</p><p class="text-xs font-bold text-green-400 flex items-center justify-end gap-1"><i class="ph-fill ph-shield-check"></i> Low (Safe)</p></div></div>
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 bg-black/20 p-4 rounded-xl border border-white/5"><div><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Staked Asset (예치 자산)</p><p class="text-sm font-bold text-white font-mono">500,000 <span class="text-[10px] text-gray-600">GLIB</span></p></div><div><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">APR (연이율)</p><p class="text-sm font-bold text-green-400 font-mono">12.5% <span class="text-[10px] text-gray-600">(Daily USDT)</span></p></div><div><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Pending Reward (미수령 이자)</p><p class="text-sm font-bold text-yellow-400 font-mono animate-pulse">+ 12.50 <span class="text-[10px] text-gray-600">USDT</span></p></div><div class="flex items-center justify-end"><button class="w-full px-3 py-2 bg-green-600 hover:bg-green-500 text-white text-[11px] font-bold rounded-lg transition shadow-lg shadow-green-900/20 flex items-center justify-center gap-1"><i class="ph-bold ph-download-simple"></i> USDT 즉시 수령</button></div></div>
+                                        <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/5 text-[10px]"><div class="text-gray-500 flex gap-4"><span>시작일: <strong class="text-gray-400">2025. 02. 15</strong></span><span>갱신일: <strong class="text-gray-400">2026. 02. 15</strong> (365 Days)</span></div><button class="font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1 group/cancel"><i class="ph-bold ph-x-circle"></i> 구독 해지 신청<span class="hidden group-hover/cancel:inline text-[9px] text-red-500 ml-1">(30일 대기 발생)</span></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-navy-950 border border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:bg-white/[0.02] transition mt-4">
+                                <div class="absolute top-0 right-0 px-3 py-1 bg-blue-500/20 border-b border-l border-blue-500/30 rounded-bl-xl text-[10px] font-bold text-blue-400 uppercase tracking-wider">Subscribed (Running)</div>
+                                <div class="flex flex-col md:flex-row gap-6 items-start">
+                                    <div class="w-full md:w-48 h-32 rounded-xl overflow-hidden relative flex-shrink-0"><img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition duration-500"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><span class="px-3 py-1 bg-blue-600/90 rounded-full text-[10px] font-bold text-white border border-white/20 shadow-lg">STANDARD ACCESS</span></div></div>
+                                    <div class="flex-grow w-full">
+                                        <div class="flex justify-between items-start mb-2"><div><h4 class="text-lg font-bold text-white flex items-center gap-2">Star Bay Residences<span class="px-2 py-0.5 rounded-full bg-purple-500/10 text-[9px] text-purple-400 border border-purple-500/20">Pre-Sale</span></h4><p class="text-xs text-gray-500 mt-1"><i class="ph-fill ph-map-pin text-gray-600"></i> Sihanoukville, Cambodia</p></div><div class="text-right hidden md:block"><p class="text-[10px] text-gray-500 uppercase">Risk Level</p><p class="text-xs font-bold text-yellow-500 flex items-center justify-end gap-1"><i class="ph-fill ph-warning"></i> Mid (Moderate)</p></div></div>
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 bg-black/20 p-4 rounded-xl border border-white/5"><div><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Staked Asset (예치 자산)</p><p class="text-sm font-bold text-white font-mono">250,000 <span class="text-[10px] text-gray-600">GLIB</span></p></div><div><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">APR (연이율)</p><p class="text-sm font-bold text-green-400 font-mono">8.0% <span class="text-[10px] text-gray-600">(Daily USDT)</span></p></div><div><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Pending Reward (미수령 이자)</p><p class="text-sm font-bold text-yellow-400 font-mono animate-pulse">+ 4.50 <span class="text-[10px] text-gray-600">USDT</span></p></div><div class="flex items-center justify-end"><button class="w-full px-3 py-2 bg-green-600 hover:bg-green-500 text-white text-[11px] font-bold rounded-lg transition shadow-lg shadow-green-900/20 flex items-center justify-center gap-1"><i class="ph-bold ph-download-simple"></i> USDT 즉시 수령</button></div></div>
+                                        <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/5 text-[10px]"><div class="text-gray-500 flex gap-4"><span>시작일: <strong class="text-gray-400">2025. 03. 01</strong></span><span>갱신일: <strong class="text-gray-400">2026. 03. 01</strong> (365 Days)</span></div><button class="font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1 group/cancel"><i class="ph-bold ph-x-circle"></i> 구독 해지 신청<span class="hidden group-hover/cancel:inline text-[9px] text-red-500 ml-1">(30일 대기 발생)</span></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-6 border-t border-white/10">
+                            <h3 class="text-sm font-bold text-gray-400 uppercase mb-4 flex items-center gap-2"><i class="ph-fill ph-hourglass text-yellow-500"></i> 해지 진행 자산 (Unstaking Process)</h3>
+                            <div class="bg-navy-950 border border-yellow-500/20 rounded-2xl p-6 relative overflow-hidden">
+                                <div class="absolute inset-0 construction-pattern opacity-5 pointer-events-none"></div>
+                                <div class="flex flex-col md:flex-row gap-6 items-center relative z-10">
+                                    <div class="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 border border-white/10 flex-shrink-0"><i class="ph-duotone ph-lock-key-open text-3xl"></i></div>
+                                    <div class="flex-grow w-full"><h4 class="text-base font-bold text-white mb-1">Glory Bay Resort (Basic)</h4><div class="flex flex-wrap items-center gap-3 text-xs mb-2"><span class="text-gray-500">해지 신청일: <strong class="text-gray-400">2025. 12. 05</strong></span><span class="w-1 h-1 rounded-full bg-gray-600"></span><span class="text-yellow-500 font-bold bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">Cool-down (30일 대기)</span><span class="text-green-400 font-bold flex items-center gap-1"><i class="ph-fill ph-coins"></i> 이자 정상 발생 중</span></div><div class="w-full bg-navy-900 rounded-full h-1.5 overflow-hidden"><div class="bg-yellow-500 h-1.5 rounded-full" style="width: 33%"></div></div><div class="flex justify-between text-[9px] text-gray-500 mt-1"><span>신청 완료</span><span>수령 가능 (D-20)</span></div></div>
+                                    <div class="flex gap-6 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-6"><div class="text-right"><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">수령 가능까지</p><p class="text-2xl font-black text-yellow-400 font-mono">20 <span class="text-sm font-bold text-gray-500">Days</span></p></div><div class="text-right"><p class="text-[10px] text-gray-500 uppercase font-bold mb-1">반환 예정 자산</p><p class="text-lg font-bold text-white font-mono">100,000 <span class="text-xs text-gray-600">GLIB</span></p><p class="text-[9px] text-green-400 font-mono">+ 누적 이자 포함</p></div></div>
+                                </div>
+                                <div class="mt-4 pt-3 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-3"><p class="text-[10px] text-gray-400 flex items-center gap-1.5"><i class="ph-fill ph-info text-blue-400"></i> 안내: 쿨다운 기간(30일) 동안에도 <strong>매일 이자가 정상적으로 지급됩니다.</strong></p><button class="text-xs font-bold text-blue-400 hover:text-blue-300 transition flex items-center gap-1 px-3 py-1.5 bg-blue-500/10 rounded-lg hover:bg-blue-500/20"><i class="ph-bold ph-arrow-u-up-left"></i> 해지 취소 (구독 유지)</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. GLIL 쇼핑 (Shopping) -->
+                <div id="content-shopping" class="content-panel hidden">
+                    <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+                        <i class="ph-duotone ph-shopping-bag text-2xl text-yellow-400"></i>
+                        <h2 class="text-xl font-bold text-white">GLIL 쇼핑 (Lifestyle Mall)</h2>
+                    </div>
+                    <div class="flex flex-col items-center justify-center py-16 text-center construction-pattern rounded-2xl border border-white/5 bg-navy-950/50">
+                        <i class="ph-duotone ph-barricade text-6xl text-yellow-500 mb-6"></i>
+                        <h3 class="text-2xl font-bold text-white mb-2">서비스 준비중입니다</h3>
+                        <p class="text-gray-400 max-w-md">GLIL 토큰으로 다양한 레저 상품과 바우처를 구매할 수 있는 전용 쇼핑몰을 구축하고 있습니다. 조금만 기다려주세요!</p>
+                    </div>
+                </div>
+
+                <!-- 7. 이용 내역 (Usage History) - IMPEMENTED -->
+                <div id="content-usage" class="content-panel hidden">
+                    <div class="flex items-center justify-between gap-3 mb-6 border-b border-white/5 pb-4">
+                        <div class="flex items-center gap-3">
+                            <i class="ph-duotone ph-receipt text-2xl text-orange-400"></i>
+                            <h2 class="text-xl font-bold text-white">서비스 이용 내역 (Usage History)</h2>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-xs text-white font-bold transition">전체</button>
+                            <button class="px-3 py-1.5 bg-navy-900 border border-white/10 hover:bg-white/5 rounded-lg text-xs text-gray-400 transition">골프</button>
+                            <button class="px-3 py-1.5 bg-navy-900 border border-white/10 hover:bg-white/5 rounded-lg text-xs text-gray-400 transition">호텔/리조트</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Usage Card 1 -->
+                        <div class="bg-navy-950 border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row gap-5 hover:border-orange-500/30 transition group">
+                            <div class="w-full md:w-32 h-24 rounded-xl overflow-hidden relative flex-shrink-0">
+                                <img src="https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=200" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                <div class="absolute top-2 left-2 bg-black/60 text-white text-[9px] font-bold px-2 py-0.5 rounded backdrop-blur-sm">GOLF</div>
+                            </div>
+                            <div class="flex-grow flex flex-col justify-between">
+                                <div>
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="text-base font-bold text-white">Angkor Golf Resort 18홀 이용권</h4>
+                                        <span class="text-xs font-bold text-gray-400">2025. 12. 10</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">예약번호: GLI-251210-AGR</p>
+                                </div>
+                                <div class="flex justify-between items-end mt-2">
+                                    <button class="text-xs text-orange-400 hover:text-orange-300 font-bold flex items-center gap-1">
+                                        <i class="ph-bold ph-receipt"></i> 전자 영수증 보기
+                                    </button>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-gray-500 line-through">$150.00 USD</p>
+                                        <p class="text-lg font-bold text-white font-mono">1,500 <span class="text-xs text-purple-400">GLIL</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Usage Card 2 -->
+                        <div class="bg-navy-950 border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row gap-5 hover:border-orange-500/30 transition group">
+                            <div class="w-full md:w-32 h-24 rounded-xl overflow-hidden relative flex-shrink-0">
+                                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=200" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                <div class="absolute top-2 left-2 bg-black/60 text-white text-[9px] font-bold px-2 py-0.5 rounded backdrop-blur-sm">HOTEL</div>
+                            </div>
+                            <div class="flex-grow flex flex-col justify-between">
+                                <div>
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="text-base font-bold text-white">Sokha Beach Resort 2박 3일</h4>
+                                        <span class="text-xs font-bold text-gray-400">2025. 11. 25</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">객실타입: Ocean View Suite</p>
+                                </div>
+                                <div class="flex justify-between items-end mt-2">
+                                    <button class="text-xs text-orange-400 hover:text-orange-300 font-bold flex items-center gap-1">
+                                        <i class="ph-bold ph-receipt"></i> 전자 영수증 보기
+                                    </button>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-gray-500 line-through">$400.00 USD</p>
+                                        <p class="text-lg font-bold text-white font-mono">4,000 <span class="text-xs text-purple-400">GLIL</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. 거래 내역 (Transaction History) - IMPLEMENTED -->
+                <div id="content-transaction" class="content-panel hidden">
+                    <div class="flex items-center justify-between gap-3 mb-6 border-b border-white/5 pb-4">
+                        <div class="flex items-center gap-3">
+                            <i class="ph-duotone ph-scroll text-2xl text-pink-400"></i>
+                            <h2 class="text-xl font-bold text-white">거래 내역 (Transaction History)</h2>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-xs text-white font-bold transition">전체</button>
+                            <button class="px-3 py-1.5 bg-navy-900 border border-white/10 hover:bg-white/5 rounded-lg text-xs text-gray-400 transition">Swap</button>
+                            <button class="px-3 py-1.5 bg-navy-900 border border-white/10 hover:bg-white/5 rounded-lg text-xs text-gray-400 transition">P2P</button>
+                            <button class="px-3 py-1.5 bg-navy-900 border border-white/10 hover:bg-white/5 rounded-lg text-xs text-gray-400 transition">입출금</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Type</th>
+                                    <th>Details (From &rarr; To)</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Hash</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <!-- Row 1: P2P Purchase -->
+                                <tr class="hover:bg-white/5 transition border-b border-white/5">
+                                    <td class="py-4 text-gray-400 text-xs">2025. 12. 20<br>14:30:25</td>
+                                    <td><span class="px-2 py-1 bg-pink-500/10 text-pink-400 rounded border border-pink-500/20 text-[10px] font-bold">P2P 구매</span></td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-gray-300">Seller: User8821</span>
+                                            <i class="ph-bold ph-arrow-right text-gray-600 text-xs"></i>
+                                            <span class="text-white font-bold">Me</span>
+                                        </div>
+                                    </td>
+                                    <td class="font-mono font-bold text-green-400">+ 10,000 GLIB</td>
+                                    <td><span class="text-green-500 flex items-center gap-1 text-xs"><i class="ph-fill ph-check-circle"></i> 성공</span></td>
+                                    <td class="text-right"><button class="text-gray-500 hover:text-white"><i class="ph-bold ph-arrow-square-out"></i></button></td>
+                                </div>
+                                <!-- Row 2: Swap -->
+                                <tr class="hover:bg-white/5 transition border-b border-white/5">
+                                    <td class="py-4 text-gray-400 text-xs">2025. 12. 18<br>09:15:10</td>
+                                    <td><span class="px-2 py-1 bg-purple-500/10 text-purple-400 rounded border border-purple-500/20 text-[10px] font-bold">Swap</span></td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-white font-bold">100 GLID</span>
+                                            <i class="ph-bold ph-arrow-right text-gray-600 text-xs"></i>
+                                            <span class="text-white font-bold">100,000 GLIL</span>
+                                        </div>
+                                    </td>
+                                    <td class="font-mono font-bold text-gray-300">- 100 GLID</td>
+                                    <td><span class="text-green-500 flex items-center gap-1 text-xs"><i class="ph-fill ph-check-circle"></i> 성공</span></td>
+                                    <td class="text-right"><button class="text-gray-500 hover:text-white"><i class="ph-bold ph-arrow-square-out"></i></button></td>
+                                </tr>
+                                <!-- Row 3: Deposit -->
+                                <tr class="hover:bg-white/5 transition border-b border-white/5">
+                                    <td class="py-4 text-gray-400 text-xs">2025. 12. 15<br>11:20:05</td>
+                                    <td><span class="px-2 py-1 bg-teal-500/10 text-teal-400 rounded border border-teal-500/20 text-[10px] font-bold">입금</span></td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-gray-300">External Wallet</span>
+                                            <i class="ph-bold ph-arrow-right text-gray-600 text-xs"></i>
+                                            <span class="text-white font-bold">GLI Wallet</span>
+                                        </div>
+                                    </td>
+                                    <td class="font-mono font-bold text-blue-400">+ 1,000 USDT</td>
+                                    <td><span class="text-green-500 flex items-center gap-1 text-xs"><i class="ph-fill ph-check-circle"></i> 성공</span></td>
+                                    <td class="text-right"><button class="text-gray-500 hover:text-white"><i class="ph-bold ph-arrow-square-out"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 9. 입출금 (Wallet Management) - IMPLEMENTED -->
+                <div id="content-wallet" class="content-panel hidden">
+                    <div class="flex items-center justify-between gap-3 mb-6 border-b border-white/5 pb-4">
+                        <div class="flex items-center gap-3">
+                            <i class="ph-duotone ph-arrows-left-right text-2xl text-teal-400"></i>
+                            <h2 class="text-xl font-bold text-white">자산 입출금 (Wallet Management)</h2>
+                        </div>
+                        <div class="text-xs font-bold text-gray-500 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+                            Network: <span class="text-white">ERC-20 / TRC-20</span>
+                        </div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <!-- Deposit Section -->
+                        <div class="bg-navy-950 border border-teal-500/30 rounded-2xl p-6 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 px-3 py-1 bg-teal-500/20 border-b border-l border-teal-500/30 rounded-bl-xl text-[10px] font-bold text-teal-400 uppercase tracking-wider">Deposit</div>
+                            
+                            <h3 class="text-lg font-bold text-white mb-4">입금하기 (Deposit)</h3>
+                            <p class="text-xs text-gray-400 mb-6">외부 지갑에서 아래 주소로 USDT를 전송하세요.<br>반드시 네트워크를 확인해주세요.</p>
+
+                            <div class="flex flex-col items-center mb-6">
+                                <div class="p-3 bg-white rounded-xl mb-4">
+                                    <i class="ph-fill ph-qr-code text-8xl text-black"></i>
+                                </div>
+                                <div class="w-full bg-black/30 border border-white/10 rounded-xl p-3 flex items-center justify-between">
+                                    <span class="text-xs font-mono text-gray-300 truncate mr-2">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</span>
+                                    <button onclick="navigator.clipboard.writeText('0x71C7656EC7ab88b098defB751B7401B5f6d8976F'); alert('주소가 복사되었습니다.');" class="text-teal-400 hover:text-white transition"><i class="ph-bold ph-copy text-lg"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 flex gap-3 items-start">
+                                <i class="ph-fill ph-warning-circle text-red-500 mt-0.5"></i>
+                                <p class="text-[10px] text-red-300"><strong>주의사항:</strong> 오입금 시 복구가 불가능할 수 있습니다. 처음에는 소액으로 테스트 전송을 권장합니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Withdraw Section -->
+                        <div class="bg-navy-950 border border-white/10 rounded-2xl p-6 relative overflow-hidden">
+                             <div class="absolute top-0 right-0 px-3 py-1 bg-white/10 border-b border-l border-white/10 rounded-bl-xl text-[10px] font-bold text-gray-400 uppercase tracking-wider">Withdraw</div>
+                            
+                            <h3 class="text-lg font-bold text-white mb-4">출금하기 (Withdraw)</h3>
+                            <p class="text-xs text-gray-400 mb-6">보유한 GLID(USDT)를 외부 지갑으로 출금합니다.</p>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 mb-1.5">출금 주소 (Destination Address)</label>
+                                    <input type="text" placeholder="0x..." class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-teal-500 outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 mb-1.5">출금 수량 (Amount)</label>
+                                    <div class="relative">
+                                        <input type="number" placeholder="0.00" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-teal-500 outline-none transition">
+                                        <button class="absolute right-3 top-3 text-[10px] text-teal-400 font-bold hover:text-white">MAX</button>
+                                    </div>
+                                    <div class="flex justify-between mt-1 text-[10px]">
+                                        <span class="text-gray-500">출금 가능액: $2,350.00</span>
+                                        <span class="text-gray-500">수수료: $1.00</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="pt-4 border-t border-white/5">
+                                    <label class="block text-xs font-bold text-gray-500 mb-1.5">보안 인증 (2FA)</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" placeholder="Google OTP 6자리" class="flex-grow bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-teal-500 outline-none transition text-center tracking-widest">
+                                        <button class="px-6 py-3 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl transition shadow-lg shadow-teal-900/30">
+                                            출금 신청
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Address Book (Optional) -->
+                    <div class="mt-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-400 uppercase">자주 쓰는 주소 (Address Book)</h3>
+                            <button class="text-xs font-bold text-teal-400 hover:text-white transition"><i class="ph-bold ph-plus"></i> 주소 추가</button>
+                        </div>
+                        <div class="bg-navy-950 border border-white/10 rounded-xl p-4 flex justify-between items-center hover:bg-white/[0.02] transition cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-500"><i class="ph-fill ph-star"></i></div>
+                                <div>
+                                    <div class="text-sm font-bold text-white">내 바이낸스 지갑</div>
+                                    <div class="text-xs text-gray-500 font-mono">0x89...2A1b</div>
+                                </div>
+                            </div>
+                            <button class="text-xs text-gray-500 hover:text-white">선택</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. 이용 내역 (Usage) -->
+                <div id="content-usage" class="content-panel hidden">
+                    <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4"><i class="ph-duotone ph-receipt text-2xl text-orange-400"></i><h2 class="text-xl font-bold text-white">서비스 이용 내역</h2></div>
+                    <div class="overflow-x-auto"><table class="w-full custom-table"><thead><tr><th>Date</th><th>Service</th><th>Details</th><th>Amount</th></tr></thead><tbody><tr><td colspan="4" class="text-center py-8 text-gray-500">최근 이용 내역이 없습니다.</td></tr></tbody></table></div>
+                </div>
+
+                <!-- 8. 거래 내역 (Transaction) -->
+                <div id="content-transaction" class="content-panel hidden">
+                    <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4"><i class="ph-duotone ph-scroll text-2xl text-pink-400"></i><h2 class="text-xl font-bold text-white">거래(P2P) 내역</h2></div>
+                    <div class="flex gap-2 mb-6"><button class="px-4 py-2 rounded-lg bg-pink-500 text-white text-xs font-bold">전체</button><button class="px-4 py-2 rounded-lg bg-navy-950 border border-white/10 text-gray-400 text-xs font-bold hover:text-white">구매</button><button class="px-4 py-2 rounded-lg bg-navy-950 border border-white/10 text-gray-400 text-xs font-bold hover:text-white">판매</button></div>
+                    <div class="overflow-x-auto"><table class="w-full custom-table"><thead><tr><th>Time</th><th>Type</th><th>Counterparty</th><th>Price</th><th>Total</th><th>Status</th></tr></thead><tbody><tr><td colspan="6" class="text-center py-8 text-gray-500">거래 내역이 존재하지 않습니다.</td></tr></tbody></table></div>
+                </div>
+
+                <!-- 9. 입출금 (Wallet) -->
+                <div id="content-wallet" class="content-panel hidden">
+                    <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4"><i class="ph-duotone ph-arrows-left-right text-2xl text-teal-400"></i><h2 class="text-xl font-bold text-white">On-Chain 입출금</h2></div>
+                    <div class="bg-navy-950 p-6 rounded-2xl border border-white/5 mb-8"><label class="block text-xs font-bold text-teal-400 uppercase mb-2">My Wallet Address</label><div class="flex items-center gap-4 bg-black/20 p-4 rounded-xl border border-white/5"><div class="text-mono text-sm text-gray-300 break-all">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</div><button class="text-gray-500 hover:text-white"><i class="ph-bold ph-copy"></i></button></div></div>
+                    <div class="grid grid-cols-2 gap-4"><button class="py-4 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl transition flex flex-col items-center gap-2"><i class="ph-bold ph-download-simple text-xl"></i><span>입금하기 (Deposit)</span></button><button class="py-4 bg-navy-800 hover:bg-navy-700 border border-white/10 text-gray-300 hover:text-white font-bold rounded-xl transition flex flex-col items-center gap-2"><i class="ph-bold ph-upload-simple text-xl"></i><span>출금하기 (Withdraw)</span></button></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="modal-password" class="modal-overlay">
+        <div class="modal-content bg-navy-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl relative"><button onclick="closeModal('password')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ph-bold ph-x"></i></button><h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2"><i class="ph-bold ph-lock-key text-blue-400"></i> 비밀번호 변경</h3><div class="space-y-4"><div><label class="block text-xs font-bold text-gray-500 mb-1.5">현재 비밀번호</label><div class="relative"><input type="password" id="current-pw" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none pr-10"><button onclick="togglePassword('current-pw', this)" class="absolute right-3 top-3 text-gray-500 hover:text-white"><i class="ph-bold ph-eye"></i></button></div></div><div><label class="block text-xs font-bold text-gray-500 mb-1.5">새 비밀번호</label><div class="relative"><input type="password" id="new-pw" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none pr-10"><button onclick="togglePassword('new-pw', this)" class="absolute right-3 top-3 text-gray-500 hover:text-white"><i class="ph-bold ph-eye"></i></button></div><ul class="text-[10px] text-gray-500 space-y-1 ml-1 mt-2"><li class="flex items-center gap-1"><i class="ph-fill ph-check-circle text-gray-600"></i> 최소 8자 이상 입력</li><li class="flex items-center gap-1"><i class="ph-fill ph-check-circle text-gray-600"></i> 영문 대문자, 소문자 포함</li><li class="flex items-center gap-1"><i class="ph-fill ph-check-circle text-gray-600"></i> 숫자 포함</li></ul></div><div><label class="block text-xs font-bold text-gray-500 mb-1.5">새 비밀번호 확인</label><div class="relative"><input type="password" id="confirm-pw" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none pr-10"><button onclick="togglePassword('confirm-pw', this)" class="absolute right-3 top-3 text-gray-500 hover:text-white"><i class="ph-bold ph-eye"></i></button></div></div><button onclick="alert('비밀번호가 성공적으로 변경되었습니다.'); closeModal('password');" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl mt-2 transition">변경하기</button></div></div>
+    </div>
+    <div id="modal-phone" class="modal-overlay">
+        <div class="modal-content bg-navy-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl relative"><button onclick="closeModal('phone')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ph-bold ph-x"></i></button><h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2"><i class="ph-bold ph-device-mobile text-blue-400"></i> 휴대전화 인증</h3><div class="space-y-4"><div><label class="block text-xs font-bold text-gray-500 mb-1.5">통신사 선택</label><div class="relative"><select class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none appearance-none cursor-pointer"><option value="" disabled selected>통신사를 선택해주세요</option><option value="SKT" class="bg-navy-900">SKT</option><option value="KT" class="bg-navy-900">KT</option><option value="LGU" class="bg-navy-900">LG U+</option><option value="SKT_MVNO" class="bg-navy-900">SKT 알뜰폰</option><option value="KT_MVNO" class="bg-navy-900">KT 알뜰폰</option><option value="LGU_MVNO" class="bg-navy-900">LG U+ 알뜰폰</option></select><i class="ph-bold ph-caret-down absolute right-4 top-3.5 text-gray-500 pointer-events-none"></i></div></div><div class="flex gap-2"><input type="text" value="010-****-5678" class="flex-grow bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-400 outline-none" readonly><button onclick="document.getElementById('phone-code-area').classList.remove('hidden'); this.innerText='재전송';" class="px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-blue-400 whitespace-nowrap">인증번호 전송</button></div><div id="phone-code-area" class="hidden space-y-4 animate-fade-in"><div class="relative"><input type="text" placeholder="인증번호 6자리" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none"><span class="absolute right-4 top-3.5 text-xs text-red-400 font-mono">02:59</span></div><button onclick="alert('인증이 완료되었습니다.'); closeModal('phone');" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition">인증 확인</button></div><p class="text-xs text-gray-500 leading-relaxed">* 등록된 휴대전화 번호로 인증번호가 발송됩니다.<br>* 번호 변경은 고객센터를 통해 문의해주세요.</p></div></div>
+    </div>
+    <div id="modal-face" class="modal-overlay">
+        <div class="modal-content bg-navy-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl relative text-center"><button onclick="closeModal('face')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ph-bold ph-x"></i></button><h3 class="text-lg font-bold text-white mb-2">얼굴 인증</h3><p class="text-sm text-gray-400 mb-6">정면을 응시해주세요.</p><div class="relative w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden border-4 border-white/10 bg-black"><div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/20 to-transparent animate-scan z-10"></div><i class="ph-fill ph-user text-8xl text-gray-700 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i><div class="absolute inset-0 border-4 border-blue-500/50 rounded-full"></div></div><div id="face-status" class="text-blue-400 font-bold animate-pulse mb-4">얼굴 인식 중...</div><button onclick="simulateFaceSuccess()" class="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-gray-300 font-bold transition">촬영하기</button></div>
+    </div>
+    <div id="modal-qr" class="modal-overlay">
+        <div class="modal-content bg-navy-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl relative text-center"><button onclick="closeModal('qr')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ph-bold ph-x"></i></button><h3 class="text-lg font-bold text-white mb-2">현장 초대용 QR</h3><p class="text-sm text-gray-400 mb-6">친구의 카메라로 스캔해주세요.</p><div class="p-4 bg-white rounded-2xl mb-6 mx-auto w-48 h-48 flex items-center justify-center"><i class="ph-fill ph-qr-code text-8xl text-black"></i></div><div class="text-sm text-gray-300 font-mono bg-black/30 py-2 rounded-lg mb-6">GLI-8829-XJ</div><button onclick="closeModal('qr')" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition">닫기</button></div>
+    </div>
+    <div id="modal-2fa" class="modal-overlay">
+        <div class="modal-content bg-navy-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl relative"><button onclick="closeModal('2fa')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ph-bold ph-x"></i></button><h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2"><i class="ph-bold ph-device-mobile-camera text-blue-400"></i> Google OTP 설정</h3><div class="space-y-4"><div class="text-center bg-white/5 rounded-xl p-4 mb-4"><p class="text-xs text-gray-400 mb-3">Google Authenticator 앱으로<br>아래 QR코드를 스캔하세요.</p><div class="p-3 bg-white rounded-xl mx-auto w-32 h-32 flex items-center justify-center mb-3"><i class="ph-fill ph-qr-code text-6xl text-black"></i></div><div class="flex items-center justify-center gap-2 bg-black/30 py-2 rounded-lg"><span class="text-xs font-mono text-gray-300">J2KS 92L1 A8X9 P0W2</span><i class="ph-bold ph-copy text-gray-500 cursor-pointer hover:text-white"></i></div></div><div><label class="block text-xs font-bold text-gray-500 mb-1.5">인증 코드 입력</label><input type="text" id="otp-input" placeholder="6자리 숫자" maxlength="6" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none text-center tracking-widest"></div><button onclick="simulate2FASetup()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl mt-2 transition">인증 및 활성화</button></div></div>
+    </div>
+    <div id="modal-pin" class="modal-overlay">
+        <div class="modal-content bg-navy-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl relative text-center"><button onclick="closeModal('pin')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ph-bold ph-x"></i></button><h3 class="text-lg font-bold text-white mb-2">PIN 번호 설정</h3><p class="text-sm text-gray-400 mb-6">사용할 6자리 숫자를 입력해주세요.</p><div class="flex justify-center gap-2 mb-8"><div class="w-4 h-4 rounded-full bg-white/20 pin-dot"></div><div class="w-4 h-4 rounded-full bg-white/20 pin-dot"></div><div class="w-4 h-4 rounded-full bg-white/20 pin-dot"></div><div class="w-4 h-4 rounded-full bg-white/20 pin-dot"></div><div class="w-4 h-4 rounded-full bg-white/20 pin-dot"></div><div class="w-4 h-4 rounded-full bg-white/20 pin-dot"></div></div><div class="grid grid-cols-3 gap-3 mb-6"><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">1</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">2</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">3</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">4</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">5</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">6</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">7</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">8</button><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">9</button><div class="p-4"></div><button class="p-4 bg-white/5 rounded-xl hover:bg-white/10 text-xl font-bold text-white" onclick="pressPin()">0</button><button class="p-4 flex items-center justify-center text-gray-400 hover:text-white" onclick="clearPin()"><i class="ph-bold ph-backspace text-xl"></i></button></div></div>
+    </div>
+    
+    <!-- Upgrade Modal (New) -->
+    <div id="modal-upgrade" class="modal-overlay">
+        <div class="modal-content bg-navy-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl relative">
+            <button onclick="closeModal('upgrade')" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ph-bold ph-x"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-4 border border-indigo-500/30">
+                    <i class="ph-fill ph-crown text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-1">Upgrade to Premium</h3>
+                <p class="text-xs text-gray-400">더 높은 등급으로 다양한 혜택을 누리세요.</p>
+            </div>
+            
+            <div class="space-y-4 mb-8">
+                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/10">
+                    <div class="flex items-center gap-3">
+                        <i class="ph-fill ph-check-circle text-green-500"></i>
+                        <span class="text-sm font-bold text-gray-300">현재 등급</span>
+                    </div>
+                    <span class="text-xs font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded">Basic</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/30">
+                    <div class="flex items-center gap-3">
+                        <i class="ph-fill ph-arrow-circle-up text-indigo-400"></i>
+                        <span class="text-sm font-bold text-white">다음 등급</span>
+                    </div>
+                    <span class="text-xs font-bold text-indigo-400 bg-indigo-500/20 px-2 py-1 rounded">Standard</span>
+                </div>
+            </div>
+
+            <div class="bg-black/20 p-4 rounded-xl border border-white/5 mb-6">
+                <p class="text-[10px] text-gray-500 uppercase font-bold mb-2">필요 스테이킹 수량</p>
+                <div class="flex justify-between items-end">
+                    <span class="text-2xl font-bold text-white font-mono">10,000 <span class="text-sm text-gray-500">GLIB</span></span>
+                    <span class="text-xs text-red-400 font-bold">부족: 10,000</span>
+                </div>
+            </div>
+
+            <button onclick="alert('스테이킹 페이지로 이동합니다.'); closeModal('upgrade');" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-900/30 transition flex items-center justify-center gap-2">
+                업그레이드 진행 <i class="ph-bold ph-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 border-t border-white/5 text-gray-600 text-[10px] uppercase tracking-widest">
+        <p>© 2025 GLI Project. My Page Environment.</p>
+    </footer>
+
+    <script>
+        // Tab Logic
+        function switchTab(tabId) {
+            const buttons = document.querySelectorAll('.menu-card');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            if(activeBtn) activeBtn.classList.add('active');
+            const panels = document.querySelectorAll('.content-panel');
+            panels.forEach(panel => { panel.classList.add('hidden'); panel.classList.remove('animate-fade-in'); });
+            const activePanel = document.getElementById('content-' + tabId);
+            if(activePanel) {
+                activePanel.classList.remove('hidden');
+                void activePanel.offsetWidth; 
+                activePanel.classList.add('animate-fade-in');
+            }
+        }
+
+        // Modal Logic
+        function openModal(modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if(modal) modal.classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if(modal) modal.classList.remove('active');
+        }
+
+        // Password Visibility Toggle
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('ph-eye');
+                icon.classList.add('ph-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('ph-eye-slash');
+                icon.classList.add('ph-eye');
+            }
+        }
+
+        // Face Auth Simulation
+        function simulateFaceSuccess() {
+            const status = document.getElementById('face-status');
+            status.innerText = "분석 중...";
+            status.classList.remove('text-blue-400');
+            status.classList.add('text-yellow-400');
+            
+            setTimeout(() => {
+                status.innerText = "인증 성공!";
+                status.classList.remove('text-yellow-400');
+                status.classList.add('text-green-400');
+                status.classList.remove('animate-pulse');
+                
+                setTimeout(() => {
+                    alert("얼굴 인증이 완료되었습니다.");
+                    closeModal('face');
+                    status.innerText = "얼굴 인식 중...";
+                    status.classList.add('text-blue-400', 'animate-pulse');
+                    status.classList.remove('text-green-400');
+                }, 1000);
+            }, 2000);
+        }
+
+        // Copy Invite Text Logic
+        function copyInviteText() {
+            const text = `안녕하세요! GLI RWA 플랫폼에 초대합니다.\n지금 가입하시면 5,000P를 즉시 받으실 수 있어요.\n\n추천인 코드: GLI-8829-XJ\n가입하기: https://gli-project.io/join`;
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('초대장 문구가 복사되었습니다.\n메신저나 이메일에 붙여넣어 보세요!');
+        }
+
+        // 2FA Setup Simulation
+        function simulate2FASetup() {
+            const input = document.getElementById('otp-input').value;
+            if(input.length !== 6) {
+                alert('6자리 코드를 입력해주세요.');
+                return;
+            }
+            // Success Logic
+            closeModal('2fa');
+            activateSecurityCard('otp', '2FA 인증 (OTP)');
+            updateSecurityLevel(2);
+        }
+
+        // PIN Setup Logic Variables
+        let pinCount = 0;
+        function pressPin() {
+            if(pinCount < 6) {
+                document.querySelectorAll('.pin-dot')[pinCount].classList.add('bg-blue-500');
+                document.querySelectorAll('.pin-dot')[pinCount].classList.remove('bg-white/20');
+                pinCount++;
+                if(pinCount === 6) {
+                    setTimeout(() => {
+                        alert('PIN 번호 설정이 완료되었습니다.');
+                        closeModal('pin');
+                        activateSecurityCard('pin', 'PIN 번호');
+                        updateSecurityLevel(3);
+                        // Reset for next time
+                        pinCount = 0;
+                        document.querySelectorAll('.pin-dot').forEach(dot => {
+                            dot.classList.remove('bg-blue-500');
+                            dot.classList.add('bg-white/20');
+                        });
+                    }, 300);
+                }
+            }
+        }
+        function clearPin() {
+            if(pinCount > 0) {
+                pinCount--;
+                document.querySelectorAll('.pin-dot')[pinCount].classList.remove('bg-blue-500');
+                document.querySelectorAll('.pin-dot')[pinCount].classList.add('bg-white/20');
+            }
+        }
+
+        // Helper to update UI after activation
+        function activateSecurityCard(type, title) {
+            const card = document.getElementById('card-' + type);
+            const badge = document.getElementById('badge-' + type);
+            const btn = document.getElementById('btn-' + type);
+            const icon = document.getElementById('icon-' + type);
+            const titleEl = document.getElementById('title-' + type);
+
+            card.classList.add('border-green-500/30');
+            card.classList.remove('border-white/10');
+            
+            badge.innerHTML = '<span class="text-[10px] font-bold text-green-400 bg-green-500/10 px-2 py-1 rounded border border-green-500/20">Active</span>';
+            
+            icon.classList.remove('bg-white/5', 'text-gray-400');
+            icon.classList.add('bg-green-500/10', 'text-green-400');
+            
+            titleEl.classList.remove('text-gray-300');
+            titleEl.classList.add('text-white');
+
+            // Change button to Manage/Disable style
+            btn.parentElement.innerHTML = `
+                <div class="flex gap-2">
+                    <button class="flex-1 py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl text-xs transition">변경</button>
+                    <button class="flex-1 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold rounded-xl text-xs transition border border-red-500/20">해지</button>
+                </div>
+            `;
+        }
+
+        // Security Level Update Logic
+        function updateSecurityLevel(level) {
+            const text = document.getElementById('security-level-text');
+            const bar2 = document.getElementById('sec-bar-2');
+            const bar3 = document.getElementById('sec-bar-3');
+
+            if (level >= 2) {
+                bar2.classList.remove('bg-gray-700');
+                bar2.classList.add('bg-yellow-500');
+                text.innerText = '보통';
+                text.className = 'text-xs font-bold text-yellow-400 w-12 text-center';
+            }
+            if (level >= 3) {
+                bar3.classList.remove('bg-gray-700');
+                bar3.classList.add('bg-green-500');
+                text.innerText = '안전';
+                text.className = 'text-xs font-bold text-green-400 w-12 text-center';
+            }
+        }
+
+        // Wallet Swap Logic
+        let isWalletConnected = false;
+        const exchangeRates = {
+            'USDT': 1.0,
+            'GLID': 1.0,  // Stable
+            'GLIB': 0.01, // 1 GLIB = $0.01 (Example)
+            'GLIL': 0.001 // 1 GLIL = $0.001 (Example)
+        };
+
+        function connectSwapWallet() {
+            // Simulation of wallet connection
+            const btn = document.querySelector('#wallet-status-disconnected button');
+            btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i>';
+            
+            setTimeout(() => {
+                isWalletConnected = true;
+                document.getElementById('wallet-status-disconnected').classList.add('hidden');
+                document.getElementById('wallet-status-connected').classList.remove('hidden');
+                document.getElementById('swap-balance-from').innerText = "1,450.00"; // Mock USDT Balance
+                checkSwapValidity();
+                alert('지갑이 성공적으로 연동되었습니다.\n잔액 정보를 불러왔습니다.');
+            }, 1000);
+        }
+
+        function updateSwapRate() {
+            const fromToken = document.getElementById('swap-token-from').value;
+            const toToken = document.getElementById('swap-token-to').value;
+            
+            // Simple Mock Rate Logic
+            let rateText = "";
+            if (fromToken === 'USDT' && toToken === 'GLID') rateText = "1 USDT ≈ 1 GLID";
+            else if (fromToken === 'GLID' && toToken === 'GLIB') rateText = "1 GLID ≈ 100 GLIB";
+            else rateText = "1 " + fromToken + " ≈ ? " + toToken;
+            
+            document.getElementById('swap-rate-display').innerText = rateText;
+            calculateSwapOutput(); // Recalculate on token change
+        }
+
+        function calculateSwapOutput() {
+            const amount = parseFloat(document.getElementById('swap-amount-from').value);
+            const warningEl = document.getElementById('swap-warning');
+            const btn = document.getElementById('btn-execute-swap');
+            const minAmount = 10; // Minimum swap amount
+
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById('swap-amount-to').value = '';
+                document.getElementById('swap-min-received').innerText = '0.00';
+                warningEl.classList.add('hidden');
+                btn.innerText = "금액을 입력해주세요";
+                btn.className = "w-full py-3 bg-gray-700 text-gray-400 font-bold rounded-xl text-sm transition cursor-not-allowed";
+                btn.disabled = true;
+                return;
+            }
+
+            // Mock Calculation (1:1 for USDT-GLID, else random for demo)
+            let output = amount; 
+            const fromToken = document.getElementById('swap-token-from').value;
+            if (fromToken === 'GLID') output = amount * 100; // GLID -> GLIB example
+
+            document.getElementById('swap-amount-to').value = output.toFixed(2);
+            document.getElementById('swap-min-received').innerText = (output * 0.99).toFixed(2); // 1% slippage buffer
+
+            // Validation
+            if (amount < minAmount) {
+                warningEl.classList.remove('hidden');
+                btn.innerText = "최소 변환 수량 미달";
+                btn.className = "w-full py-3 bg-red-900/50 text-red-200 font-bold rounded-xl text-sm transition cursor-not-allowed border border-red-500/30";
+                btn.disabled = true;
+            } else if (!isWalletConnected && fromToken === 'USDT') {
+                 btn.innerText = "지갑 연동 필요";
+                 btn.className = "w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-sm transition shadow-lg shadow-blue-900/30";
+                 btn.onclick = connectSwapWallet; // Redirect action
+                 btn.disabled = false;
+            } else {
+                warningEl.classList.add('hidden');
+                btn.innerText = "변환하기 (Swap)";
+                btn.className = "w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-sm transition shadow-lg shadow-purple-900/30";
+                btn.onclick = executeSwapAction;
+                btn.disabled = false;
+            }
+        }
+
+        function checkSwapValidity() {
+            calculateSwapOutput();
+        }
+
+        function executeSwapAction() {
+            const btn = document.getElementById('btn-execute-swap');
+            btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> 처리 중...';
+            setTimeout(() => {
+                alert('토큰 변환이 완료되었습니다!\n자산 현황이 업데이트됩니다.');
+                document.getElementById('swap-amount-from').value = '';
+                calculateSwapOutput(); // Reset UI
+            }, 2000);
+        }
+
+        function swapDirection() {
+            // Logic to swap From/To tokens (Visual only for this demo)
+            const fromSel = document.getElementById('swap-token-from');
+            const toSel = document.getElementById('swap-token-to');
+            const temp = fromSel.value;
+            // Simplified swap for demo
+            if(temp === 'USDT') { fromSel.value = 'GLID'; toSel.value = 'USDT'; }
+            else { fromSel.value = 'USDT'; toSel.value = 'GLID'; }
+            updateSwapRate();
+        }
+
+        function setMaxUSDT() {
+            const balance = 1450.00;
+            document.getElementById('usdt-input').value = balance;
+            calculateSwapOutput();
+        }
+    </script>
+
+</body>
+</html>

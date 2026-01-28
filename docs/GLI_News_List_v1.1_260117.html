@@ -1,0 +1,671 @@
+<!-- 
+    GLI News Room - Based on GLI Main Landing Page V7.8 System
+    - 상단 GNB: 메인 페이지와 100% 동일 (구독 자산목록, 포인트몰 등 드롭다운 포함)
+    - 하단 Footer: 메인 페이지와 100% 동일
+    - 디자인 시스템: Pretendard, Rajdhani, Navy/Blue 테마 적용
+-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLI | News & Insights</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard"', '"Noto Sans KR"', 'sans-serif'],
+                        mono: ['"Rajdhani"', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 850: '#0f172a', 900: '#020617', 950: '#010409' },
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#080c14'
+                        },
+                        cyan: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 900: '#164e63' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+                        purple: { 400: '#c084fc', 500: '#a855f7', 600: '#9333ea' },
+                        primary: '#3b82f6',
+                        accent: '#a855f7',
+                        bgDark: '#080c14',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: radial-gradient(circle at top right, #0f172a 0%, #080c14 100%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Styles from Main */
+        .nav-blur {
+            background: rgba(8, 12, 20, 0.85);
+            backdrop-filter: blur(16px);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .dropdown-container {
+            position: relative;
+            padding: 10px 0;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(10, 15, 25, 0.98);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            z-index: 50;
+        }
+
+        .dropdown-container:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0px);
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 10px 16px;
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .dropdown-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: white;
+            padding-left: 20px;
+        }
+
+        /* Wallet Modal Styles */
+        #walletModal {
+            display: none; opacity: 0; transition: opacity 0.3s ease;
+        }
+        #walletModal.active {
+            display: flex; opacity: 1;
+        }
+        .modal-content {
+            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #walletModal.active .modal-content {
+            transform: scale(1);
+        }
+        .wallet-option {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.2s ease;
+        }
+        .wallet-option:hover {
+            background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.4); transform: translateY(-2px);
+        }
+        .wallet-icon-box {
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(255, 255, 255, 0.05);
+        }
+
+        .unread-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; position: absolute; top: 0; right: 0; border: 2px solid #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        /* News Page Specific Styles */
+        .news-header-glow {
+            position: absolute; top: -20%; left: 20%; width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            filter: blur(100px); z-index: -1;
+        }
+        
+        .news-card-v2 {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .news-card-v2:hover {
+            transform: translateY(-8px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .category-tab {
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s;
+        }
+        .category-tab:hover, .category-tab.active {
+            color: white;
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .sns-icon-btn {
+            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); color: #94a3b8; font-size: 20px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .sns-icon-btn:hover { transform: translateY(-5px); color: white; }
+        .sns-icon-btn.telegram:hover { background: #0088cc; border-color: #0088cc; }
+        .sns-icon-btn.x:hover { background: #000000; border-color: #333333; }
+        .sns-icon-btn.discord:hover { background: #5865F2; border-color: #5865F2; }
+
+    </style>
+</head>
+<body class="selection:bg-blue-500/30" onclick="closeMenus(event)">
+
+    <!-- 지갑 연결 모달 -->
+    <div id="walletModal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+        <div class="modal-content w-full max-w-md bg-navy-950 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white">지갑 연결</h3>
+                <button onclick="closeWalletModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-gray-400 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-8 space-y-4">
+                <p class="text-gray-400 text-sm mb-6 text-center">원하시는 지갑 서비스를 선택해주세요.</p>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('Trust Wallet')">
+                    <div class="flex items-center gap-4">
+                        <div class="wallet-icon-box"><i class="fas fa-shield-alt text-blue-500 text-xl"></i></div>
+                        <span class="font-bold text-white tracking-tight">Trust Wallet</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-blue-400"></i>
+                </button>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('MetaMask')">
+                    <div class="flex items-center gap-4">
+                        <div class="wallet-icon-box"><i class="fas fa-mask text-orange-500 text-xl"></i></div>
+                        <span class="font-bold text-white tracking-tight">MetaMask</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-orange-400"></i>
+                </button>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('Phantom')">
+                    <div class="flex items-center gap-4">
+                        <div class="wallet-icon-box"><i class="fas fa-ghost text-purple-400 text-xl"></i></div>
+                        <span class="font-bold text-white tracking-tight">Phantom Wallet</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-purple-400"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 네비게이션 바 -->
+    <nav class="fixed w-full z-[100] nav-blur border-b border-white/5 transition-all duration-300">
+        <div class="max-w-[1600px] mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-3xl font-black tracking-tighter text-white font-mono">GLI</a>
+            </div>
+
+            <div class="flex items-center gap-10">
+                <div class="hidden lg:flex items-center gap-2 text-[14px] font-medium text-gray-400">
+                    <div class="dropdown-container px-4">
+                        <a href="#" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1">구독 자산목록 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">국가별</a>
+                            <a href="#" class="dropdown-link">레저</a>
+                            <a href="#" class="dropdown-link">상업</a>
+                            <a href="#" class="dropdown-link">주거</a>
+                            <a href="#" class="dropdown-link">프로젝트</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1">포인트몰 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">소셜카지노</a>
+                            <a href="#" class="dropdown-link">레저상품</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1 text-white font-bold">안내센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">공지</a>
+                            <a href="#" class="dropdown-link">가이드</a>
+                            <a href="#" class="dropdown-link text-white bg-blue-500/10">뉴스</a>
+                            <a href="#" class="dropdown-link">파트너스</a>
+                            <a href="#" class="dropdown-link">Docs</a>
+                            <a href="#" class="dropdown-link">FAQs</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4">
+                        <a href="#" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1">기능센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-link">토큰구입</a>
+                            <a href="#" class="dropdown-link">토큰교환</a>
+                            <a href="#" class="dropdown-link">레퍼럴</a>
+                            <a href="#" class="dropdown-link">DAO</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pl-6 border-l border-white/10">
+                    <button id="wallet-btn" onclick="openWalletModal()" class="px-5 py-2.5 bg-navy-900 border border-white/10 hover:bg-navy-800 text-white rounded-xl text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                        <span id="wallet-status-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+                        <span id="wallet-btn-text">Connect Wallet</span>
+                    </button>
+
+                    <div class="hidden sm:flex items-center gap-3 relative font-bold font-sans">
+                        <div class="text-right font-bold mr-2">
+                            <div class="text-sm font-bold text-white uppercase tracking-wide">GUEST</div>
+                            <div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="user-level-text">Lv.1 ACCESS</div>
+                        </div>
+                        
+                        <!-- 마이페이지 프로필 메뉴 -->
+                        <div class="relative h-full flex items-center font-bold">
+                            <button onclick="toggleProfileMenu(event)" class="w-10 h-10 rounded-full bg-navy-900 border-2 border-slate-700 transition-colors shadow-none relative flex items-center justify-center overflow-hidden" id="avatar-container">
+                                <div id="avatar-img-box" class="w-full h-full rounded-full overflow-hidden hidden">
+                                    <img src="https://ui-avatars.com/api/?name=User&background=0f172a&color=cbd5e1" class="w-full h-full object-cover">
+                                </div>
+                                <div id="avatar-text-box" class="w-full h-full flex items-center justify-center text-[13px] font-black text-slate-300 uppercase">GU</div>
+                                <div class="absolute -bottom-1 -right-1 bg-navy-950 text-slate-400 text-[10px] font-bold px-1 py-0.5 rounded-full border border-slate-800 shadow-md z-10 font-bold" id="level-badge">1</div>
+                            </button>
+                            
+                            <div id="profile-menu" class="absolute right-0 top-14 w-52 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in font-sans">
+                                <div class="py-1">
+                                    <div class="px-4 py-2 border-b border-white/5 text-[10px] text-slate-500 font-bold uppercase tracking-widest">My Account</div>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-user-circle text-lg text-cyan-500"></i> 마이페이지</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-list-bullets text-lg text-blue-400"></i> 자산목록</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-shopping-cart-simple text-lg text-emerald-400"></i> 장바구니</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-arrows-left-right text-lg text-purple-400"></i> 거래내역</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-shield-check text-lg text-gold-500"></i> 인증센터</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition"><i class="ph-fill ph-gear-six text-lg text-slate-400"></i> 설정</a>
+                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-[11px] font-black text-red-400 hover:bg-red-500/10 border-t border-white/5 transition uppercase"><i class="ph-fill ph-sign-out text-lg"></i> 로그아웃</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 알림 아이콘 -->
+                        <div class="relative font-bold">
+                            <button onclick="toggleNotification(event)" class="flex items-center justify-center w-10 h-10 rounded-full bg-navy-900/50 hover:bg-navy-900 text-slate-400 transition border border-white/10 relative" id="noti-btn">
+                                <i class="ph-fill ph-bell text-xl"></i>
+                                <span class="unread-dot" id="noti-unread-indicator"></span>
+                            </button>
+                            <div id="noti-panel" class="absolute right-0 top-14 w-80 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in font-sans">
+                                <div class="px-4 py-3 bg-navy-950 border-b border-white/5 flex justify-between items-center">
+                                    <span class="text-xs font-bold text-white uppercase tracking-widest font-mono">Notifications</span>
+                                    <button onclick="markAllNotificationsRead()" class="text-[10px] text-cyan-400 font-bold underline">전체 읽음</button>
+                                </div>
+                                <div id="noti-list" class="max-h-64 overflow-y-auto custom-scrollbar p-4 text-xs text-slate-400">신규 알림이 없습니다.</div>
+                            </div>
+                        </div>
+
+                        <!-- 언어 선택 아이콘 -->
+                        <div class="lang-container relative font-bold">
+                            <button class="flex items-center justify-center w-10 h-10 rounded-full bg-navy-900/50 hover:bg-navy-900 text-slate-400 transition border border-white/10 relative">
+                                <i class="ph-fill ph-globe text-xl"></i>
+                            </button>
+                            <div class="lang-dropdown absolute right-0 top-full mt-2 w-44 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden opacity-0 visibility-hidden transition-all duration-300 translate-y-2 z-50 font-sans">
+                                <div class="py-1">
+                                    <button class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition"><span class="w-2 h-2 rounded-full bg-blue-500"></span> 한국어</button>
+                                    <button class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition"><span class="w-2 h-2 rounded-full bg-transparent"></span> English</button>
+                                    <button class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-blue-500/10 hover:text-white transition"><span class="w-2 h-2 rounded-full bg-transparent"></span> 简体中文</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 뉴스 콘텐츠 섹션 -->
+    <main class="relative pt-40 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+        <div class="news-header-glow"></div>
+        
+        <!-- 헤더 -->
+        <div class="mb-16">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="w-10 h-0.5 bg-blue-500"></span>
+                <span class="text-blue-400 text-xs font-black uppercase tracking-[0.2em] font-mono">Insight Center</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">GLI <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">NEWSROOM</span></h1>
+            <p class="text-gray-400 max-w-2xl text-lg leading-relaxed">
+                GLI의 최신 소식과 RWA 시장 리포트, 파트너십 업데이트를 확인하세요.<br>
+                블록체인과 실물 경제가 만나는 현장의 이야기를 전해드립니다.
+            </p>
+        </div>
+
+        <!-- 필터 및 검색 -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+            <div class="flex flex-wrap gap-2">
+                <button class="category-tab active">전체보기</button>
+                <button class="category-tab">공지사항</button>
+                <button class="category-tab">보도자료</button>
+                <button class="category-tab">인사이트</button>
+                <button class="category-tab">이벤트</button>
+            </div>
+            <div class="relative w-full md:w-80">
+                <input type="text" placeholder="검색어를 입력하세요..." class="w-full bg-navy-900 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:border-blue-500 focus:outline-none transition-colors">
+                <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg"></i>
+            </div>
+        </div>
+
+        <!-- 주요 뉴스 (Featured) -->
+        <div class="mb-12">
+            <article class="relative w-full aspect-[21/9] rounded-[32px] overflow-hidden group cursor-pointer border border-white/5">
+                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/50 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full max-w-4xl">
+                    <span class="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-4 inline-block">보도자료</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight group-hover:text-blue-300 transition-colors">
+                        GLI, 캄보디아 'Star Bay' 레지던스 독점 운영권 확보
+                    </h2>
+                    <p class="text-gray-300 text-base md:text-lg mb-6 line-clamp-2">
+                        시아누크빌의 랜드마크 Star Bay Residences와의 파트너십을 통해 GLI 토큰 홀더들에게 독점적인 숙박 할인 및 수익 공유 모델을 제공합니다.
+                    </p>
+                    <div class="flex items-center text-gray-400 text-xs font-bold gap-4">
+                        <span><i class="ph-fill ph-calendar-blank mr-1"></i> 2026.01.14</span>
+                        <span><i class="ph-fill ph-user mr-1"></i> Official</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 뉴스 그리드 -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <article class="news-card-v2 group cursor-pointer flex flex-col h-full">
+                <div class="relative h-56 overflow-hidden bg-navy-950">
+                    <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-navy-900/80 backdrop-blur-md border border-white/10 text-cyan-400 text-[10px] font-bold uppercase tracking-widest rounded-lg">공지사항</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-cyan-400 transition-colors">GLI Wallet V2.0 업데이트 안내</h3>
+                    <p class="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                        더 빠르고 안전한 자산 관리를 위한 지갑 업데이트가 진행되었습니다. 생체 인증 지원 및 다중 체인 지원 기능이 추가되었습니다.
+                    </p>
+                    <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs text-gray-500 font-bold">
+                        <span>2026.01.12</span>
+                        <span class="flex items-center gap-1 group-hover:text-white transition-colors">Read More <i class="ph-bold ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="news-card-v2 group cursor-pointer flex flex-col h-full">
+                <div class="relative h-56 overflow-hidden bg-navy-950">
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-navy-900/80 backdrop-blur-md border border-white/10 text-purple-400 text-[10px] font-bold uppercase tracking-widest rounded-lg">보도자료</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-purple-400 transition-colors">신규 파트너십: Global Trust Law</h3>
+                    <p class="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                        RWA 자산의 법적 안정성 확보를 위해 글로벌 로펌과 전략적 제휴를 체결했습니다. 투자자 보호를 위한 법적 장치를 강화합니다.
+                    </p>
+                    <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs text-gray-500 font-bold">
+                        <span>2026.01.10</span>
+                        <span class="flex items-center gap-1 group-hover:text-white transition-colors">Read More <i class="ph-bold ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="news-card-v2 group cursor-pointer flex flex-col h-full">
+                <div class="relative h-56 overflow-hidden bg-navy-950">
+                    <img src="https://images.unsplash.com/photo-1526304640152-d4619684e484?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-navy-900/80 backdrop-blur-md border border-white/10 text-green-400 text-[10px] font-bold uppercase tracking-widest rounded-lg">인사이트</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-green-400 transition-colors">2026년 상반기 RWA 시장 전망 보고서</h3>
+                    <p class="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                        전통 금융 기관의 진입과 규제 완화에 따른 RWA 시장의 성장 가능성을 분석했습니다. GLI 리서치 팀의 심층 분석을 확인하세요.
+                    </p>
+                    <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs text-gray-500 font-bold">
+                        <span>2026.01.08</span>
+                        <span class="flex items-center gap-1 group-hover:text-white transition-colors">Read More <i class="ph-bold ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 추가된 아티클 1 -->
+            <article class="news-card-v2 group cursor-pointer flex flex-col h-full">
+                <div class="relative h-56 overflow-hidden bg-navy-950">
+                    <img src="https://images.unsplash.com/photo-1518531966041-98c517023b91?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-navy-900/80 backdrop-blur-md border border-white/10 text-blue-400 text-[10px] font-bold uppercase tracking-widest rounded-lg">보도자료</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-blue-400 transition-colors">베트남 하노이 오피스 빌딩 토큰화 완료</h3>
+                    <p class="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                        하노이 중심 업무 지구의 프리미엄 오피스 빌딩에 대한 자산 토큰화 절차가 마무리되었습니다. 곧 구독 서비스가 시작됩니다.
+                    </p>
+                    <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs text-gray-500 font-bold">
+                        <span>2026.01.05</span>
+                        <span class="flex items-center gap-1 group-hover:text-white transition-colors">Read More <i class="ph-bold ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 추가된 아티클 2 -->
+            <article class="news-card-v2 group cursor-pointer flex flex-col h-full">
+                <div class="relative h-56 overflow-hidden bg-navy-950">
+                    <img src="https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-navy-900/80 backdrop-blur-md border border-white/10 text-gold-400 text-[10px] font-bold uppercase tracking-widest rounded-lg">이벤트</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-gold-400 transition-colors">신규 가입자 대상 포인트 2배 적립 이벤트</h3>
+                    <p class="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                        신규 가입 후 첫 자산 구독 시, 포인트몰에서 즉시 사용 가능한 GLI 포인트를 2배로 적립해 드리는 한정 이벤트를 진행합니다.
+                    </p>
+                    <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs text-gray-500 font-bold">
+                        <span>2026.01.03</span>
+                        <span class="flex items-center gap-1 group-hover:text-white transition-colors">Read More <i class="ph-bold ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 추가된 아티클 3 -->
+            <article class="news-card-v2 group cursor-pointer flex flex-col h-full">
+                <div class="relative h-56 overflow-hidden bg-navy-950">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-navy-900/80 backdrop-blur-md border border-white/10 text-red-400 text-[10px] font-bold uppercase tracking-widest rounded-lg">공지사항</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-red-400 transition-colors">보안 강화: 2단계 인증(2FA) 필수 도입</h3>
+                    <p class="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                        사용자 자산 보호를 위해 로그인 및 출금 시 2단계 인증이 필수로 적용됩니다. 설정 페이지에서 보안 수준을 높여주세요.
+                    </p>
+                    <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs text-gray-500 font-bold">
+                        <span>2026.01.01</span>
+                        <span class="flex items-center gap-1 group-hover:text-white transition-colors">Read More <i class="ph-bold ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="mt-20 flex justify-center items-center gap-2">
+            <button class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-gray-400 hover:bg-white/5 hover:text-white transition"><i class="fas fa-chevron-left"></i></button>
+            <button class="w-10 h-10 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center shadow-lg shadow-blue-500/20">1</button>
+            <button class="w-10 h-10 rounded-xl border border-white/10 text-gray-400 font-bold flex items-center justify-center hover:bg-white/5 hover:text-white transition">2</button>
+            <button class="w-10 h-10 rounded-xl border border-white/10 text-gray-400 font-bold flex items-center justify-center hover:bg-white/5 hover:text-white transition">3</button>
+            <button class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-gray-400 hover:bg-white/5 hover:text-white transition"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="py-24 border-t border-white/5 bg-navy-950 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 text-white">
+            <div class="max-w-xs">
+                <div class="text-3xl font-black mb-8 flex items-center gap-2 tracking-tighter">GLI</div>
+                <p class="text-gray-500 text-sm leading-relaxed mb-8">RWA 기반 실물 자산과 디지털 생태계의 결합을 통해 지속 가능한 투자 가치를 창출합니다.</p>
+            </div>
+            <div class="flex-grow flex flex-col items-center justify-center">
+                <h5 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Join Our Community</h5>
+                <div class="flex gap-4">
+                    <a href="#" class="sns-icon-btn telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="sns-icon-btn x" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="sns-icon-btn discord" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-16">
+                <div>
+                    <h5 class="font-bold mb-6">Menu</h5>
+                    <ul class="text-gray-500 text-sm space-y-4">
+                        <li><a href="#assets" class="hover:text-blue-400">구독자산목록</a></li>
+                        <li><a href="#tokens" class="hover:text-blue-400">TOKEN</a></li>
+                        <li><a href="#guide" class="hover:text-blue-400">가이드</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-6">Legal</h5>
+                    <ul class="text-gray-500 text-sm space-y-4">
+                        <li><a href="#" class="hover:text-blue-400">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-blue-400">License</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-16 mt-16 border-t border-white/5 text-gray-600 text-[10px] uppercase tracking-widest flex justify-between">
+            <p>© 2025 GLI Project. Confidential & Proprietary.</p>
+        </div>
+    </footer>
+
+    <!-- 스크립트 -->
+    <script>
+        const walletModal = document.getElementById('walletModal');
+
+        function openWalletModal() { walletModal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeWalletModal() { walletModal.classList.remove('active'); document.body.style.overflow = 'auto'; }
+
+        function connectWalletMock(walletName) {
+            closeWalletModal();
+            const btnText = document.getElementById('wallet-btn-text');
+            const dot = document.getElementById('wallet-status-dot');
+            if(btnText && dot) {
+                btnText.innerText = "0x71...8A2B";
+                dot.classList.remove('bg-slate-500');
+                dot.classList.add('bg-cyan-400', 'animate-pulse');
+            }
+        }
+
+        window.onclick = function(event) { 
+            if (event.target == walletModal) closeWalletModal(); 
+        }
+        
+        function toggleProfileMenu(e) { 
+            e.stopPropagation(); 
+            document.getElementById('profile-menu').classList.toggle('hidden'); 
+            document.getElementById('noti-panel').classList.add('hidden'); 
+        }
+        
+        function toggleNotification(e) { 
+            e.stopPropagation(); 
+            document.getElementById('noti-panel').classList.toggle('hidden'); 
+            document.getElementById('profile-menu').classList.add('hidden'); 
+        }
+        
+        function closeMenus(e) { 
+            if (!document.getElementById('profile-menu').contains(e.target) && e.target.id !== 'avatar-container') {
+                document.getElementById('profile-menu').classList.add('hidden'); 
+            }
+            if (!document.getElementById('noti-panel').contains(e.target) && e.target.id !== 'noti-btn') {
+                document.getElementById('noti-panel').classList.add('hidden'); 
+            }
+        }
+        
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) { 
+                nav.style.height = "70px"; 
+                nav.style.background = "rgba(8, 12, 20, 0.95)"; 
+            } else { 
+                nav.style.height = "80px"; 
+                nav.style.background = "rgba(8, 12, 20, 0.85)"; 
+            }
+        });
+
+        function markAllNotificationsRead() {
+            const indicator = document.getElementById('noti-unread-indicator');
+            if(indicator) indicator.style.display = 'none';
+            document.getElementById('noti-list').innerText = '읽지 않은 알림이 없습니다.';
+        }
+        
+        // 카테고리 탭 상호작용
+        const tabs = document.querySelectorAll('.category-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
