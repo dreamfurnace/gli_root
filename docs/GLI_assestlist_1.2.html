@@ -1,0 +1,1171 @@
+<!-- 
+    GLI Platform - V0.7 Sub Version (Forked from V0.6 Sub)
+    - Base: GLI Platform V0.6 Sub (Asset Overview + Map Feature + Staking Logic Active)
+    - Purpose: Sub version for further development.
+    - Update: Added Dynamic 'RISK' Badge to Yield Simulator Section in Detail Modal.
+      (Casino/Project: HIGH, Residential/Leisure: MID, Commercial: LOW)
+-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLI Platform - Global Leisure Investment (Sub V0.7)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard"', '"Noto Sans KR"', 'sans-serif'],
+                        mono: ['"Rajdhani"', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' },
+                        navy: { 800: '#1e293b', 900: '#0f172a', 950: '#080c14' },
+                        cyan: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 900: '#164e63' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+                        bronze: { 400: '#d97706', 500: '#b45309', 900: '#78350f' },
+                        silver: { 400: '#94a3b8', 500: '#64748b' },
+                        purple: { 400: '#c084fc', 500: '#a855f7', 600: '#9333ea' }
+                    },
+                    backgroundImage: {
+                        'tech-gradient': 'linear-gradient(135deg, #0f172a 0%, #020617 100%)',
+                        'card-gradient': 'linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                        'premium-gradient': 'linear-gradient(135deg, rgba(66, 32, 6, 0.4) 0%, rgba(15, 23, 42, 0.9) 100%)',
+                        'modal-gradient': 'radial-gradient(circle at center, rgba(15, 23, 42, 0.98) 0%, #020617 100%)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { --tier-color: #c084fc; }
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Pretendard', 'Noto Sans KR', sans-serif; }
+        .glass-panel { background: rgba(30, 41, 59, 0.3); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .hidden-modal { display: none !important; }
+        .visible-modal { display: flex !important; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        
+        .gl-scrollbar::-webkit-scrollbar { height: 10px; }
+        .gl-scrollbar::-webkit-scrollbar-track { background: #020617; border-radius: 5px; }
+        .gl-scrollbar::-webkit-scrollbar-thumb { 
+            background: linear-gradient(90deg, #164e63 0%, #0891b2 100%); 
+            border-radius: 5px; border: 2px solid #020617; 
+        }
+
+        .nav-blur { background: rgba(8, 12, 20, 0.85); backdrop-filter: blur(16px); }
+        .nav-item { position: relative; transition: color 0.3s ease; }
+        .nav-item::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: #3b82f6; transition: width 0.3s ease; }
+        .nav-item:hover::after { width: 100%; }
+        .dropdown-container { position: relative; padding: 10px 0; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: rgba(10, 15, 25, 0.98); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px; padding: 8px; min-width: 140px; opacity: 0; visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.6); z-index: 50;
+        }
+        .dropdown-container:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0px); }
+        .dropdown-link { display: block; padding: 10px 16px; border-radius: 8px; color: #94a3b8; font-size: 13px; transition: all 0.2s ease; white-space: nowrap; cursor: pointer; }
+        .dropdown-link:hover { background: rgba(59, 130, 246, 0.1); color: white; padding-left: 20px; }
+        
+        #walletModal, #videoModal, #mapModal { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        #walletModal.active, #videoModal.active, #mapModal.active { display: flex; opacity: 1; }
+        .modal-content { transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        #walletModal.active .modal-content, #videoModal.active .modal-content, #mapModal.active .modal-content { transform: scale(1); }
+        .wallet-option { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.2s ease; }
+        .wallet-option:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.4); transform: translateY(-2px); }
+        .wallet-icon-box { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(255, 255, 255, 0.05); }
+
+        .tab-btn { position: relative; transition: all 0.3s; flex: 1; padding: 0.75rem 0.25rem; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: #64748b; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; text-align: center; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; transition: all 0.3s; }
+        .tab-free.active { color: #fff !important; text-shadow: 0 0 10px rgba(255,255,255,0.7); }
+        .tab-basic.active { color: #4ade80 !important; }
+        .tab-standard.active { color: #fbbf24 !important; }
+        .tab-premium.active { color: #22d3ee !important; }
+        .tab-business.active { color: #c084fc !important; }
+
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { 
+            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; 
+            background: var(--tier-color); cursor: pointer; margin-top: -7px; 
+            box-shadow: 0 0 12px var(--tier-color); transition: 0.3s;
+        }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #334155; border-radius: 2px; }
+
+        .filter-btn { @apply px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider rounded-lg border transition-all font-mono; background: rgba(30, 41, 59, 0.4); border-color: rgba(255, 255, 255, 0.1); color: #94a3b8; }
+        .filter-btn.active { background: linear-gradient(135deg, #0891b2 0%, #2563eb 100%); border-color: transparent; color: white; box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3); transform: translateY(-1px); }
+
+        .unread-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; position: absolute; top: 0; right: 0; border: 2px solid #0f172a; }
+        .asset-icon-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .asset-icon-btn:hover { transform: scale(1.2); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .country-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-size: cover;
+            background-position: center;
+        }
+        .country-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -5px rgba(34, 211, 238, 0.3);
+            border-color: rgba(34, 211, 238, 0.8);
+        }
+        .country-card-overlay {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.9) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .hashtag-btn {
+            @apply px-4 py-1.5 rounded-full border border-slate-700 bg-slate-900/50 text-[10px] text-slate-400 font-bold uppercase tracking-wider transition-all cursor-pointer;
+        }
+        .hashtag-btn:hover {
+            @apply border-cyan-500/50 text-cyan-400 bg-slate-800/80;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 211, 238, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-tech-gradient min-h-screen flex flex-col overflow-x-hidden font-bold" onclick="closeMenus(event)">
+
+    <!-- 지갑 연결 모달 -->
+    <div id="walletModal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+        <div class="modal-content w-full max-w-md bg-navy-950 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white font-sans">지갑 연결</h3>
+                <button onclick="closeWalletModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-gray-400 transition-colors"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-8 space-y-4 font-sans">
+                <p class="text-gray-400 text-sm mb-6 text-center font-normal">원하시는 지갑 서비스를 선택해주세요.</p>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('Trust Wallet')"><div class="flex items-center gap-4"><div class="wallet-icon-box"><i class="fas fa-shield-alt text-blue-500 text-xl"></i></div><span class="font-bold text-white tracking-tight">Trust Wallet</span></div><i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-blue-400"></i></button>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('MetaMask')"><div class="flex items-center gap-4"><div class="wallet-icon-box"><i class="fas fa-mask text-orange-500 text-xl"></i></div><span class="font-bold text-white tracking-tight">MetaMask</span></div><i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-orange-400"></i></button>
+                <button class="wallet-option w-full p-5 rounded-2xl flex items-center justify-between group" onclick="connectWalletMock('Phantom')"><div class="flex items-center gap-4"><div class="wallet-icon-box"><i class="fas fa-ghost text-purple-400 text-xl"></i></div><span class="font-bold text-white tracking-tight">Phantom Wallet</span></div><i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-purple-400"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 z-[250] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10 modal-content">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors border border-white/10"><i class="ph-bold ph-x text-xl"></i></button>
+            <iframe id="promoVideoFrame" class="w-full h-full" src="" title="GLI Promotion Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Map Modal -->
+    <div id="mapModal" class="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="relative w-full max-w-4xl h-[80vh] bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col modal-content">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-slate-950">
+                <h3 class="text-white font-bold flex items-center gap-2 font-rajdhani"><i class="ph-fill ph-map-pin text-cyan-500"></i> Asset Location View</h3>
+                <button onclick="closeMapModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-white transition"><i class="ph-bold ph-x text-xl"></i></button>
+            </div>
+            <div class="flex-grow relative bg-slate-800">
+                <iframe id="googleMapFrame" class="w-full h-full" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" allowfullscreen></iframe>
+                <div id="map-loading" class="absolute inset-0 flex items-center justify-center bg-slate-900 text-cyan-400 font-bold pointer-events-none">Loading Map...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-[100] nav-blur border-b border-slate-700/50 transition-all duration-300">
+        <div class="max-w-[1600px] mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" onclick="returnToMain(event)" class="text-3xl font-black tracking-tighter text-white font-mono uppercase">GLI</a>
+            </div>
+            <div class="flex items-center gap-10">
+                <div class="hidden lg:flex items-center gap-2 text-[14px] font-medium text-gray-400">
+                    <div class="dropdown-container px-4">
+                        <a href="#assets" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1 font-bold">투자 자산목록 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a>
+                        <div class="dropdown-menu">
+                            <a onclick="returnToMain(event)" class="dropdown-link font-bold">국가별</a>
+                            <a onclick="scrollToSection('leisure-section')" class="dropdown-link font-bold">레져</a>
+                            <a onclick="scrollToSection('commercial-section')" class="dropdown-link font-bold">상업</a>
+                            <a onclick="scrollToSection('residential-section')" class="dropdown-link font-bold">주거</a>
+                            <a onclick="scrollToSection('project-section')" class="dropdown-link font-bold">프로젝트</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-container px-4"><a href="#pointmall" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1 font-bold">포인트몰 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a><div class="dropdown-menu"><a href="#" class="dropdown-link font-bold">소셜카지노</a><a href="#" class="dropdown-link font-bold">레저상품</a></div></div>
+                    <div class="dropdown-container px-4"><a href="#guide" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1 font-bold">안내센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a><div class="dropdown-menu"><a href="#" class="dropdown-link font-bold">공지</a><a href="#" class="dropdown-link font-bold">가이드</a><a href="#" class="dropdown-link font-bold">뉴스</a><a href="#" class="dropdown-link font-bold">파트너스</a><a href="#" class="dropdown-link font-bold">Docs</a><a href="#" class="dropdown-link font-bold">FAQs</a></div></div>
+                    <div class="dropdown-container px-4"><a href="#hub" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1 font-bold">기능센터 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a><div class="dropdown-menu"><a href="#" class="dropdown-link font-bold">토큰구입</a><a href="#" class="dropdown-link font-bold">토큰교환</a><a href="#" class="dropdown-link font-bold">레퍼럴</a><a href="#" class="dropdown-link font-bold">DAO</a></div></div>
+                    <div class="dropdown-container px-4"><a href="#mypage" class="nav-item hover:text-white transition-colors whitespace-nowrap flex items-center gap-1 font-bold">마이페이지 <i class="fas fa-chevron-down text-[10px] opacity-40"></i></a><div class="dropdown-menu"><a href="#" class="dropdown-link font-bold">내 자산 현황</a><a href="#" class="dropdown-link font-bold">거래 내역</a><a href="#" class="dropdown-link font-bold">계정 설정</a></div></div>
+                </div>
+                <div class="flex items-center gap-6 pl-6 border-l border-white/10">
+                    <button id="wallet-btn" onclick="openWalletModal()" class="px-5 py-2.5 bg-navy-900 border border-white/10 hover:bg-navy-800 text-white rounded-xl text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2"><span id="wallet-status-dot" class="w-2 h-2 rounded-full bg-slate-500"></span><span id="wallet-btn-text">Connect Wallet</span></button>
+                    <div class="hidden sm:flex items-center gap-3 relative font-bold font-sans">
+                        <div class="text-right font-bold mr-2"><div class="text-sm font-bold text-white uppercase tracking-wide font-bold">SAMSUNG</div><div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="user-level-text">Lv.5 ACCESS</div></div>
+                        <div class="relative h-full flex items-center font-bold">
+                            <button onclick="toggleProfileMenu(event)" class="w-10 h-10 rounded-full bg-navy-900 border-2 border-purple-400 transition-colors shadow-none relative" id="avatar-container"><div class="w-full h-full rounded-full overflow-hidden"><img src="https://ui-avatars.com/api/?name=User&background=0f172a&color=cbd5e1" class="w-full h-full object-cover"></div><div class="absolute -bottom-1 -right-1 bg-navy-950 text-cyan-400 text-[10px] font-bold px-1 py-0.5 rounded-full border border-slate-800 shadow-md z-10 font-bold" id="level-badge">5</div></button>
+                            <div id="profile-menu" class="absolute right-0 top-14 w-48 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in font-sans">
+                                <div class="py-1"><div class="px-4 py-2 border-b border-white/5 text-[10px] text-slate-500 font-bold uppercase tracking-widest font-bold">Account</div><a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-user-circle text-lg text-cyan-500 font-bold"></i> 마이페이지</a><a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-list-bullets text-lg text-blue-400 font-bold"></i> 자산목록</a><a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-300 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-shopping-cart-simple text-lg text-emerald-400 font-bold"></i> 장바구니</a><a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-400 hover:bg-white/5 transition font-bold"><i class="ph-fill ph-gear text-lg text-slate-400 font-bold"></i> 설정</a><a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-red-400 hover:bg-white/5 border-t border-white/5 transition uppercase font-bold">로그아웃</a></div>
+                            </div>
+                        </div>
+                        <div class="relative font-bold">
+                            <button onclick="toggleNotification(event)" class="flex items-center justify-center w-10 h-10 rounded-full bg-navy-900/50 hover:bg-navy-900 text-slate-400 transition border border-white/10 relative font-bold" id="noti-btn"><i class="ph-fill ph-bell text-xl font-bold"></i><span class="unread-dot" id="noti-unread-indicator"></span></button>
+                            <div id="noti-panel" class="absolute right-0 top-14 w-80 bg-navy-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 animate-fade-in font-sans"><div class="px-4 py-3 bg-navy-950 border-b border-white/5 flex justify-between items-center"><span class="text-xs font-bold text-white uppercase tracking-widest font-mono font-bold">Notifications</span><button onclick="markAllNotificationsRead()" class="text-[10px] text-cyan-400 font-bold underline font-bold">전체 읽음</button></div><div id="noti-list" class="max-h-64 overflow-y-auto custom-scrollbar p-4 text-xs text-slate-400 font-bold">신규 알림이 없습니다.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="main-dashboard" class="transition-all duration-500 font-sans font-bold pt-20">
+        <!-- 0. Hot Trending -->
+        <div class="w-full bg-slate-900/50 border-b border-slate-800 pt-4 pb-6 px-6">
+            <div class="max-w-[1600px] mx-auto">
+                <p class="text-xs font-bold text-cyan-400 flex items-center gap-2 tracking-widest uppercase mb-3 font-rajdhani font-bold font-bold"><i class="ph-fill ph-fire text-red-500 animate-pulse"></i> Hot Trending</p>
+                <div id="top-carousel" class="flex gap-5 overflow-x-auto pb-4 gl-scrollbar snap-x font-bold"></div>
+            </div>
+        </div>
+
+        <!-- 1. INVESTMENT PROFIT PROFILE SECTION -->
+        <section class="w-full bg-slate-950 border-b border-slate-800 font-rajdhani font-bold py-10" id="profit-profile-section">
+            <div class="max-w-[1600px] mx-auto px-6">
+                <p class="text-xs font-bold text-slate-400 mb-8 uppercase tracking-widest flex items-center gap-2 font-mono font-bold"><i class="ph-fill ph-shield-check text-green-500 font-bold"></i> Investment Profit Profile</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 font-bold">
+                    <div class="flex items-center bg-slate-900/40 p-5 rounded-2xl border border-purple-500/20 hover:border-purple-500/40 transition-all group overflow-hidden">
+                        <div class="w-12 h-12 rounded-full bg-purple-900/30 flex-shrink-0 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform mr-4 font-bold font-bold font-bold font-bold font-bold font-bold"><i class="ph-fill ph-thumbs-up text-2xl font-bold"></i></div>
+                        <div class="flex flex-col"><h4 class="text-sm font-bold text-white uppercase tracking-tighter whitespace-nowrap">Best Pick</h4><span class="text-[10px] text-purple-200/90 uppercase font-sans font-bold truncate font-bold font-bold font-bold">Expert Selection</span></div>
+                    </div>
+                    <div class="flex items-center bg-slate-900/40 p-5 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all group overflow-hidden font-bold font-bold">
+                        <div class="w-12 h-12 rounded-full bg-emerald-900/30 flex-shrink-0 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform mr-4 font-bold font-bold"><i class="ph-fill ph-shield text-2xl font-bold"></i></div>
+                        <div class="flex flex-col"><h4 class="text-sm font-bold text-white uppercase tracking-tighter whitespace-nowrap font-bold">Low Profit</h4><span class="text-[10px] text-emerald-200/90 uppercase font-sans font-bold truncate">~8% APY Range</span></div>
+                    </div>
+                    <div class="flex items-center bg-slate-900/40 p-5 rounded-2xl border border-yellow-500/20 hover:border-yellow-500/40 transition-all group overflow-hidden font-bold font-bold font-bold">
+                        <div class="w-12 h-12 rounded-full bg-yellow-900/30 flex-shrink-0 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform mr-4 font-bold"><i class="ph-fill ph-chart-line-up text-2xl font-bold"></i></div>
+                        <div class="flex flex-col font-bold font-bold font-bold font-bold font-bold"><h4 class="text-sm font-bold text-white uppercase tracking-tighter whitespace-nowrap font-bold font-bold">Mid Profit</h4><span class="text-[10px] text-yellow-200/90 uppercase font-sans font-bold truncate font-bold font-bold font-bold">~20% APY Range</span></div>
+                    </div>
+                    <div class="flex items-center bg-slate-900/40 p-5 rounded-2xl border border-rose-500/20 hover:border-rose-500/40 transition-all group overflow-hidden font-bold font-bold font-bold font-bold">
+                        <div class="w-12 h-12 rounded-full bg-rose-900/30 flex-shrink-0 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform mr-4 font-bold font-bold"><i class="ph-fill ph-lightning text-2xl font-bold"></i></div>
+                        <div class="flex flex-col font-bold font-bold font-bold font-bold font-bold"><h4 class="text-sm font-bold text-white uppercase tracking-tighter whitespace-nowrap font-bold font-bold">High Profit</h4><span class="text-[10px] text-rose-200/90 uppercase font-sans font-bold truncate font-bold font-bold">60%+ High Yield</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ASSET SEARCH SECTION -->
+        <section class="w-full bg-slate-950 border-b border-slate-800 py-10" id="search-section">
+            <div class="max-w-[1600px] mx-auto px-6">
+                <div class="relative w-full max-w-2xl mx-auto font-sans font-bold mb-6 font-bold font-bold font-bold font-bold font-bold">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none font-bold font-bold"><i class="ph ph-magnifying-glass text-slate-500 text-xl font-bold"></i></div>
+                    <input type="text" class="block w-full pl-14 pr-20 py-5 border border-slate-700 rounded-3xl bg-slate-900 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 text-md shadow-2xl transition-all font-bold font-bold font-bold font-bold" placeholder="Search by asset name, location or type...">
+                    <div class="absolute inset-y-2 right-2 flex items-center font-bold font-bold"><button class="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl transition-all font-bold text-sm uppercase tracking-widest shadow-lg font-bold font-bold">Find Assets</button></div>
+                </div>
+                <div class="flex flex-wrap justify-center gap-3 animate-fade-in font-bold font-bold font-bold font-bold font-bold">
+                    <button onclick="returnToMain(event)" class="hashtag-btn"># ALL</button>
+                    <button onclick="returnToMain(event)" class="hashtag-btn font-bold font-bold font-bold font-bold font-bold"># Country</button>
+                    <button onclick="scrollToSection('leisure-section')" class="hashtag-btn"># Leisure</button>
+                    <button onclick="scrollToSection('commercial-section')" class="hashtag-btn font-bold"># Commercial</button>
+                    <button onclick="scrollToSection('residential-section')" class="hashtag-btn"># Residential</button>
+                    <button onclick="scrollToSection('project-section')" class="hashtag-btn font-bold"># Project</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SELECT COUNTRY SECTION -->
+        <main class="max-w-[1600px] mx-auto p-6 py-12 font-bold" id="asset-section-root">
+            <!-- Country Cards Injected -->
+        </main>
+
+        <!-- 4. LEISURE SECTION -->
+        <section class="max-w-[1600px] mx-auto p-6 py-12 font-bold border-t border-slate-800/50" id="leisure-section">
+            <div class="mb-8 border-b border-slate-800 pb-4 font-bold font-sans">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-3xl font-bold text-white flex items-center gap-3 uppercase tracking-wider font-rajdhani font-bold font-bold"><span class="text-cyan-500"><i class="ph-fill ph-island font-bold"></i></span> Leisure</h3>
+                        <p class="text-sm text-slate-400 mt-2 font-mono font-bold uppercase tracking-widest font-bold font-bold">Golf, Tour, and Hopping Experiences</p>
+                    </div>
+                </div>
+            </div>
+            <div id="leisure-asset-grid" class="flex gap-6 overflow-x-auto pb-8 gl-scrollbar snap-x font-bold"></div>
+        </section>
+
+        <!-- 5. COMMERCIAL SECTION -->
+        <section class="max-w-[1600px] mx-auto p-6 py-12 font-bold border-t border-slate-800/50" id="commercial-section">
+            <div class="mb-8 border-b border-slate-800 pb-4 font-bold font-sans font-bold">
+                <div class="flex items-center justify-between font-bold">
+                    <div>
+                        <h3 class="text-3xl font-bold text-white flex items-center gap-3 uppercase tracking-wider font-rajdhani font-bold"><span class="text-blue-500"><i class="ph-fill ph-buildings font-bold"></i></span> Commercial</h3>
+                        <p class="text-sm text-slate-400 mt-2 font-mono font-bold uppercase tracking-widest font-bold">Offices, Retail Hubs and Commercial Projects</p>
+                    </div>
+                </div>
+            </div>
+            <div id="commercial-asset-grid" class="flex gap-6 overflow-x-auto pb-8 gl-scrollbar snap-x font-bold"></div>
+        </section>
+
+        <!-- 6. RESIDENTIAL SECTION -->
+        <section class="max-w-[1600px] mx-auto p-6 py-12 font-bold border-t border-slate-800/50" id="residential-section">
+            <div class="mb-8 border-b border-slate-800 pb-4 font-bold font-sans font-bold">
+                <div class="flex items-center justify-between font-bold">
+                    <div>
+                        <h3 class="text-3xl font-bold text-white flex items-center gap-3 uppercase tracking-wider font-rajdhani font-bold font-bold"><span class="text-emerald-500"><i class="ph-fill ph-house-line font-bold"></i></span> Residential</h3>
+                        <p class="text-sm text-slate-400 mt-2 font-mono font-bold uppercase tracking-widest font-bold">Luxury Apartments and Private Villas</p>
+                    </div>
+                </div>
+            </div>
+            <div id="residential-asset-grid" class="flex gap-6 overflow-x-auto pb-8 gl-scrollbar snap-x font-bold"></div>
+        </section>
+
+        <!-- 7. PROJECT SECTION -->
+        <section class="max-w-[1600px] mx-auto p-6 py-12 font-bold border-t border-slate-800/50" id="project-section">
+            <div class="mb-8 border-b border-slate-800 pb-4 font-bold font-sans font-bold">
+                <div class="flex items-center justify-between font-bold font-bold">
+                    <div>
+                        <h3 class="text-3xl font-bold text-white flex items-center gap-3 uppercase tracking-wider font-rajdhani font-bold"><span class="text-purple-500 font-bold font-bold"><i class="ph-fill ph-rocket-launch font-bold font-bold"></i></span> Project</h3>
+                        <p class="text-sm text-slate-400 mt-2 font-mono font-bold uppercase tracking-widest font-bold">Business Items and Luxury Dining</p>
+                    </div>
+                </div>
+            </div>
+            <div id="project-asset-grid" class="flex gap-6 overflow-x-auto pb-8 gl-scrollbar snap-x font-bold font-bold"></div>
+        </section>
+        
+        <footer class="bg-slate-950 border-t border-slate-900 text-slate-500 py-16">
+            <div class="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:col-span-2 space-y-4 font-sans font-bold text-center md:text-left font-bold">
+                <div class="flex items-center justify-center md:justify-start gap-2 text-2xl font-black text-white font-mono uppercase tracking-tighter font-bold font-bold"><div class="w-8 h-8 bg-cyan-600 rounded flex items-center justify-center font-mono font-bold">G</div> GLI PLATFORM</div>
+                <p class="text-sm opacity-60 font-bold font-bold font-bold font-bold font-bold">Global Leisure Investment Platform.<br>Transparency in RWA fractional investment ecosystem.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- IMMERSIVE DETAIL MODAL (Sync with index.html) -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden-modal bg-slate-950/95 backdrop-blur-xl overflow-y-auto lg:overflow-hidden flex-col font-sans font-bold">
+        <div class="sticky top-0 z-50 flex justify-between items-center px-4 lg:px-8 py-4 bg-slate-950/80 backdrop-blur border-b border-slate-800 flex-none font-mono font-bold font-bold font-bold">
+            <div class="flex items-center gap-3 font-bold font-bold font-bold">
+                <span class="text-xs text-cyan-500 border border-cyan-900/50 bg-cyan-950/30 px-2 py-1 rounded uppercase font-bold font-bold font-bold font-bold font-bold" id="modal-asset-id">ASSET ID</span>
+                <span class="text-sm font-bold text-white uppercase tracking-wider font-rajdhani truncate max-w-[150px] lg:max-w-none font-bold" id="modal-asset-title">Asset Details</span>
+            </div>
+            <button onclick="closeDetail()" class="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-slate-800 font-bold font-bold font-bold font-bold">
+                <span class="hidden lg:inline text-xs font-bold uppercase tracking-widest font-sans font-bold font-bold font-bold font-bold font-bold">Close</span>
+                <i class="ph-bold ph-x text-lg group-hover:rotate-90 transition-transform font-bold font-bold font-bold font-bold font-bold font-bold"></i>
+            </button>
+        </div>
+
+        <div class="flex-grow w-full max-w-[1800px] mx-auto p-0 lg:p-12 overflow-visible lg:overflow-hidden font-bold">
+            <div class="flex flex-col lg:flex-row gap-0 lg:gap-12 h-auto lg:h-full font-bold">
+                <!-- [LEFT] Visuals & Simulator -->
+                <div class="w-full lg:w-5/12 flex flex-col gap-6 h-auto lg:h-full lg:overflow-y-auto custom-scrollbar pr-0 lg:pr-2 font-sans shrink-0 bg-slate-950 lg:bg-transparent p-4 lg:p-0 font-bold font-bold font-bold">
+                    <div class="relative rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl group h-64 lg:h-[400px] bg-black shrink-0 font-sans cursor-pointer hover:border-cyan-500/50 transition-colors font-bold font-bold font-bold" onclick="openLightbox()">
+                        <div class="absolute top-4 right-4 z-20 bg-black/50 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold"><i class="ph-bold ph-arrows-out-simple text-xl font-bold font-bold font-bold font-bold font-bold font-bold"></i></div>
+                        <img id="gallery-image" src="" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 font-sans font-bold font-bold font-bold">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent font-sans font-bold"></div>
+                        <div class="absolute bottom-6 left-6 right-6 pointer-events-none font-sans font-bold">
+                            <h2 class="text-2xl lg:text-4xl font-black text-white leading-tight uppercase font-rajdhani font-bold truncate font-bold font-bold font-bold font-bold font-bold" id="modal-hero-title">TITLE</h2>
+                            <div class="flex items-center gap-2 text-cyan-400 text-xs lg:text-sm font-bold uppercase tracking-widest font-rajdhani mt-1 font-bold"><i class="ph-fill ph-map-pin font-bold font-bold font-bold font-bold font-bold"></i> <span id="modal-hero-location" class="font-bold font-sans font-bold font-bold font-bold">LOCATION</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- NEW ASSET OVERVIEW DESCRIPTION BOX (V0.6) -->
+                    <div class="bg-slate-900/50 rounded-2xl p-6 border border-slate-700/50 backdrop-blur-sm shadow-xl shrink-0 font-bold mb-0">
+                        <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-slate-700 pb-3 uppercase tracking-widest font-mono font-bold">
+                            <i class="ph-fill ph-info text-cyan-500 text-lg font-bold"></i> Asset Overview
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed font-sans font-bold" id="modal-asset-desc">
+                            Loading asset description...
+                        </p>
+                    </div>
+
+                    <div id="yield-sim-container" class="bg-slate-900/50 rounded-2xl p-6 border border-slate-700/50 backdrop-blur-sm shadow-xl shrink-0 transition-all duration-500 border-purple-500 shadow-[0_0_10px_rgba(192,132,252,0.4)] font-bold">
+                        <h4 class="text-sm font-bold text-white mb-6 flex items-center gap-2 border-b border-slate-700 pb-3 uppercase tracking-widest font-mono font-bold font-bold font-bold">
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-calculator text-cyan-500 text-lg font-bold font-bold font-bold font-bold font-bold font-bold"></i> Yield Simulator</span>
+                            <span class="ml-auto text-[10px] bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded border border-rose-500/30 font-bold tracking-wider animate-pulse" id="modal-risk-badge">RISK</span>
+                        </h4>
+                        <div class="space-y-6 font-bold">
+                            <div>
+                                <div class="flex justify-between mb-3 font-sans font-bold font-mono font-bold font-bold font-bold"><span class="text-xs text-slate-400 uppercase tracking-widest font-bold font-bold font-bold font-bold font-bold">Staking Amount</span><span class="text-xl text-white font-bold" id="invest-amount-display">0 GLIB</span></div>
+                                <input type="range" min="0" max="19" step="1" value="19" id="invest-slider" oninput="updateCalculator(this.value)" class="mb-2 w-full font-bold">
+                                <div class="flex justify-between text-[10px] text-slate-600 font-mono font-bold uppercase font-bold font-bold font-bold font-bold"><span>0 GLIB</span><span>100K GLIB</span></div>
+                            </div>
+                            <div id="grade-info-box" class="mb-5 p-3 rounded-xl border transition-all duration-300 bg-purple-950/80 border-purple-500 font-bold font-sans">
+                                <div class="flex items-center justify-between mb-1 font-mono font-bold font-bold font-bold"><span class="text-xs font-bold uppercase tracking-wider text-purple-400 font-bold font-bold font-bold font-bold" id="grade-label">Business</span><i class="ph-fill ph-star text-slate-400 font-bold font-bold font-bold font-bold"></i></div>
+                                <p class="text-[11px] text-slate-400 leading-relaxed font-sans font-bold font-bold font-bold font-bold" id="grade-desc">지분 투자 및 경영진 미팅 브로커리지 (100,000 GLIB+)</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 text-center font-mono font-bold">
+                                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-bold"><p class="text-[9px] text-slate-500 uppercase font-bold mb-1 tracking-widest font-bold font-bold font-bold font-bold">Monthly Payout</p><p class="text-lg font-bold text-cyan-400 font-bold font-mono font-bold font-bold font-bold font-bold" id="calc-monthly">0 GLIB</p></div>
+                                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-bold font-bold font-bold font-bold"><p class="text-[9px] text-slate-500 uppercase font-bold mb-1 tracking-widest font-bold font-bold font-bold font-bold">Yearly Payout</p><p class="text-lg font-bold text-white font-bold font-mono font-bold font-bold font-bold font-bold" id="calc-yearly">0 GLIB</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Comment Section -->
+                    <div class="mt-6 font-bold font-sans font-bold">
+                         <h4 class="text-white font-bold text-sm mb-4 flex items-center gap-2 font-bold font-bold"><i class="ph-fill ph-chat-text text-cyan-400 font-bold font-bold"></i> Comments</h4>
+                            <div id="comment-list" class="space-y-4 mb-4 max-h-48 overflow-y-auto custom-scrollbar pr-2 bg-slate-900/30 p-3 rounded-xl border border-slate-800 font-bold">
+                                <div class="bg-slate-950/50 p-3 rounded-lg border border-slate-800 font-bold font-sans"><div class="flex justify-between items-start mb-1 font-bold"><div class="flex items-center gap-2 font-bold font-bold font-bold font-bold font-bold"><div class="w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center text-[8px] text-purple-400 font-bold font-bold font-bold">W</div><span class="text-[10px] text-white font-bold font-bold font-bold font-bold font-bold">Whale_Investor</span></div><span class="text-[8px] text-slate-500 font-bold font-bold font-bold font-bold">2025.01.10</span></div><p class="text-[10px] text-slate-400 leading-relaxed font-bold font-sans font-bold">The projected yield for this project looks quite attractive.</p></div>
+                            </div>
+                            <div class="flex gap-2 font-bold font-bold font-bold"><input type="text" id="comment-input" placeholder="Leave your opinion..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-[10px] text-white focus:border-cyan-500 outline-none transition-colors font-bold font-bold"><button onclick="addComment()" class="bg-slate-800 hover:bg-cyan-600 text-white px-4 rounded-lg text-[10px] font-bold transition-colors font-bold font-bold">Post</button></div>
+                    </div>
+                </div>
+
+                <!-- [RIGHT] Detail Contents (Internal scrolling restored) -->
+                <div class="w-full lg:w-7/12 flex flex-col bg-slate-900/30 lg:rounded-2xl border-t lg:border border-slate-800 overflow-hidden relative backdrop-blur-sm h-[650px] lg:h-full font-sans font-bold">
+                    <div class="p-6 lg:p-8 border-b border-slate-800 bg-slate-800/20 flex-none grid grid-cols-2 gap-4 lg:gap-6 items-end font-mono font-bold">
+                        <div class="font-bold"><p class="text-[10px] lg:text-xs text-slate-400 mb-1 uppercase tracking-widest font-bold font-mono font-bold font-bold font-bold font-bold font-bold font-bold">Target APY</p><div class="flex items-baseline gap-2 font-bold font-mono font-bold font-bold"><span class="text-4xl lg:text-6xl font-black text-white tracking-tighter" id="modal-apy">0.0</span><span class="text-xl lg:text-2xl text-cyan-500 font-bold font-bold font-bold font-bold font-bold font-bold">%</span></div></div>
+                        <div class="text-right font-bold font-sans font-bold"><div class="flex items-center justify-end gap-2 lg:gap-3 mb-2 font-bold font-mono font-bold font-bold font-bold font-bold font-bold"><p class="text-[10px] lg:text-xs text-slate-400 font-mono uppercase whitespace-nowrap tracking-widest font-bold font-bold font-bold font-bold font-bold">Progress</p><span class="text-[9px] lg:text-[10px] text-cyan-400 font-bold bg-cyan-950/50 border border-cyan-900 px-1.5 lg:px-2 py-0.5 rounded font-mono font-bold font-bold font-bold font-bold font-bold font-bold font-bold">Target: 2026.12.31</span></div><div class="flex items-center justify-end gap-3 font-mono font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold"><span class="text-2xl lg:text-3xl font-bold text-white font-bold font-bold font-bold font-bold font-bold font-bold font-bold" id="modal-progress">0%</span><div class="w-24 lg:w-32 h-2 bg-slate-800 rounded-full overflow-hidden shadow-inner font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold"><div class="h-full bg-cyan-500 shadow-[0_0_8px_#22d3ee] font-bold font-bold" id="modal-progress-bar" style="width: 0%"></div></div></div></div>
+                    </div>
+                    <div class="flex border-b border-slate-800 bg-slate-900/60 flex-none overflow-x-auto font-bold uppercase tracking-widest font-rajdhani font-bold no-scrollbar font-bold font-bold">
+                        <button class="tab-btn tab-free active font-bold min-w-[80px]" onclick="switchTab('overview')">FREE<br>(LV.1)</button>
+                        <button class="tab-btn tab-basic font-bold min-w-[80px]" onclick="switchTab('financials')">BASIC<br>(LV.2)</button>
+                        <button class="tab-btn tab-standard font-bold min-w-[80px]" onclick="switchTab('docs')">STANDARD<br>(LV.3)</button>
+                        <button class="tab-btn tab-premium font-bold min-w-[80px]" onclick="switchTab('security')">PREMIUM<br>(LV.4)</button>
+                        <button class="tab-btn tab-business font-bold min-w-[80px]" onclick="switchTab('alpha')">BUSINESS<br>(LV.5)</button>
+                    </div>
+                    <div class="flex-grow p-6 lg:p-10 overflow-y-auto bg-slate-900/20 custom-scrollbar relative font-bold font-bold font-bold">
+                        <div id="tab-overview" class="space-y-10 animate-fade-in h-full font-bold font-bold font-bold font-bold"></div>
+                        <div id="tab-financials" class="hidden space-y-8 animate-fade-in h-full font-bold"></div>
+                        <div id="tab-docs" class="hidden space-y-8 animate-fade-in h-full font-bold font-bold"></div>
+                        <div id="tab-security" class="hidden space-y-8 animate-fade-in h-full font-bold font-bold"></div>
+                        <div id="tab-alpha" class="hidden space-y-8 animate-fade-in h-full font-bold font-bold font-bold font-bold"></div>
+                    </div>
+                    <div class="p-6 border-t border-slate-800 bg-slate-900/90 flex-none text-center font-mono font-bold">
+                        <button onclick="openStakingReview()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 py-4 text-white font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] tracking-widest uppercase font-mono font-bold font-bold">Confirm Staking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAKING REVIEW MODAL (ADDED FUNCTIONALITY) -->
+    <div id="staking-review-modal" class="fixed inset-0 z-[70] hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4 transition-opacity duration-300 font-bold">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full relative shadow-2xl transform scale-95 opacity-0 transition-all duration-300 font-bold" id="review-modal-content">
+            <button onclick="closeStakingReview()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold"><i class="ph-bold ph-x text-xl font-bold"></i></button>
+            <div class="flex items-center gap-3 mb-6 border-b border-slate-800 pb-4 font-bold"><div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white border border-slate-600 font-bold"><i class="ph-fill ph-signature text-xl font-bold"></i></div><div class="font-bold"><h3 class="text-lg font-bold text-white uppercase tracking-tight font-rajdhani font-bold">Signature Request</h3><p class="text-[10px] text-slate-400 font-mono font-bold">Confirm Investment</p></div></div>
+            <div class="space-y-5 mb-6 font-mono font-bold"><div class="bg-slate-950/30 p-3 rounded-lg border border-slate-800/50 text-center font-bold"><p class="text-[10px] text-slate-400 mb-1 font-bold">* 슬라이더 조작에 따라 구독하고자 하는 내용들이 OPEN 됩니다.</p><p class="text-xs text-cyan-400 font-bold transition-all font-bold" id="review-tier-desc">BASIC: AI 리스크 분석 및 히든 로컬 정보 열람</p></div>
+                <div class="font-bold"><div class="flex justify-between text-xs mb-2 font-bold"><span class="text-slate-400 font-bold font-bold">Subscription Amount</span><span class="text-cyan-400 font-bold font-bold" id="review-slider-value">1,000 GLIB</span></div><input type="range" id="review-slider" min="1000" max="100000" step="1000" value="1000" oninput="updateReviewAmount(this.value)" class="w-full font-bold"></div>
+                <div class="bg-slate-950/50 p-3 rounded-lg border border-slate-800 space-y-2 font-bold"><div class="flex justify-between text-xs font-bold"><span class="text-slate-500 font-bold">Asset Required</span><span class="text-white font-bold font-bold" id="review-asset-req">1,000 GLIB</span></div><div class="flex justify-between text-xs font-bold"><span class="text-slate-500 font-bold">Network Fee</span><span class="text-white font-bold font-bold">0.0025 ETH</span></div><div class="flex justify-between text-xs border-t border-slate-800 pt-2 mt-2 font-bold"><span class="text-slate-500 font-bold">Total</span><span class="text-cyan-400 font-bold font-bold" id="review-total">1,000 GLIB + Fee</span></div></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 font-bold"><button onclick="closeStakingReview()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 rounded-xl uppercase tracking-widest text-[10px] transition-colors font-bold">Reject</button><button id="sign-stake-btn" onclick="confirmStaking()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl uppercase tracking-widest text-[10px] transition-colors shadow-lg font-bold">Sign & Stake</button></div>
+        </div>
+    </div>
+
+    <!-- STAKING CONFIRMATION MODAL (ADDED FUNCTIONALITY) -->
+    <div id="staking-confirm-modal" class="fixed inset-0 z-[80] hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4 transition-opacity duration-300 font-bold">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full relative shadow-2xl transform scale-95 opacity-0 transition-all duration-300 font-bold" id="staking-modal-content">
+            <button onclick="closeStakingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold"><i class="ph-bold ph-x text-xl font-bold"></i></button>
+            <div class="text-center mb-6 font-bold">
+                <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-cyan-400 border border-cyan-500/50 shadow-[0_0_20px_rgba(34,211,238,0.3)]"><i class="ph-fill ph-check-circle text-4xl font-bold"></i></div>
+                <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-2 font-rajdhani font-bold">Staking Confirmed!</h3>
+                <p class="text-xs text-slate-400 font-bold">Your investment has been successfully locked.</p>
+            </div>
+            <div class="bg-slate-950/80 rounded-xl p-4 border border-slate-800 mb-6 space-y-3 font-mono font-bold">
+                <div class="flex justify-between items-center text-xs font-bold"><span class="text-slate-500 font-bold">Asset</span><span class="text-white truncate max-w-[200px]" id="confirm-asset-name">ASSET NAME</span></div>
+                <div class="flex justify-between items-center text-xs font-bold"><span class="text-slate-500 font-bold">Amount</span><span class="text-cyan-400 font-bold" id="confirm-amount">0 GLIB</span></div>
+                <div class="flex justify-between items-center text-xs font-bold"><span class="text-slate-500 font-bold">Lock-up Period</span><span class="text-white font-bold">365 Days</span></div>
+                <div class="flex justify-between items-center text-xs pt-2 border-t border-slate-800 font-bold"><span class="text-slate-500 font-bold">Est. APY</span><span class="text-green-400 font-bold" id="confirm-apy">0%</span></div>
+            </div>
+            <button onclick="closeStakingModal()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl uppercase tracking-widest text-xs transition-colors shadow-lg font-bold">Return to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Assets Database - Full Expansion to 6 items each
+        const allAssetsMap = {
+            'gc-001': { id: 'gc-001', title: 'Gangdao VIP Junket Room', type: 'CASINO', location: 'Cambodia', apy: 18.5, progress: 78, img: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=1080', desc: 'Located in the prestigious coastal zone of Sihanoukville, this VIP Junket Room offers exclusive high-stakes gaming services. Partnered with top-tier international casino operators, it ensures stable high-yield returns through a verified junket system.', risk: 'HIGH' },
+            'gc-002': { id: 'gc-002', title: 'Fortune Slot Hub 50U', type: 'CASINO', location: 'Vietnam', apy: 16.2, progress: 65, img: 'https://images.unsplash.com/photo-1605870445919-838d190e8e1b?q=80&w=1080', desc: 'A modern electronic gaming center in Vietnam, featuring 50 premium slot machines. High footfall area ensures consistent daily revenue.', risk: 'HIGH' },
+            'gc-003': { id: 'gc-003', title: 'Power Poker Lounge', type: 'CASINO', location: 'Manila, PH', apy: 22.4, progress: 38, img: 'https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=1080', desc: 'Manila\'s premier poker destination hosting international tournaments. High profitability driven by rake fees and F&B services.', risk: 'HIGH' },
+            'gc-004': { id: 'gc-004', title: 'Regency Casino Spa', type: 'CASINO', location: 'Manila, PH', apy: 19.8, progress: 82, img: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1080', desc: 'Integrated luxury spa within a major casino resort. Diversified revenue stream from wellness services and gaming patrons.', risk: 'HIGH' },
+            'gc-005': { id: 'gc-005', title: 'Royal High-Roller Hub', type: 'CASINO', location: 'Nha Trang, VN', apy: 24.1, progress: 45, img: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=1080', desc: 'Exclusive members-only gaming club in Nha Trang. Targets VVIP tourists with personalized concierge and high-limit tables.', risk: 'HIGH' },
+            'gc-006': { id: 'gc-006', title: 'Asia Grand Gaming', type: 'CASINO', location: 'Sihanoukville, KH', apy: 17.5, progress: 91, img: 'https://images.unsplash.com/photo-1620393470010-fd62ca935585?q=80&w=1080', desc: 'Large-scale mass market casino floor operation. Stable cash flow from diverse gaming options including Baccarat and Roulette.', risk: 'HIGH' },
+            
+            'ls-001': { id: 'ls-001', title: 'The Royal Woods Golf Club', type: 'GOLF', location: 'Manila, PH', apy: 14.2, progress: 62, img: 'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?q=80&w=1080', desc: 'Premium 18-hole championship golf course in Manila. Membership-based revenue model with high retention rates.', risk: 'MID' },
+            'ls-002': { id: 'ls-002', title: 'Sihanoukville Island Tour', type: 'TOUR', location: 'Cambodia', apy: 18.8, progress: 45, img: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=1080', desc: 'Exclusive island hopping and private yacht tour services. Capitalizes on the growing luxury tourism market in Cambodia.', risk: 'MID' },
+            'ls-003': { id: 'ls-003', title: 'Cebu Island Hopping Package', type: 'HOPPING', location: 'Cebu, PH', apy: 15.5, progress: 88, img: 'https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?q=80&w=1080', desc: 'Top-rated marine tourism package in Cebu. High seasonal demand and strong partnerships with local resorts.', risk: 'MID' },
+            'ls-004': { id: 'ls-004', title: 'Emerald Coast Golf Resort', type: 'GOLF', location: 'Danang, VN', apy: 12.5, progress: 32, img: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?q=80&w=1080', desc: 'Oceanfront golf resort in Danang. Combines luxury accommodation with world-class golfing facilities.', risk: 'MID' },
+            'ls-005': { id: 'ls-005', title: 'Phuket Sunset Hopping', type: 'HOPPING', location: 'Phuket, TH', apy: 16.2, progress: 54, img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1080', desc: 'Sunset cruise and island tour operations in Phuket. High margin service targeting premium tourists.', risk: 'MID' },
+            'ls-006': { id: 'ls-006', title: 'Angkor Cultural Tour', type: 'TOUR', location: 'Siem Reap, KH', apy: 13.8, progress: 77, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1080', desc: 'Guided cultural heritage tours in Siem Reap. Stable income backed by UNESCO world heritage site traffic.', risk: 'MID' },
+
+            'cm-001': { id: 'cm-001', title: 'Skylight Business Tower', type: 'OFFICE', location: 'Ho Chi Minh, VN', apy: 11.5, progress: 74, img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1080', desc: 'Grade A office space in central Ho Chi Minh City. Long-term corporate leases ensure steady rental income.', risk: 'LOW' },
+            'cm-002': { id: 'cm-002', title: 'Central Retail Mall 50U', type: 'RETAIL', location: 'Bangkok, TH', apy: 9.8, progress: 91, img: 'https://images.unsplash.com/photo-1519567241046-7f570eee3ce6?q=80&w=1080', desc: 'Prime retail units in a major Bangkok shopping complex. High occupancy rate and strong foot traffic.', risk: 'LOW' },
+            'cm-003': { id: 'cm-003', title: 'Global Finance Hub', type: 'MULTI', location: 'Manila, PH', apy: 13.4, progress: 38, img: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?q=80&w=1080', desc: 'Mixed-use development in Manila CBD. Integrates fintech offices and commercial retail spaces.', risk: 'LOW' },
+            'cm-004': { id: 'cm-004', title: 'Metro Plaza Complex', type: 'MULTI', location: 'Jakarta, ID', apy: 10.2, progress: 61, img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=1080', desc: 'Strategic commercial hub in Jakarta. Diverse tenant mix minimizes vacancy risk.', risk: 'LOW' },
+            'cm-005': { id: 'cm-005', title: 'Grand Office Suites', type: 'OFFICE', location: 'Kuala Lumpur, MY', apy: 12.1, progress: 29, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1080', desc: 'Modern office suites near KLCC. Attractive for tech startups and multinational branch offices.', risk: 'LOW' },
+            'cm-006': { id: 'cm-006', title: 'Oceanic Retail District', type: 'RETAIL', location: 'Singapore', apy: 8.9, progress: 85, img: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1080', desc: 'Premium retail frontage in Singapore. Stable asset value with moderate but secure yield.', risk: 'LOW' },
+
+            'rs-001': { id: 'rs-001', title: 'Marina Bay Luxury Condo', type: 'APARTMENT', location: 'Singapore', apy: 8.5, progress: 95, img: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1080', desc: 'High-end residential unit with Marina Bay views. Top-tier asset protection and rental demand.', risk: 'MID' },
+            'rs-002': { id: 'rs-002', title: 'Phuket Sea-View Villa', type: 'VILLA', location: 'Phuket, TH', apy: 12.8, progress: 42, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1080', desc: 'Luxury private villa rentals in Phuket. targeted at vacationers seeking privacy and exclusivity.', risk: 'MID' },
+            'rs-003': { id: 'rs-003', title: 'Manila Heights Estate', type: 'HOUSE', location: 'Manila, PH', apy: 11.2, progress: 68, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1080', desc: 'Gated community housing project in Metro Manila. Strong domestic demand for secure family living.', risk: 'MID' },
+            'rs-004': { id: 'rs-004', title: 'Skyline Central Apartment', type: 'APARTMENT', location: 'Bangkok, TH', apy: 9.4, progress: 81, img: 'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=1080', desc: 'Modern serviced apartments in Sukhumvit. Popular among expats and long-stay business travelers.', risk: 'MID' },
+            'rs-005': { id: 'rs-005', title: 'Riverside Private Villa', type: 'VILLA', location: 'Bali, ID', apy: 15.1, progress: 34, img: 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?q=80&w=1080', desc: 'Boutique villa resort in Bali\'s cultural center. High yield potential from tourism recovery.', risk: 'MID' },
+            'rs-006': { id: 'rs-006', title: 'Emerald Hill House', type: 'HOUSE', location: 'Penang, MY', apy: 10.8, progress: 59, img: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=1080', desc: 'Heritage restoration housing project in Penang. Unique asset value combining history and residential utility.', risk: 'MID' },
+
+            'pj-001': { id: 'pj-001', title: 'XIJIU - Premium Baijiu', type: 'LUXURY', location: 'Guizhou, CN', apy: 12.8, progress: 75, img: 'https://images.unsplash.com/photo-1569058242253-92a9c73f49bc?q=80&w=1080', desc: 'Investment in premium aged Baijiu inventory. Rare spirit market shows consistent appreciation.', risk: 'HIGH' },
+            'pj-002': { id: 'pj-002', title: 'Phnom Penh Omakase Izakaya', type: 'F&B', location: 'Phnom Penh, KH', apy: 15.5, progress: 60, img: 'https://images.unsplash.com/photo-1579027989536-b7b1f875659b?q=80&w=1080', desc: 'High-end Japanese dining establishment. Catering to the growing expat and elite community in Cambodia.', risk: 'HIGH' },
+            'pj-003': { id: 'pj-003', title: 'YAPOO Singapore High-end Dining', type: 'F&B', location: 'Singapore', apy: 14.2, progress: 82, img: 'https://images.unsplash.com/photo-1617196034183-421b4917c92d?q=80&w=1080', desc: 'Award-winning fine dining venture in Singapore. Strong brand equity and reservation demand.', risk: 'HIGH' },
+            'pj-004': { id: 'pj-004', title: 'Digital Art Token Project', type: 'TECH', location: 'Seoul, KR', apy: 11.5, progress: 40, img: 'https://images.unsplash.com/photo-1554188248-986adbb73be4?q=80&w=1080', desc: 'Fractional ownership of blue-chip digital art. Exposure to the high-growth digital collectibles market.', risk: 'HIGH' },
+            'pj-005': { id: 'pj-005', title: 'Sustainable Coffee Plantation RWA', type: 'LUXURY', location: 'Dak Lak, VN', apy: 10.2, progress: 55, img: 'https://images.unsplash.com/photo-1501333190715-43093952f08d?q=80&w=1080', desc: 'Direct investment in fair-trade coffee production. Stable agricultural commodity returns.', risk: 'HIGH' },
+            'pj-006': { id: 'pj-006', title: 'Medical Wellness Center', type: 'TECH', location: 'Bangkok, TH', apy: 13.9, progress: 28, img: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1080', desc: 'Advanced anti-aging and wellness facility. Capitalizing on Thailand\'s medical tourism hub status.', risk: 'HIGH' }
+        };
+
+        const geoData = {
+            'KH': { name: 'Cambodia', flag: '🇰🇭', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1080', regions: { 'Sihanoukville': ['gc-006', 'gc-001', 'ls-002'], 'Phnom Penh': ['pj-002'] } },
+            'VN': { name: 'Vietnam', flag: '🇻🇳', image: 'https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=1080', regions: { 'Ho Chi Minh': ['gc-002', 'cm-001'], 'Danang': ['gc-005', 'ls-004'], 'Dak Lak': ['pj-005'] } },
+            'PH': { name: 'Philippines', flag: '🇵🇭', image: 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?q=80&w=1080', regions: { 'Manila': ['gc-003', 'gc-004', 'ls-001', 'cm-003', 'rs-003'] } },
+            'MY': { name: 'Malaysia', flag: '🇲🇾', image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=1080', regions: { 'Kuala Lumpur': ['ta-001', 'cm-005'], 'Penang': ['rs-006'] } },
+            'TH': { name: 'Thailand', flag: '🇹🇭', image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?q=80&w=1080', regions: { 'Phuket': ['ls-005', 'rs-002'], 'Bangkok': ['cm-002', 'rs-004', 'pj-006'] } },
+            'LA': { name: 'Laos', flag: '🇱🇦', image: 'https://images.unsplash.com/photo-1528181304800-259b08848526?q=80&w=1080', regions: { 'Vientiane': [] } },
+            'MM': { name: 'Myanmar', flag: '🇲🇲', image: 'https://images.unsplash.com/photo-1523592121529-f6dde35f079e?q=80&w=1080', regions: { 'Yangon': [] } },
+            'SG': { name: 'Singapore', flag: '🇸🇬', image: 'https://images.unsplash.com/photo-1565967511849-76a60a516170?q=80&w=1080', regions: { 'Singapore': ['cm-006', 'rs-001', 'pj-003'] } }
+        };
+
+        const walletModal = document.getElementById('walletModal'), videoModal = document.getElementById('videoModal'), promoVideoFrame = document.getElementById('promoVideoFrame');
+        let currentLevel = 5, publicChartInstance = null, riskChartInstance = null, selectedAsset = null;
+
+        function init() { 
+            renderTopCarousel(); 
+            renderCountryView(); 
+            renderLeisureView(); 
+            renderCommercialView(); 
+            renderResidentialView();
+            renderProjectView();
+            updateCalculator(19); 
+            document.addEventListener('click', closeMenus); 
+        }
+
+        /* --- Rendering --- */
+        function renderCountryView() {
+            const container = document.getElementById('asset-section-root');
+            if(!container) return;
+            container.innerHTML = `<div class="mb-8 border-b border-slate-800 pb-4"><h3 class="text-3xl font-bold text-white flex items-center gap-3 uppercase tracking-wider font-rajdhani"><span class="text-cyan-500"><i class="ph-fill ph-globe-hemisphere-east font-bold"></i></span> Select Country</h3></div><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-fade-in">${Object.entries(geoData).map(([code, data]) => { const assetCount = Object.values(data.regions).flat().length; return `<div onclick="renderRegionView('${code}')" class="country-card bg-slate-900 border border-slate-700/50 rounded-2xl cursor-pointer relative overflow-hidden group h-64" style="background-image: url('${data.image}');"><div class="country-card-overlay absolute inset-0 z-0"></div><div class="absolute top-4 right-4 z-10 p-2 bg-black/40 backdrop-blur rounded-full border border-white/10 font-bold"><div class="text-3xl select-none grayscale-0">${data.flag}</div></div><div class="relative z-10 flex flex-col h-full justify-end p-6"><div><h4 class="text-2xl font-black text-white font-rajdhani drop-shadow-lg mb-1 uppercase">${data.name}</h4><div class="flex items-center justify-between border-t border-white/20 pt-3 mt-2 font-bold"><span class="text-xs text-slate-300 font-mono uppercase tracking-widest font-bold font-bold font-bold">${Object.keys(data.regions).length} Regions</span><span class="text-[10px] bg-cyan-500/90 text-white px-2 py-1 rounded border border-white/10 font-bold font-bold font-bold">${assetCount} Assets</span></div></div></div></div>`; }).join('')}</div>`;
+        }
+
+        function renderRegionView(code) {
+            const data = geoData[code]; if(!data) return;
+            const regions = Object.keys(data.regions); const first = regions[0];
+            document.getElementById('asset-section-root').innerHTML = `<div class="mb-8 font-bold animate-fade-in font-bold"><button onclick="renderCountryView()" class="mb-4 text-xs text-slate-400 hover:text-white flex items-center gap-2 font-mono uppercase font-bold font-bold"><i class="ph-bold ph-arrow-left font-bold"></i> Back to Countries</button><div class="flex items-end justify-between border-b border-slate-800 pb-4 font-bold"><div><h3 class="text-3xl font-bold text-white flex items-center gap-3 uppercase font-rajdhani font-bold font-bold"><span class="text-4xl font-bold">${data.flag}</span> ${data.name}</h3></div></div><div class="flex flex-wrap gap-2 mt-6 font-mono font-bold" id="region-tabs">${regions.map(r => `<button onclick="filterRegionAssets('${code}', '${r}', this)" class="filter-btn ${r === first ? 'active' : ''}">${r}</button>`).join('')}</div></div><div id="region-asset-grid" class="flex gap-6 overflow-x-auto pb-8 gl-scrollbar snap-x font-bold"></div>`;
+            filterRegionAssets(code, first, null);
+        }
+
+        function filterRegionAssets(code, rName, btn) {
+            if(btn) { document.querySelectorAll('#region-tabs .filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+            const ids = geoData[code].regions[rName]; const grid = document.getElementById('region-asset-grid');
+            grid.innerHTML = ids.length > 0 ? ids.map(id => createAssetCard(allAssetsMap[id])).join('') : `<div class="col-span-full py-20 text-center text-slate-500 font-bold uppercase tracking-widest font-mono">No assets found.</div>`;
+        }
+
+        function renderLeisureView() { document.getElementById('leisure-asset-grid').innerHTML = ['ls-001','ls-002','ls-003','ls-004','ls-005','ls-006'].map(id => createAssetCard(allAssetsMap[id])).join(''); }
+        function renderCommercialView() { document.getElementById('commercial-asset-grid').innerHTML = ['cm-001','cm-002','cm-003','cm-004','cm-005','cm-006'].map(id => createAssetCard(allAssetsMap[id])).join(''); }
+        function renderResidentialView() { document.getElementById('residential-asset-grid').innerHTML = ['rs-001','rs-002','rs-003','rs-004','rs-005','rs-006'].map(id => createAssetCard(allAssetsMap[id])).join(''); }
+        function renderProjectView() { document.getElementById('project-asset-grid').innerHTML = ['pj-001','pj-002','pj-003','pj-004','pj-005','pj-006'].map(id => createAssetCard(allAssetsMap[id])).join(''); }
+
+        function createAssetCard(a) { if(!a) return ''; return `<div class="min-w-[320px] max-w-[320px] glass-panel bg-card-gradient rounded-xl overflow-hidden border border-slate-700/50 cursor-pointer hover:border-cyan-500/50 transition-all shadow-xl h-[380px] flex flex-col font-sans snap-start" onclick="openDetail('${a.id}')"><div class="h-44 bg-slate-900 overflow-hidden relative font-bold"><div class="absolute top-3 left-3 z-10 bg-slate-950/90 px-2 py-1 border border-slate-700 rounded text-[9px] font-black text-cyan-400 font-mono tracking-widest uppercase font-bold">${a.type}</div><img src="${a.img}" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition duration-500"></div><div class="p-5 flex flex-col flex-grow font-sans font-bold"><h5>${a.title}</h5><p class="text-xs text-slate-400 mb-2 font-mono font-bold font-bold font-bold"><i class="ph-fill ph-map-pin text-slate-500 font-bold font-bold font-bold"></i> ${a.location}</p><div class="mt-auto grid grid-cols-2 gap-2 bg-slate-950/80 p-3 rounded-lg border border-slate-700/50 text-center font-mono font-bold font-bold"><div><p class="text-[9px] text-slate-500 uppercase font-sans font-bold font-bold font-bold">PROFIT</p><p class="text-sm font-bold ${a.apy > 15 ? 'text-rose-500' : 'text-emerald-400'} font-sans uppercase font-bold font-bold font-bold">${a.apy > 15 ? 'HIGH' : 'LOW'}</p></div><div class="border-l border-slate-700 font-bold font-bold font-bold font-bold font-bold"><p class="text-[9px] text-slate-500 uppercase font-sans font-bold font-bold font-bold">Staking</p><p class="text-sm font-bold text-white font-sans">${(a.progress * 1250).toLocaleString()} GLIB</p></div></div></div></div>`; }
+
+        function openDetail(id) {
+            const a = allAssetsMap[id]; if(!a) return;
+            selectedAsset = a; // Store for staking
+            document.getElementById('modal-hero-title').innerText = a.title; document.getElementById('modal-hero-location').innerText = a.location;
+            document.getElementById('modal-asset-id').innerText = id.toUpperCase(); document.getElementById('modal-apy').innerText = a.apy;
+            document.getElementById('modal-progress').innerText = a.progress + '%'; document.getElementById('modal-progress-bar').style.width = a.progress + '%';
+            
+            // Set Description
+            const descEl = document.getElementById('modal-asset-desc');
+            if(descEl) descEl.innerText = a.desc || "No description available for this asset.";
+            
+            // Set Risk Badge in Detail Modal (Added for V0.7 Sub)
+            const riskBadge = document.getElementById('modal-risk-badge');
+            if (riskBadge && a.risk) {
+                riskBadge.innerText = a.risk + " RISK";
+                // Reset classes
+                riskBadge.className = "ml-auto text-[10px] px-2 py-0.5 rounded border font-bold tracking-wider animate-pulse";
+                if (a.risk === 'HIGH') {
+                    riskBadge.classList.add('text-rose-400', 'bg-rose-500/20', 'border-rose-500/30');
+                } else if (a.risk === 'MID') {
+                    riskBadge.classList.add('text-yellow-400', 'bg-yellow-500/20', 'border-yellow-500/30');
+                } else {
+                    riskBadge.classList.add('text-emerald-400', 'bg-emerald-500/20', 'border-emerald-500/30');
+                }
+            }
+
+            document.getElementById('gallery-image').src = a.img;
+            const modal = document.getElementById('detail-modal'); modal.classList.remove('hidden-modal'); modal.classList.add('visible-modal');
+            updateModalContent(currentLevel); switchTab('overview');
+        }
+
+        function closeDetail() { document.getElementById('detail-modal').classList.add('hidden-modal'); document.getElementById('detail-modal').classList.remove('visible-modal'); renderCountryView(); }
+        function returnToMain(e) { if(e) e.preventDefault(); closeDetail(); closeWalletModal(); closeVideoModal(); renderCountryView(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function scrollToSection(id) { const el = document.getElementById(id); if(el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' }); }
+        function openWalletModal() { walletModal.classList.add('active'); }
+        function closeWalletModal() { walletModal.classList.remove('active'); }
+        function openVideoModal() { videoModal.classList.add('active'); promoVideoFrame.src = "https://www.youtube.com/embed/YsC_VS2Uy-w?autoplay=1"; }
+        function closeVideoModal() { videoModal.classList.remove('active'); promoVideoFrame.src = ""; }
+
+        function switchTab(tabId) {
+            ['overview', 'financials', 'docs', 'security', 'alpha'].forEach(t => document.getElementById(`tab-${t}`).classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const tabs = ['overview', 'financials', 'docs', 'security', 'alpha'];
+            const idx = tabs.indexOf(tabId); if(idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+            if(tabId === 'overview') setTimeout(renderPublicTourismChart, 200);
+            if(tabId === 'financials' && currentLevel >= 2) setTimeout(renderAIRiskChart, 200);
+        }
+
+        function updateModalContent(level) {
+            const overview = document.getElementById('tab-overview'), financials = document.getElementById('tab-financials'), docs = document.getElementById('tab-docs'), security = document.getElementById('tab-security'), alpha = document.getElementById('tab-alpha');
+            
+            // [OVERVIEW] Sync with index.html (Perfectly Matched) + Map Location Feature Added
+            if(overview) overview.innerHTML = `
+                <div class="space-y-6 font-bold font-sans">
+                    <h4 class="text-white font-bold text-lg border-b border-slate-700 pb-2 flex items-center gap-2 uppercase font-mono font-rajdhani uppercase font-bold font-bold font-bold"><i class="ph-fill ph-chart-line text-cyan-400 font-bold"></i> General Tourism Statistics</h4>
+                    <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50 h-64 relative font-mono font-bold font-bold font-bold"><canvas id="public-tourism-chart"></canvas></div>
+
+                    <!-- Location / Address Section -->
+                    <div class="mb-2 p-4 bg-slate-900/50 border border-slate-700/50 rounded-xl flex justify-between items-center animate-fade-in">
+                        <div>
+                            <p class="text-[9px] text-slate-500 uppercase font-bold mb-1 tracking-wider"><i class="ph-fill ph-map-pin text-cyan-500"></i> Asset Location Address</p>
+                            <p class="text-xs text-white font-bold font-mono tracking-wide" id="overview-address">${selectedAsset ? selectedAsset.location : 'Location Data'} - Prime Resort Area</p>
+                        </div>
+                        <button onclick="openMapModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-[10px] font-bold rounded-lg border border-slate-700 transition flex items-center gap-2 uppercase tracking-wider">
+                            <i class="ph-fill ph-map-trifold text-lg"></i> View Map
+                        </button>
+                    </div>
+
+                    <h4 class="text-white font-bold text-lg border-b border-slate-700 pb-2 mt-4 flex items-center gap-2 uppercase font-rajdhani font-mono font-bold font-bold font-bold"><i class="ph-fill ph-youtube-logo text-red-500 font-bold font-bold font-bold"></i> Public Media & News Reviews</h4>
+                    <div id="news-list" class="space-y-4 font-bold font-bold font-bold">
+                        <div class="bg-slate-800/40 rounded-lg p-3 border border-slate-700 hover:border-slate-500 transition cursor-pointer flex gap-4 font-bold font-bold font-bold font-bold font-bold font-bold font-bold">
+                            <div class="w-32 h-20 bg-slate-900 rounded flex-shrink-0 flex items-center justify-center text-slate-500 font-bold"><i class="ph-fill ph-play-circle text-3xl font-bold"></i></div>
+                            <div class="font-bold">
+                                <p class="text-[11px] text-white font-bold leading-tight mb-1 font-bold">Cambodia Tourism Growth 2025 Report</p>
+                                <p class="text-[9px] text-slate-500 font-bold font-bold font-bold font-bold">Global Economics News • 24K views</p>
+                                <p class="text-[9px] text-slate-400 mt-2 line-clamp-2 font-bold font-bold font-bold font-bold font-bold">Analysis of massive casino complex development in Sihanoukville and foreign capital influx...</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800/40 rounded-lg p-3 border border-slate-700 hover:border-slate-500 transition cursor-pointer flex gap-4 font-bold font-bold font-bold font-bold font-bold font-bold">
+                            <div class="w-32 h-20 bg-slate-900 rounded flex-shrink-0 flex items-center justify-center text-slate-500 font-bold font-bold font-bold"><i class="ph-fill ph-article text-3xl font-bold font-bold font-bold"></i></div>
+                            <div class="font-bold font-bold font-bold font-bold font-bold font-bold">
+                                <p class="text-[11px] text-white font-bold leading-tight mb-1 font-bold font-bold font-bold font-bold font-bold">Sihanoukville Investment Guide & Regulations</p>
+                                <p class="text-[9px] text-slate-500 font-bold font-bold font-bold font-bold font-bold">Google Public Data • Updated yesterday</p>
+                                <p class="text-[9px] text-slate-400 mt-2 line-clamp-2 font-bold font-bold font-bold font-bold font-bold">Summary of key tax incentives and foreign investment regulations in SEZ zones.</p>
+                            </div>
+                        </div>
+                        <div id="extra-news" class="hidden space-y-4 font-bold font-bold font-bold">
+                            <div class="bg-slate-800/40 rounded-lg p-3 border border-slate-700 hover:border-slate-500 transition cursor-pointer flex gap-4 font-bold font-bold font-bold">
+                                <div class="w-32 h-20 bg-slate-900 rounded flex-shrink-0 flex items-center justify-center text-slate-500 font-bold"><i class="ph-fill ph-trend-up text-3xl font-bold font-bold font-bold"></i></div>
+                                <div>
+                                    <p class="text-[11px] text-white font-bold leading-tight mb-1 font-bold font-bold font-bold font-bold font-bold">SE Asia Casino Market Outlook 2025</p>
+                                    <p class="text-[9px] text-slate-500 font-bold font-bold font-bold font-bold font-bold">MarketWatch Analysis • 1 week ago</p>
+                                    <p class="text-[9px] text-slate-400 mt-2 line-clamp-2 font-bold font-bold font-bold font-bold">Comparative study of gaming sectors in Vietnam, Philippines, and Cambodia.</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800/40 rounded-lg p-3 border border-slate-700 hover:border-slate-500 transition cursor-pointer flex gap-4 font-bold font-bold font-bold">
+                                <div class="w-32 h-20 bg-slate-900 rounded flex-shrink-0 flex items-center justify-center text-slate-500 font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold"><i class="ph-fill ph-globe text-3xl font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold"></i></div>
+                                <div class="font-bold font-bold font-bold font-bold font-bold">
+                                    <p class="text-[11px] text-white font-bold leading-tight mb-1 font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold">Global Leisure Investment Trend Analysis</p>
+                                    <p class="text-[9px] text-slate-500 font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold">GLI Research Hub • New Insight</p>
+                                    <p class="text-[9px] text-slate-400 mt-2 line-clamp-2 font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold">Exploring the RWA fractional ownership boom in high-yield leisure properties.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="document.getElementById('extra-news').classList.toggle('hidden'); this.innerText = document.getElementById('extra-news').classList.contains('hidden') ? 'See More News' : 'Show Less';" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-[10px] text-slate-400 font-bold transition font-bold font-bold font-bold">See More News</button>
+                    </div>
+                </div>`;
+
+            // [BASIC] Sync with index.html (AI Risk Radar & Insights)
+            const basicHTML = `
+                <div class="space-y-8 font-mono font-bold">
+                    <div class="bg-blue-900/10 border border-blue-500/30 p-5 rounded-xl font-mono uppercase font-bold">
+                        <div class="flex justify-between items-center mb-4 font-bold">
+                            <h4 class="text-blue-400 font-bold text-sm uppercase tracking-widest font-bold flex items-center gap-2 font-bold"><i class="ph-fill ph-robot text-lg font-bold"></i> Real-time AI Risk Radar</h4>
+                            <span class="text-[9px] bg-blue-900/50 text-blue-200 px-2 py-0.5 rounded border border-blue-500/30 animate-pulse font-bold">ANALYZING</span>
+                        </div>
+                        <div class="grid grid-cols-5 gap-3 h-48 font-bold">
+                            <div class="col-span-3 bg-slate-800/40 p-1.5 rounded-lg border border-slate-700 relative overflow-hidden font-bold"><canvas id="ai-risk-chart"></canvas></div>
+                            <div class="col-span-2 flex flex-col gap-1.5 h-full font-bold">
+                                <div class="bg-slate-900/80 py-1.5 px-2 rounded-lg border border-slate-700 flex flex-col justify-center text-center flex-1 font-bold">
+                                    <p class="text-[7px] text-slate-500 font-bold leading-none mb-0.5 uppercase font-bold">Sentiment</p>
+                                    <p class="text-green-400 font-bold text-[9px] leading-none font-bold">Positive</p>
+                                </div>
+                                <div class="bg-slate-900/80 py-1.5 px-2 rounded-lg border border-slate-700 flex flex-col justify-center text-center flex-1 font-bold">
+                                    <p class="text-[7px] text-slate-500 font-bold leading-none mb-0.5 uppercase font-bold">Risk Index</p>
+                                    <p class="text-yellow-500 font-bold text-[9px] leading-none uppercase font-bold">Moderate</p>
+                                </div>
+                                <div class="bg-slate-900/80 py-1.5 px-2 rounded-lg border border-slate-700 flex flex-col justify-center text-center flex-1 font-bold font-mono font-bold">
+                                    <p class="text-[7px] text-slate-500 font-bold leading-none mb-0.5 uppercase font-bold font-mono">Operation</p>
+                                    <p class="text-cyan-400 font-bold text-[9px] leading-none font-mono uppercase font-bold">A- Tier</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Insight List -->
+                    <div class="mt-6 space-y-3 font-sans font-bold">
+                        <div class="p-3 bg-slate-900/50 border border-blue-500/20 rounded-lg flex items-start gap-3 font-bold">
+                            <i class="ph-fill ph-info text-blue-400 mt-0.5 font-bold"></i>
+                            <div>
+                                <p class="text-[10px] text-white font-bold font-bold">Infrastructure Growth Matrix</p>
+                                <p class="text-[9px] text-slate-400 font-bold font-bold">Regional expansion score upgraded to 8.2/10 based on satellite flow analytics.</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-900/50 border border-blue-500/20 rounded-lg flex items-start gap-3 font-bold">
+                            <i class="ph-fill ph-warning-circle text-yellow-500 mt-0.5 font-bold"></i>
+                            <div>
+                                <p class="text-[10px] text-white font-bold font-bold">Currency Volatility Monitor</p>
+                                <p class="text-[9px] text-slate-400 font-bold font-bold">Local exchange variance detected within stable +/- 2% threshold.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Hidden AI Insights -->
+                        <div id="extra-ai-insights" class="hidden space-y-3 font-bold">
+                            <div class="p-3 bg-slate-900/50 border border-blue-500/20 rounded-lg flex items-start gap-3 font-bold">
+                                <i class="ph-fill ph-chart-line-up text-green-400 mt-0.5 font-bold"></i>
+                                <div>
+                                    <p class="text-[10px] text-white font-bold font-bold">Predictive ROI Analysis</p>
+                                    <p class="text-[9px] text-slate-400 font-bold font-bold">Expected dividend yield increase of 1.5% in Q4 2025 due to seasonal peak.</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-900/50 border border-blue-500/20 rounded-lg flex items-start gap-3 font-bold">
+                                <i class="ph-fill ph-users text-cyan-400 mt-0.5 font-bold"></i>
+                                <div>
+                                    <p class="text-[10px] text-white font-bold font-bold">Competitor Footfall Tracking</p>
+                                    <p class="text-[9px] text-slate-400 font-bold font-bold">Neighboring properties showing 12% lower occupancy compared to GLI managed assets.</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-900/50 border border-blue-500/20 rounded-lg flex items-start gap-3 font-bold">
+                                <i class="ph-fill ph-shield-check text-emerald-400 mt-0.5 font-bold"></i>
+                                <div>
+                                    <p class="text-[10px] text-white font-bold font-bold">Environmental Audit Audit</p>
+                                    <p class="text-[9px] text-slate-400 font-bold font-bold">Sea-level impact audit scored 'Low Risk' for the next 15-year operational cycle.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="document.getElementById('extra-ai-insights').classList.toggle('hidden'); this.innerText = document.getElementById('extra-ai-insights').classList.contains('hidden') ? 'See More AI Insights' : 'Show Less';" class="w-full py-2 bg-blue-900/20 hover:bg-blue-900/40 border border-blue-500/30 rounded text-[10px] text-blue-400 font-bold transition font-bold">See More AI Insights</button>
+                    </div>
+                </div>`;
+
+            // [STANDARD] Sync with index.html (Secret Data Room & Doc List)
+            const standardHTML = `
+                <div class="space-y-6 font-mono font-bold">
+                    <div class="p-6 bg-red-950/10 border border-red-900/30 rounded-xl font-mono uppercase font-bold">
+                        <h4 class="text-red-400 font-bold text-sm mb-6 flex items-center gap-2 font-bold"><i class="ph-fill ph-file-lock text-xl font-bold"></i> Secret Data Room (Confidential)</h4>
+                        <p class="text-xs text-slate-500 mb-6 font-sans normal-case font-bold">Access raw financial statements, internal audit reports, and non-public operator data.</p>
+                        <div class="space-y-3 font-bold">
+                            <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-700 rounded hover:border-red-500/50 transition cursor-pointer group font-bold">
+                                <div class="flex items-center gap-3 font-bold">
+                                    <i class="ph-fill ph-file-pdf text-red-500 text-lg font-bold"></i>
+                                    <span class="text-[10px] text-white font-bold group-hover:text-red-400 font-bold">FY2024 Internal Audit Report (Final)</span>
+                                </div>
+                                <i class="ph-bold ph-download-simple text-slate-500 group-hover:text-white font-bold"></i>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-700 rounded hover:border-red-500/50 transition cursor-pointer group font-bold">
+                                <div class="flex items-center gap-3 font-bold">
+                                    <i class="ph-fill ph-file-xls text-green-500 text-lg font-bold"></i>
+                                    <span class="text-[10px] text-white font-bold group-hover:text-green-400 font-bold">Q3 2024 Raw Financial Statement_V2</span>
+                                </div>
+                                <i class="ph-bold ph-download-simple text-slate-500 group-hover:text-white font-bold"></i>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-700 rounded hover:border-red-500/50 transition cursor-pointer group font-bold">
+                                <div class="flex items-center gap-3 font-bold">
+                                    <i class="ph-fill ph-file-text text-blue-500 text-lg font-bold"></i>
+                                    <span class="text-[10px] text-white font-bold group-hover:text-blue-400 font-bold">Due Diligence Opinion: Land Title Verification</span>
+                                </div>
+                                <i class="ph-bold ph-download-simple text-slate-500 group-hover:text-white font-bold"></i>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-700 rounded hover:border-red-500/50 transition cursor-pointer group font-bold">
+                                <div class="flex items-center gap-3 font-bold">
+                                    <i class="ph-fill ph-file-pdf text-red-500 text-lg font-bold"></i>
+                                    <span class="text-[10px] text-white font-bold group-hover:text-red-400 font-bold">Executive Compensation Structure 2025</span>
+                                </div>
+                                <i class="ph-bold ph-download-simple text-slate-500 group-hover:text-white font-bold"></i>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-700 rounded hover:border-red-500/50 transition cursor-pointer group font-bold">
+                                <div class="flex items-center gap-3 font-bold">
+                                    <i class="ph-fill ph-file-pdf text-red-500 text-lg font-bold"></i>
+                                    <span class="text-[10px] text-white font-bold group-hover:text-red-400 font-bold">Operational Risk Assessment (Non-Public)</span>
+                                </div>
+                                <i class="ph-bold ph-download-simple text-slate-500 group-hover:text-white font-bold"></i>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-700 rounded hover:border-red-500/50 transition cursor-pointer group font-bold">
+                                <div class="flex items-center gap-3 font-bold">
+                                    <i class="ph-fill ph-file-xls text-green-500 text-lg font-bold"></i>
+                                    <span class="text-[10px] text-white font-bold group-hover:text-green-400 font-bold">Monthly Cash Flow Projection (2025-2027)</span>
+                                </div>
+                                <i class="ph-bold ph-download-simple text-slate-500 group-hover:text-white font-bold"></i>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-700 rounded hover:border-red-500/50 transition cursor-pointer group font-bold">
+                                <div class="flex items-center gap-3 font-bold">
+                                    <i class="ph-fill ph-file-text text-blue-500 text-lg font-bold"></i>
+                                    <span class="text-[10px] text-white font-bold group-hover:text-blue-400 font-bold">Partnership Agreement with Hotel Chain A</span>
+                                </div>
+                                <i class="ph-bold ph-download-simple text-slate-500 group-hover:text-white font-bold"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+            // [PREMIUM] Sync with index.html (VVIP Trip & DAO Governance)
+            const premiumHTML = `
+                <div class="space-y-6 font-mono font-bold">
+                    <div class="p-5 bg-gradient-to-br from-cyan-950/30 to-slate-900 border border-cyan-500/30 rounded-xl font-sans">
+                        <h4 class="text-cyan-400 font-bold text-sm mb-4 flex items-center gap-2 font-bold"><i class="ph-fill ph-airplane-tilt font-bold"></i> VIP Field Trip Packages (Imjang)</h4>
+                        
+                        <div class="space-y-4 font-bold">
+                            <!-- Package 1 -->
+                            <div class="flex items-center gap-4 bg-slate-950/50 p-3 rounded border border-slate-800 hover:border-cyan-500/50 transition font-bold">
+                                <img src="https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=200" class="w-16 h-16 object-cover rounded">
+                                <div class="flex-1 font-bold">
+                                    <p class="text-[10px] text-white font-bold mb-1 font-bold">3D2N Sihanoukville Private Tour (Cambodia)</p>
+                                    <p class="text-[9px] text-slate-400 font-sans normal-case mb-2 font-bold">Vehicle/Translation included, 5-star hotel provided</p>
+                                    <div class="flex justify-between items-center font-bold">
+                                        <span class="text-xs text-cyan-400 font-bold font-bold">1,500 GLIB <span class="text-[9px] text-slate-600 line-through font-bold">($2,000)</span></span>
+                                        <button class="bg-cyan-600 text-white text-[9px] px-2 py-1 rounded hover:bg-cyan-500 font-bold uppercase font-bold">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Package 2 -->
+                            <div class="flex items-center gap-4 bg-slate-950/50 p-3 rounded border border-slate-800 hover:border-cyan-500/50 transition font-bold">
+                                <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=200" class="w-16 h-16 object-cover rounded">
+                                <div class="flex-1 font-bold">
+                                    <p class="text-[10px] text-white font-bold mb-1 font-bold">4D3N Manila High-Roller Course (Philippines)</p>
+                                    <p class="text-[9px] text-slate-400 font-sans normal-case mb-2 font-bold">Manila Bay casino tour & golf rounding included</p>
+                                    <div class="flex justify-between items-center font-bold">
+                                        <span class="text-xs text-cyan-400 font-bold font-bold">2,200 GLIB <span class="text-[9px] text-slate-600 line-through font-bold">($3,000)</span></span>
+                                        <button class="bg-cyan-600 text-white text-[9px] px-2 py-1 rounded hover:bg-cyan-500 font-bold uppercase font-bold">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Package 3 -->
+                            <div class="flex items-center gap-4 bg-slate-950/50 p-3 rounded border border-slate-800 hover:border-cyan-500/50 transition font-bold">
+                                <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=200" class="w-16 h-16 object-cover rounded">
+                                <div class="flex-1">
+                                    <p class="text-[10px] text-white font-bold mb-1 font-bold">3D2N Danang Golf & Heritage Tour (Vietnam)</p>
+                                    <p class="text-[9px] text-slate-400 font-sans normal-case mb-2 font-bold">Beachfront property inspection and luxury tour</p>
+                                    <div class="flex justify-between items-center font-bold">
+                                        <span class="text-xs text-cyan-400 font-bold font-bold">1,800 GLIB <span class="text-[9px] text-slate-600 line-through font-bold">($2,500)</span></span>
+                                        <button class="bg-cyan-600 text-white text-[9px] px-2 py-1 rounded hover:bg-cyan-500 font-bold uppercase font-bold">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-gold-950/10 border border-gold-500/30 rounded-xl font-sans">
+                        <div class="flex justify-between items-center mb-4 font-bold">
+                            <h4 class="text-gold-400 font-bold text-sm flex items-center gap-2 font-bold"><i class="ph-fill ph-crown font-bold"></i> DAO Governance & Staking</h4>
+                            <span class="text-[9px] text-white bg-slate-800 px-2 py-0.5 rounded font-bold">Total Staked: 4.2M GLIB</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-[9px] text-slate-400 mb-2 uppercase font-bold">Broadcast Message (To Bronze+)</p>
+                            <div class="flex gap-2 font-bold">
+                                <input type="text" placeholder="Ex: Emergency voting starts at 14:00..." class="flex-1 bg-slate-950 border border-slate-700 rounded px-3 py-2 text-[10px] text-white focus:border-gold-500 outline-none font-bold">
+                                <button class="bg-gold-600 hover:bg-gold-500 text-white px-3 rounded text-[10px] font-bold"><i class="ph-bold ph-paper-plane-right font-bold"></i></button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-[9px] text-slate-400 mb-2 uppercase font-bold">Active Voting Agendas</p>
+                            <div class="space-y-2 font-bold">
+                                <div class="bg-slate-950 p-3 rounded border border-slate-800 font-bold">
+                                    <div class="flex justify-between mb-1 font-bold"><span class="text-[9px] bg-red-500/20 text-red-400 px-1 rounded font-bold">URGENT</span> <span class="text-[9px] text-slate-500 font-bold">Ends in 2h</span></div>
+                                    <p class="text-[10px] text-white mb-2 font-bold">Agenda: Q1 Dividend Payout Adjustment</p>
+                                    <div class="flex gap-2 font-bold">
+                                        <button class="flex-1 bg-green-900/30 border border-green-500/50 text-green-400 text-[9px] py-1.5 rounded hover:bg-green-900/50 font-bold">AGREE (65%)</button>
+                                        <button class="flex-1 bg-red-900/30 border border-red-500/50 text-red-400 text-[9px] py-1.5 rounded hover:bg-red-900/50 font-bold">REJECT (35%)</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Governance Stakeholder Ranking -->
+                        <div class="mt-6 border-t border-slate-800 pt-5 font-sans font-bold">
+                            <div class="flex justify-between items-end mb-4 font-bold">
+                                <div>
+                                    <p class="text-[9px] text-slate-400 mb-1 uppercase font-bold">Top Governance Stakeholders</p>
+                                    <h5 class="text-white text-xs font-black uppercase tracking-tighter font-bold">Participation Index</h5>
+                                </div>
+                                <span class="text-[8px] text-gold-500 font-bold underline font-bold">VIEW ALL MEMBERS</span>
+                            </div>
+                            
+                            <div class="space-y-2 font-bold">
+                                <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-lg border border-slate-800 hover:border-gold-500/30 transition-colors font-bold">
+                                    <div class="flex items-center gap-3 font-bold">
+                                        <span class="text-[10px] font-mono text-gold-500 font-bold">#01</span>
+                                        <div class="w-7 h-7 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-[10px] font-bold">W</div>
+                                        <div>
+                                            <span class="block text-[10px] text-white font-bold leading-none font-bold">WHALE_VVIP_01</span>
+                                            <span class="text-[8px] text-slate-500 font-mono font-bold">BUSINESS ACCESS</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right font-bold">
+                                        <p class="text-[11px] text-white font-bold font-mono font-bold">1,240,000 GLIB</p>
+                                        <p class="text-[8px] text-cyan-400 font-bold uppercase font-bold">29.7% Power</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-lg border border-slate-800 hover:border-gold-500/30 transition-colors font-bold">
+                                    <div class="flex items-center gap-3 font-bold">
+                                        <span class="text-[10px] font-mono text-slate-400 font-bold">#02</span>
+                                        <div class="w-7 h-7 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-[10px] font-bold">A</div>
+                                        <div>
+                                            <span class="block text-[10px] text-white font-bold leading-none font-bold">ALPHA_STAKER</span>
+                                            <span class="text-[8px] text-slate-500 font-mono font-bold">PREMIUM ACCESS</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right font-bold">
+                                        <p class="text-[11px] text-white font-bold font-mono font-bold">850,000 GLIB</p>
+                                        <p class="text-[8px] text-cyan-400 font-bold uppercase font-bold">20.2% Power</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-lg border border-slate-800 opacity-80 transition-colors font-bold">
+                                    <div class="flex items-center gap-3 font-bold">
+                                        <span class="text-[10px] font-mono text-slate-400 font-bold">#03</span>
+                                        <div class="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 font-bold text-[10px] font-bold">M</div>
+                                        <div>
+                                            <span class="block text-[10px] text-white font-bold leading-none font-bold">MEMBER_4812</span>
+                                            <span class="text-[8px] text-slate-500 font-mono font-bold">STANDARD ACCESS</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right font-bold">
+                                        <p class="text-[11px] text-white font-bold font-mono font-bold">512,000 GLIB</p>
+                                        <p class="text-[8px] text-slate-600 font-bold uppercase font-bold">12.1% Power</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 grid grid-cols-3 gap-2 font-bold">
+                                <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800 text-center font-bold">
+                                    <p class="text-[7px] text-slate-500 uppercase font-bold font-bold">Staked Vol.</p>
+                                    <p class="text-[10px] text-gold-500 font-black font-bold">4.2M GLIB</p>
+                                </div>
+                                <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800 text-center font-bold">
+                                    <p class="text-[7px] text-slate-500 uppercase font-bold font-bold">Governance</p>
+                                    <p class="text-[10px] text-white font-black font-bold">Active</p>
+                                </div>
+                                <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800 text-center font-bold">
+                                    <p class="text-[7px] text-slate-500 uppercase font-bold font-bold">Quorum</p>
+                                    <p class="text-[10px] text-green-500 font-black font-bold">Reached</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+            // [BUSINESS] Sync with index.html (Equity Desk & Startups)
+            const businessHTML = `
+                <div class="space-y-6 font-mono font-bold">
+                    <div class="p-6 bg-gradient-to-br from-purple-950/40 to-slate-900 rounded-xl border border-purple-500/30 font-bold">
+                        <h4 class="text-xl font-black text-white font-rajdhani uppercase tracking-tighter mb-4 flex items-center gap-2 font-bold"><i class="ph-fill ph-handshake text-purple-400 font-bold"></i> GLI Equity Desk</h4>
+                        <p class="text-[10px] text-slate-400 font-sans normal-case mb-6 font-bold">Direct connection with Global Group CEOs. Private brokerage for large-scale RWA fractional negotiations.</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-4 font-bold">
+                            <button class="bg-slate-950 border border-purple-500/50 text-white py-3 rounded hover:bg-purple-900/20 transition flex flex-col items-center justify-center gap-1 font-bold">
+                                <i class="ph-fill ph-phone-call text-purple-400 text-lg font-bold"></i>
+                                <span class="text-[9px] uppercase tracking-wider font-bold">Request CEO Meeting</span>
+                            </button>
+                            <button class="bg-slate-950 border border-purple-500/50 text-white py-3 rounded hover:bg-purple-900/20 transition flex flex-col items-center justify-center gap-1 font-bold">
+                                <i class="ph-fill ph-briefcase text-purple-400 text-lg font-bold"></i>
+                                <span class="text-[9px] uppercase tracking-wider font-bold">Initiate Negotiation</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-slate-900/50 border border-slate-700 rounded-xl font-bold">
+                        <h4 class="text-white font-bold text-sm mb-4 uppercase tracking-widest flex items-center gap-2 font-bold"><i class="ph-fill ph-rocket-launch text-orange-500 font-bold"></i> Startup Equity Brokerage</h4>
+                        <p class="text-[9px] text-slate-500 mb-3 font-bold">Pre-IPO & Series A verified startup shares (Direct IR Connection)</p>
+                        <div class="space-y-3 font-bold">
+                            <div class="flex items-center justify-between text-[10px] text-slate-300 border-b border-slate-800 pb-2 hover:bg-slate-800/50 p-1 rounded transition font-bold">
+                                <div class="font-bold">
+                                    <span class="block text-white font-bold">Global Leisure Tech (Series A)</span>
+                                    <span class="text-[8px] text-slate-500 font-bold">AI-driven Casino Analytics</span>
+                                </div>
+                                <span class="text-purple-400 font-bold cursor-pointer hover:underline border border-purple-500/30 px-2 py-1 rounded font-bold">IR CONNECT</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[10px] text-slate-300 border-b border-slate-800 pb-2 hover:bg-slate-800/50 p-1 rounded transition font-bold">
+                                <div class="font-bold">
+                                    <span class="block text-white font-bold">Gangdao PropTech (Pre-IPO)</span>
+                                    <span class="text-[8px] text-slate-500 font-bold">RWA Tokenization Platform</span>
+                                </div>
+                                <span class="text-purple-400 font-bold cursor-pointer hover:underline border border-purple-500/30 px-2 py-1 rounded font-bold">IR CONNECT</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[10px] text-slate-300 border-b border-slate-800 pb-2 hover:bg-slate-800/50 p-1 rounded transition font-bold">
+                                <div class="font-bold">
+                                    <span class="block text-white font-bold">Vietnam Eco-Resorts (Seed)</span>
+                                    <span class="text-[8px] text-slate-500 font-bold">Sustainable Tourism Dev</span>
+                                </div>
+                                <span class="text-purple-400 font-bold cursor-pointer hover:underline border border-purple-500/30 px-2 py-1 rounded font-bold">IR CONNECT</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[10px] text-slate-300 border-b border-slate-800 pb-2 hover:bg-slate-800/50 p-1 rounded transition font-bold">
+                                <div class="font-bold">
+                                    <span class="block text-white font-bold">Manila Fintech Solutions (Series B)</span>
+                                    <span class="text-[8px] text-slate-500 font-bold">Cross-border Payments</span>
+                                </div>
+                                <span class="text-purple-400 font-bold cursor-pointer hover:underline border border-purple-500/30 px-2 py-1 rounded font-bold">IR CONNECT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+            renderLockedState(financials, level >= 2, 2, 'Basic', '#4ade80', basicHTML); 
+            renderLockedState(docs, level >= 3, 3, 'Standard', '#fbbf24', standardHTML); 
+            renderLockedState(security, level >= 4, 4, 'Premium', '#22d3ee', premiumHTML); 
+            renderLockedState(alpha, level >= 5, 5, 'Business', '#c084fc', businessHTML); 
+        }
+
+        function renderLockedState(container, isUnlocked, reqLevel, rankName, colorHex, content) {
+            if (isUnlocked) { if(container) container.innerHTML = content; }
+            else { if(container) container.innerHTML = `<div class="flex flex-col items-center justify-center h-full min-h-[400px] text-center px-6 font-rajdhani uppercase font-bold font-bold font-bold" style="color: ${colorHex}"><div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-4 border border-slate-700 shadow-xl font-bold font-bold font-bold font-bold"><i class="ph-fill ph-lock-key text-3xl font-bold font-bold font-bold font-bold font-bold font-bold"></i></div><h4 class="text-lg font-bold text-white mb-2 uppercase tracking-widest font-bold">Access Restricted</h4><p class="text-[11px] text-slate-400 tracking-tight font-sans lowercase font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold font-bold">Exclusive for <span style="color: ${colorHex}; font-weight: 800; font-family: 'Rajdhani';">${rankName} Member</span>.</p><div class="mt-6 px-4 py-1.5 bg-slate-950 rounded border border-slate-800 text-[10px] text-slate-500 font-mono font-bold uppercase tracking-widest font-bold font-bold font-bold font-bold font-bold" style="border-color: ${colorHex}44">REQ: LEVEL ${reqLevel}+</div></div>`; }
+        }
+
+        function updateCalculator(val) {
+            const idx = parseInt(val); let amount = idx <= 10 ? idx * 1000 : 10000 + (idx - 10) * 10000;
+            const amtDisp = document.getElementById('invest-amount-display'); if(amtDisp) amtDisp.innerText = amount.toLocaleString() + ' GLIB';
+            const mPay = document.getElementById('calc-monthly'); if(mPay) mPay.innerText = '$' + (amount * 0.015).toFixed(0).toLocaleString();
+            const yPay = document.getElementById('calc-yearly'); if(yPay) yPay.innerText = '$' + (amount * 0.18).toFixed(0).toLocaleString();
+            let newLevel = 1; if (amount >= 100000) newLevel = 5; else if (amount >= 10000) newLevel = 4; else if (amount >= 5000) newLevel = 3; else if (amount >= 1000) newLevel = 2;
+            if (newLevel !== currentLevel) { currentLevel = newLevel; updateHeader(); updateModalContent(newLevel); }
+            const label = document.getElementById('grade-label'), box = document.getElementById('grade-info-box'), desc = document.getElementById('grade-desc');
+            let tierColor = "#ffffff", tierName = "FREE", tierDesc = "Anyone can view asset info without subscription.", tierBg = "bg-slate-800/80", tierBorder = "border-slate-600";
+            if(newLevel === 5) { tierColor = "#c084fc"; tierName = "BUSINESS"; tierDesc = "지분 투자 및 경영진 미팅 브로커리지 (100,000 GLIB+)"; tierBg = "bg-purple-950/80"; tierBorder = "border-purple-500"; }
+            else if(newLevel === 4) { tierColor = "#22d3ee"; tierName = "PREMIUM"; tierDesc = "VVIP field trip (Imjang) & DAO governance voting power."; tierBg = "bg-cyan-950/80"; tierBorder = "border-cyan-500"; }
+            else if(newLevel === 3) { tierColor = "#fbbf24"; tierName = "STANDARD"; tierDesc = "Secret data room & raw financial statement access."; tierBg = "bg-yellow-950/80"; tierBorder = "border-gold-500"; }
+            else if(newLevel === 2) { tierColor = "#4ade80"; tierName = "BASIC"; tierDesc = "AI risk analysis & hidden local information access."; tierBg = "bg-green-950/80"; tierBorder = "border-green-500"; }
+            document.documentElement.style.setProperty('--tier-color', tierColor); if(label) { label.innerText = tierName; label.style.color = tierColor; } if(desc) desc.innerText = tierDesc; if(box) box.className = `mb-5 p-3 rounded-xl border transition-all duration-300 ${tierBg} ${tierBorder}`;
+        }
+
+        function updateHeader() { const uTxt = document.getElementById('user-level-text'); if(uTxt) uTxt.innerText = `Lv.${currentLevel} Access`; const lBdg = document.getElementById('level-badge'); if(lBdg) lBdg.innerText = currentLevel; }
+        function renderPublicTourismChart() { const canvas = document.getElementById('public-tourism-chart'); if (!canvas) return; const ctx = canvas.getContext('2d'); if (publicChartInstance) publicChartInstance.destroy(); publicChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['2022', '2023', '2024', '2025'], datasets: [{ label: 'Visitors (M)', data: [2.5, 3.8, 5.2, 6.1], borderColor: '#22d3ee', backgroundColor: 'rgba(34, 211, 238, 0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } }); }
+        function renderAIRiskChart() { const canvas = document.getElementById('ai-risk-chart'); if (!canvas) return; const ctx = canvas.getContext('2d'); if (riskChartInstance) riskChartInstance.destroy(); riskChartInstance = new Chart(ctx, { type: 'radar', data: { labels: ['Stability', 'Profit', 'Growth', 'Trans.', 'Liq.'], datasets: [{ label: 'Score', data: [85, 92, 78, 95, 80], borderColor: '#4ade80', backgroundColor: 'rgba(74, 222, 128, 0.2)', borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false }, pointLabels: { color: '#94a3b8', font: { size: 8 } } } }, plugins: { legend: { display: false } } } }); }
+
+        function renderTopCarousel() {
+            const container = document.getElementById('top-carousel'); if(!container) return;
+            const allAssets = Object.values(allAssetsMap);
+            container.innerHTML = allAssets.slice(0, 5).map((asset, index) => `<div class="min-w-[280px] h-40 rounded-xl bg-slate-800 relative overflow-hidden group cursor-pointer border border-slate-700/50 hover:border-cyan-400 transition-all shadow-lg snap-start font-sans font-bold" onclick="openDetail('${asset.id}')"><div class="absolute inset-0 bg-[url('${asset.img}')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity duration-500 font-bold font-bold font-bold font-bold font-bold"></div><div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 via-slate-900/80 to-transparent font-rajdhani font-bold font-bold font-bold font-bold font-bold"><span class="text-[9px] ${index === 0 ? 'bg-red-500' : 'bg-cyan-600'} text-white px-2 py-0.5 rounded font-black mb-2 inline-block uppercase font-mono font-bold font-bold font-bold">${index === 0 ? 'Hot Pick' : 'Trending'}</span><h4 class="text-sm font-bold text-white truncate mb-1 uppercase font-bold font-sans font-bold font-bold font-bold">${asset.title}</h4><div class="flex justify-between items-center text-[10px] font-mono font-bold font-bold font-bold font-bold font-bold"><span class="text-cyan-400 font-bold font-bold font-bold">APY ${asset.apy}%</span><span class="text-slate-300 font-sans font-bold font-bold font-bold font-bold font-bold">${asset.progress}% Funded</span></div></div></div>`).join('');
+        }
+
+        function closeMenus(e) { 
+            const pMenu = document.getElementById('profile-menu'), nPanel = document.getElementById('noti-panel');
+            if (pMenu && !pMenu.contains(e.target) && e.target.id !== 'avatar-container') pMenu.classList.add('hidden'); 
+            if (nPanel && !nPanel.contains(e.target) && e.target.id !== 'noti-btn') nPanel.classList.add('hidden'); 
+        }
+
+        function openLightbox() { const src = document.getElementById('gallery-image').src; const modal = document.getElementById('lightbox-modal'); const img = document.getElementById('lightbox-image'); if(img) img.src = src; if(modal) modal.classList.remove('hidden'); setTimeout(() => { if(img) { img.classList.remove('scale-95', 'opacity-0'); img.classList.add('scale-100', 'opacity-100'); } }, 10); }
+        function closeLightbox() { const modal = document.getElementById('lightbox-modal'); const img = document.getElementById('lightbox-image'); if(img) { img.classList.remove('scale-100', 'opacity-100'); img.classList.add('scale-95', 'opacity-0'); } setTimeout(() => { if(modal) modal.classList.add('hidden'); if(img) img.src = ''; }, 300); }
+        function connectWalletMock() { closeWalletModal(); const btn = document.getElementById('wallet-btn-text'); if(btn) btn.innerText = "0x71...8A2B"; const dot = document.getElementById('wallet-status-dot'); if(dot) dot.classList.add('bg-cyan-400'); }
+        function changeLang(l) { console.log(l); }
+        function markAllNotificationsRead() { const ind = document.getElementById('noti-unread-indicator'); if(ind) ind.classList.add('hidden'); }
+        function addComment() { /* Original Logic preserved */ }
+
+        // --- Staking Logic Added (Active) ---
+        function openStakingReview() {
+            const modal = document.getElementById('staking-review-modal');
+            const content = document.getElementById('review-modal-content');
+            
+            // Set dynamic review data
+            const assetNameEl = document.getElementById('review-asset-name');
+            if(assetNameEl && selectedAsset) assetNameEl.innerText = selectedAsset.title;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeStakingReview() {
+            const modal = document.getElementById('staking-review-modal');
+            const content = document.getElementById('review-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function updateReviewAmount(value) {
+            const formatted = parseInt(value).toLocaleString();
+            document.getElementById('review-slider-value').innerText = formatted + ' GLIB';
+            document.getElementById('review-asset-req').innerText = formatted + ' GLIB';
+            document.getElementById('review-total').innerText = formatted + ' GLIB + Fee';
+            
+            const descEl = document.getElementById('review-tier-desc');
+            if(descEl) {
+                const val = parseInt(value);
+                if (val >= 100000) { descEl.innerText = "BUSINESS: GLI 지분 투자 및 경영진 미팅 주선"; descEl.className = "text-xs text-purple-400 font-bold transition-all font-bold"; }
+                else if (val >= 10000) { descEl.innerText = "PREMIUM: VVIP 현지 답사 및 DAO 투표권 부여"; descEl.className = "text-xs text-cyan-400 font-bold transition-all font-bold"; }
+                else if (val >= 5000) { descEl.innerText = "STANDARD: 시크릿 데이터룸 및 재무제표 열람"; descEl.className = "text-xs text-gold-400 font-bold transition-all font-bold"; }
+                else { descEl.innerText = "BASIC: AI 리스크 분석 및 히든 로컬 정보 열람"; descEl.className = "text-xs text-green-400 font-bold transition-all font-bold"; }
+            }
+        }
+
+        function confirmStaking() {
+            closeStakingReview();
+            if (!selectedAsset) return;
+            document.getElementById('confirm-asset-name').innerText = selectedAsset.title;
+            document.getElementById('confirm-amount').innerText = document.getElementById('review-asset-req').innerText;
+            document.getElementById('confirm-apy').innerText = selectedAsset.apy + '%';
+            
+            const modal = document.getElementById('staking-confirm-modal');
+            const content = document.getElementById('staking-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeStakingModal() {
+            const modal = document.getElementById('staking-confirm-modal');
+            const content = document.getElementById('staking-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                closeDetail();
+            }, 300);
+        }
+
+        // --- Map Modal Logic (Added) ---
+        function openMapModal() {
+            const modal = document.getElementById('mapModal');
+            const frame = document.getElementById('googleMapFrame');
+            if (modal && frame && selectedAsset) {
+                // Use Google Maps Embed API (Free mode with search query)
+                // Using 'q=' with the location string or coordinates if available.
+                // Fallback to location string.
+                const query = encodeURIComponent(selectedAsset.location + ' ' + selectedAsset.title);
+                frame.src = `https://maps.google.com/maps?q=${query}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+                
+                modal.classList.add('active');
+            }
+        }
+
+        function closeMapModal() {
+            const modal = document.getElementById('mapModal');
+            const frame = document.getElementById('googleMapFrame');
+            if (modal) {
+                modal.classList.remove('active');
+                if (frame) frame.src = ""; // Stop loading
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+        window.addEventListener('scroll', () => { const nav = document.querySelector('nav'); if (window.scrollY > 50) { nav.classList.add('shadow-2xl'); nav.style.height = "70px"; nav.style.background = "rgba(8, 12, 20, 0.95)"; } else { nav.classList.remove('shadow-2xl'); nav.style.height = "80px"; nav.style.background = "rgba(8, 12, 20, 0.85)"; } });
+    </script>
+</body>
+</html>
