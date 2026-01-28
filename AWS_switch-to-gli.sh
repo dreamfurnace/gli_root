@@ -6,7 +6,7 @@ echo "🔄 GLI AWS 계정으로 전환 중..."
 # GLI 키 설정 (gli 프로필 사용)
 unset AWS_ACCESS_KEY_ID
 unset AWS_SECRET_ACCESS_KEY
-export AWS_PROFILE=ORVIA
+export AWS_PROFILE=gli2
 export AWS_REGION=ap-northeast-2
 
 # 전환 확인
