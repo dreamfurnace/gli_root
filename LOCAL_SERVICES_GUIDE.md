@@ -351,20 +351,27 @@ echo $! > ./gli_api-server.pid
 
 ### 4.4 AWS 자격 증명 로드
 
-**파일**: `gli_api-server/.env.development`
+**권장 방법**: AWS CLI 프로필 사용
+
+```bash
+# AWS_switch-to-gli.sh 사용 (권장)
+source AWS_switch-to-gli.sh
+```
+
+**대안**: `.env.development`에 직접 설정 (보안에 주의!)
 
 ```bash
 # GLI AWS 계정 자격 증명
-AWS_ACCESS_KEY_ID=AKIA5LNU5WLWUA55GAOG
-AWS_SECRET_ACCESS_KEY=ok7wgkBHbNQ9bSyV1Pbt8t7PjSbt5b5QT1dVQNqY
-AWS_STORAGE_BUCKET_NAME=gli-platform-media-dev
+AWS_ACCESS_KEY_ID=<your-access-key-id>
+AWS_SECRET_ACCESS_KEY=<your-secret-access-key>
+AWS_STORAGE_BUCKET_NAME=gli-platform-media-staging
 AWS_S3_REGION=ap-northeast-2
 ```
 
-**자동 로드**:
-- Django 서버 시작 시 자동으로 로드
-- S3 버킷 접근 가능
-- 별도 설정 불필요
+**⚠️ 보안 주의사항**:
+- 실제 자격증명은 절대 Git에 커밋하지 마세요
+- `.env` 파일은 `.gitignore`에 포함되어 있습니다
+- 프로덕션 환경에서는 AWS Secrets Manager 사용
 
 ---
 
