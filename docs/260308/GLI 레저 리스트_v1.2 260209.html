@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLI Selection - Premium Lifestyle Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0f172a;
+            color: white;
+        }
+        .gradient-title {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 10px;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        .filter-input-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .sidebar-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            color: white;
+            font-size: 0.75rem;
+            outline: none;
+            cursor: pointer;
+        }
+        .sidebar-date {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            color: white;
+            font-size: 0.75rem;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const iconRef = useRef(null);
+            useEffect(() => {
+                if (window.lucide && iconRef.current) {
+                    window.lucide.createIcons({
+                        icons: { [name]: window.lucide.icons[name] },
+                        nameAttr: 'data-lucide',
+                        attrs: { class: `lucide-icon ${className}`, width: size, height: size, 'stroke-width': 1.5 }
+                    });
+                }
+            }, [name, size, className]);
+            return <i data-lucide={name} ref={iconRef} className={className} style={{ width: size, height: size, display: 'inline-block' }}></i>;
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('resort');
+            const [selectedItem, setSelectedItem] = useState(null);
+            const [isReservationMode, setIsReservationMode] = useState(false);
+            const [showMoreDetails, setShowMoreDetails] = useState(false);
+            
+            const [resDate, setResDate] = useState("2026-02-10");
+            const [resTime, setResTime] = useState("");
+            const [resGuests, setResGuests] = useState(2);
+            const [resRoomType, setResRoomType] = useState("");
+            const [resLocation, setResLocation] = useState("All");
+
+            const locations = [
+                { value: "All", label: "전 지역" },
+                { value: "Thailand", label: "태국 (방콕/푸켓)" },
+                { value: "Vietnam", label: "베트남 (다낭/나트랑)" },
+                { value: "Indonesia", label: "인도네시아 (발리)" },
+                { value: "Philippines", label: "필리핀 (세부/보라카이)" },
+                { value: "Singapore", label: "싱가포르" },
+                { value: "Cambodia", label: "캄보디아 (프놈펜/시아누크빌)" }
+            ];
+
+            const timeSlots = ["12:00", "13:00", "14:00", "17:30", "18:30", "19:30", "20:30"];
+            // Other 옵션 추가
+            const roomTypes = ["Standard", "Deluxe", "Executive Suite", "Presidential", "Other"];
+
+            const commonPolicies = [
+                { title: "예약 및 취소 규정", content: "체크인 7일 전까지는 100% 환불이 가능하며, 이후에는 규정에 따른 위약금이 발생할 수 있습니다." },
+                { title: "이용 수칙", content: "전 객실 및 시설 내 금연이며, 반려동물 동반은 사전 승인된 객실에 한해 가능합니다." },
+                { title: "GLI 멤버십 혜택", content: "본 예약 시 결제 금액의 일부가 멤버십 등급에 따라 산정되어 혜택으로 제공될 수 있습니다." }
+            ];
+
+            const generalInfo = [
+                { icon: "Clock", title: "체크인/아웃", content: "Check-in 15:00 | Check-out 11:00" },
+                { icon: "ShieldAlert", title: "취소 규정", content: "숙박 3일 전 오후 6시까지 무료 취소 가능" },
+                { icon: "Coffee", title: "조식 서비스", content: "07:00 - 10:30 (성인 55,000원 / 소인 35,000원)" },
+                { icon: "Car", title: "발렛 및 주차", content: "투숙객 전용 무료 발렛 파킹 및 전기차 충전 가능" }
+            ];
+
+            const resorts = [
+                { id: 1, name: "GLI Bangkok Riverside", location: "Thailand", rating: 5, price: "280,000", badge: "추천", description: "방콕 짜오프라야 강변의 화려한 야경을 품은 럭셔리 호텔입니다.", fullDescription: "방콕의 심장부, 짜오프라야 강변에 위치한 GLI 리버사이드는 전통적인 태국 미학과 현대적 럭셔리가 결합된 공간입니다.", features: ["리버뷰 수영장", "스카이 바", "스파"], image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&q=80&w=1200" },
+                { id: 2, name: "GLI Bali Cliff Retreat", location: "Indonesia", rating: 4.9, price: "520,000", badge: "인기", description: "울루와투 절벽 끝에서 내려다보는 끝없는 인도양의 절경.", fullDescription: "발리의 절벽 위에 자리잡은 이 리트릿은 완전한 프라이버시와 함께 자연과 하나가 되는 경험을 제공합니다.", features: ["프라이빗 풀", "요가 파빌리온", "버틀러 서비스"], image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&q=80&w=1200" },
+                { id: 3, name: "GLI Danang Beach", location: "Vietnam", rating: 4.8, price: "350,000", badge: "신규", description: "다낭의 하얀 모래사장 위에 펼쳐진 모던한 감성의 리조트입니다.", features: ["비치 클럽", "해산물 다이닝", "인피니티 풀"], image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&q=80&w=1200" },
+                { id: 4, name: "GLI Phuket Private Bay", location: "Thailand", rating: 4.7, price: "480,000", badge: "프라이빗", description: "안다만해의 투명한 바다를 독점하는 프라이빗 베이 리조트입니다.", features: ["요트 투어", "개별 테라스", "스노클링 세션"], image: "https://images.unsplash.com/photo-1512100356956-c1227c331f01?auto=format&fit=crop&q=80&w=1200" },
+                { id: 5, name: "GLI Marina Sands", location: "Singapore", rating: 5, price: "620,000", badge: "럭셔리", description: "싱가포르의 랜드마크를 조망하며 즐기는 도시의 최정점 휴식.", features: ["루프탑 수영장", "카지노 연결", "미슐랭 식당"], image: "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&q=80&w=1200" },
+                { id: 6, name: "GLI Cebu Island Garden", location: "Philippines", rating: 4.6, price: "230,000", badge: "가족여행", description: "푸른 정원과 에메랄드 빛 바다가 어우러진 휴양의 천국입니다.", features: ["키즈 워터파크", "가든 카페", "전통 마사지"], image: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&q=80&w=1200" }
+            ];
+
+            const products = [
+                { id: 101, name: "트로피컬 트래블 키트", category: "여행", price: "45,000", rating: 4.7, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800", description: "동남아 여행에 최적화된 필수 아이템 8종 세트입니다." },
+                { id: 102, name: "린넨 리조트 웨어", category: "의류", price: "88,000", rating: 4.9, image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800", description: "통기성이 뛰어난 최고급 린넨 소재의 리조트 셔츠입니다." },
+                { id: 103, name: "자외선 차단 선글라스", category: "전자", price: "245,000", rating: 4.8, image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800", description: "강렬한 태양 아래 눈을 보호하는 하이엔드 아이웨어입니다." },
+                { id: 104, name: "코코넛 보디 오일", category: "뷰티", price: "32,000", rating: 4.6, image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=800", description: "천연 코코넛 추출물로 만든 고보습 스킨케어 오일입니다." },
+                { id: 105, name: "방수 액션 카메라", category: "전자", price: "480,000", rating: 4.7, image: "https://images.unsplash.com/photo-1526170315873-3a98618bb3fa?auto=format&fit=crop&q=80&w=800", description: "수중 탐험의 순간을 선명하게 기록하는 고해상도 카메라입니다." },
+                { id: 106, name: "수제 라탄 백", category: "잡화", price: "65,000", rating: 4.9, image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800", description: "현지 장인이 한땀 한땀 엮어 만든 유니크한 라탄 가방입니다." }
+            ];
+
+            const restaurants = [
+                { id: 201, name: "Lemongrass Spice", location: "Thailand", rating: 5, price: "120,000", badge: "전통", description: "방콕 최고의 쉐프가 선보이는 정통 타이 퀴진의 진수.", features: ["쿠킹 클래스", "야외 좌석"], image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1200" },
+                { id: 202, name: "Ocean Grill Bali", location: "Indonesia", rating: 4.9, price: "180,000", badge: "해산물", description: "갓 잡아 올린 신선한 해산물을 발리식 소스로 그릴링한 요리.", features: ["라이브 연주", "선셋 뷰"], image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200" },
+                { id: 203, name: "Hanoi Secret", location: "Vietnam", rating: 4.8, price: "95,000", badge: "퓨전", description: "베트남 로컬 푸드를 모던하게 재해석한 럭셔리 다이닝 공간.", features: ["테이스팅 메뉴", "와인 페어링"], image: "https://images.unsplash.com/photo-1567620985452-946d152c748b?auto=format&fit=crop&q=80&w=1200" },
+                { id: 204, name: "Manila Bay Seafood", location: "Philippines", rating: 4.7, price: "110,000", badge: "패밀리", description: "필리핀 최대 규모의 해산물 전문 마켓형 레스토랑입니다.", features: ["신선한 재료 선택", "포토존"], image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200" },
+                { id: 205, name: "Sky Cloud Singapore", location: "Singapore", rating: 5, price: "250,000", badge: "파인다이닝", description: "싱가포르 도심 70층 높이에서 즐기는 유러피안 파인다이닝.", features: ["창가석 보장", "드레스 코드"], image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1200" },
+                { id: 206, name: "Nusa Dua Terrace", location: "Indonesia", rating: 4.9, price: "140,000", badge: "가든", description: "아름다운 누사두아 해변의 바람과 함께 즐기는 트로피컬 뷔페.", features: ["전통 무용 공연", "가족석"], image: "https://images.unsplash.com/photo-1550966841-3ee7adac1668?auto=format&fit=crop&q=80&w=1200" }
+            ];
+
+            const packages = [
+                { id: 301, name: "Bali Moon Package", location: "Indonesia", price: "1,250,000", rating: 5, badge: "허니문", description: "3박 4일간의 발리 럭셔리 풀빌라와 스파가 포함된 패키지입니다.", features: ["캔들라이트 디너", "공항 픽업"], image: "https://images.unsplash.com/photo-1573843225244-bf1380263351?auto=format&fit=crop&q=80&w=1200" },
+                { id: 302, name: "Bangkok Night Life", location: "Thailand", price: "880,000", rating: 4.8, badge: "인기", description: "방콕의 화려한 야경과 루프탑 바 투어가 포함된 다이나믹 패키지.", features: ["프라이빗 가이드", "칵테일 쿠폰"], image: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&q=80&w=1200" },
+                { id: 303, name: "Danang Family Resort", location: "Vietnam", price: "950,000", rating: 4.7, badge: "추천", description: "아이들을 위한 키즈 클럽과 워터파크 이용권이 포함된 가족용 패키지.", features: ["전 일정 식사 포함", "키즈 케어"], image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1200" },
+                { id: 304, name: "Singapore City Tour", location: "Singapore", price: "1,100,000", rating: 4.9, badge: "올인원", description: "유니버셜 스튜디오와 마리나 베이 관광이 모두 포함된 시티 투어.", features: ["패스트 트랙", "시티 패스"], image: "https://images.unsplash.com/photo-1525596662741-e94ff9f26de1?auto=format&fit=crop&q=80&w=1200" },
+                { id: 305, name: "Phuket Island Hopping", location: "Thailand", price: "720,000", rating: 4.6, badge: "액티비티", description: "스피드 보트를 타고 떠나는 피피섬 투어와 스노클링 패키지입니다.", features: ["수중 촬영", "비치 런치"], image: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=1200" },
+                { id: 306, name: "Boracay White Beach", location: "Philippines", price: "680,000", rating: 4.8, badge: "힐링", description: "보라카이의 화이트 비치에서 즐기는 선셋 세일링과 해변 마사지.", features: ["비치 선베드 예약", "웰컴 칵테일"], image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&q=80&w=1200" }
+            ];
+
+            const getData = () => {
+                let data = [];
+                switch(activeTab) {
+                    case 'resort': data = resorts; break;
+                    case 'shop': data = products; break;
+                    case 'restaurant': data = restaurants; break;
+                    case 'package': data = packages; break;
+                    default: data = [];
+                }
+                
+                if (resLocation !== "All" && activeTab !== 'shop') {
+                    return data.filter(item => item.location === resLocation);
+                }
+                return data;
+            };
+
+            const closeAllModals = () => {
+                setSelectedItem(null);
+                setIsReservationMode(false);
+                setShowMoreDetails(false);
+            };
+
+            const handleOrderClick = () => {
+                if (activeTab === 'restaurant' || activeTab === 'resort' || activeTab === 'package') {
+                    setIsReservationMode(true);
+                } else {
+                    alert(`${selectedItem.name} 상품이 장바구니에 담겼습니다.`);
+                    closeAllModals();
+                }
+            };
+
+            const handleReservationSubmit = () => {
+                const message = activeTab === 'resort' 
+                    ? `${resDate}에 ${resRoomType || '기본'} 객실(${resGuests}인) 예약이 완료되었습니다.`
+                    : `${resDate} ${resTime || ''}에 ${resGuests}인 예약이 완료되었습니다.`;
+                alert(message);
+                closeAllModals();
+            }
+
+            const calculatePriceDetails = (basePriceStr) => {
+                const base = parseInt(basePriceStr.replace(/,/g, ''));
+                const tax = Math.floor(base * 0.1);
+                const service = activeTab === 'restaurant' ? Math.floor(base * 0.1) : 0;
+                const total = base + tax + service;
+                return {
+                    base: base.toLocaleString(),
+                    tax: tax.toLocaleString(),
+                    service: service.toLocaleString(),
+                    total: total.toLocaleString()
+                };
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col relative overflow-x-hidden text-white pb-20">
+                    <nav className="bg-[#0f172a]/80 backdrop-blur-xl border-b border-white/5 py-4 px-6 flex items-center justify-between sticky top-0 z-[60]">
+                        <div className="flex items-center gap-8">
+                            <div className="text-2xl font-black tracking-tighter flex items-center gap-1 cursor-pointer">
+                                G L I <span className="w-2 h-6 bg-[#38bdf8] inline-block"></span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs font-bold text-slate-400">
+                           <span className="hover:text-white cursor-pointer">MY PAGE</span>
+                           <span className="hover:text-white cursor-pointer">ORDERS</span>
+                            <button className="bg-[#38bdf8] hover:bg-white px-6 py-2.5 rounded-xl text-sm font-black text-[#0f172a] transition-all ml-4">
+                                LOGIN
+                            </button>
+                        </div>
+                    </nav>
+
+                    <header className="bg-[#0f172a] pt-24 pb-12 px-4 text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#38bdf8] opacity-[0.05] rounded-full blur-[120px]"></div>
+                        <div className="max-w-4xl mx-auto space-y-8 relative z-10">
+                            <h2 className="text-6xl md:text-7xl font-black tracking-tighter uppercase leading-none gradient-title py-2">
+                                GLI Selection
+                            </h2>
+                            <p className="text-base md:text-lg text-slate-400 font-light tracking-wide italic">"Your premium journey starts with the right choice."</p>
+                            
+                            <div className="flex flex-wrap justify-center gap-3 mt-12 p-2">
+                                <TabButton active={activeTab === 'resort'} onClick={() => { setActiveTab('resort'); closeAllModals(); }} icon="Hotel" label="호텔&리조트" desc="Premium Stays" />
+                                <TabButton active={activeTab === 'shop'} onClick={() => { setActiveTab('shop'); closeAllModals(); }} icon="ShoppingBag" label="상품 구매" desc="Luxury Boutique" />
+                                <TabButton active={activeTab === 'restaurant'} onClick={() => { setActiveTab('restaurant'); closeAllModals(); }} icon="Utensils" label="레스토랑" desc="Fine Dining" />
+                                <TabButton active={activeTab === 'package'} onClick={() => { setActiveTab('package'); closeAllModals(); }} icon="Sparkles" label="패키지" desc="Special Offers" />
+                            </div>
+                        </div>
+                    </header>
+
+                    {(activeTab === 'resort' || activeTab === 'restaurant' || activeTab === 'package') && (
+                        <div className="max-w-7xl mx-auto px-6 w-full -mt-6 relative z-40">
+                            <div className="bg-[#1e293b]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-4 shadow-2xl flex flex-col md:flex-row items-center gap-4">
+                                <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                                    <div className="filter-input-group px-4 border-r border-white/5">
+                                        <label className="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest">Date</label>
+                                        <input 
+                                            type="date" 
+                                            value={resDate}
+                                            onChange={(e) => setResDate(e.target.value)}
+                                            className="bg-transparent border-none outline-none text-sm font-bold text-white w-full cursor-pointer"
+                                        />
+                                    </div>
+                                    <div className="filter-input-group px-4 border-r border-white/5">
+                                        <label className="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest">Guests</label>
+                                        <div className="flex items-center gap-3">
+                                            <button onClick={() => setResGuests(Math.max(1, resGuests - 1))} className="text-slate-500 hover:text-white"><Icon name="Minus" size={14}/></button>
+                                            <span className="text-sm font-bold min-w-[20px] text-center">{resGuests}명</span>
+                                            <button onClick={() => setResGuests(Math.min(10, resGuests + 1))} className="text-slate-500 hover:text-white"><Icon name="Plus" size={14}/></button>
+                                        </div>
+                                    </div>
+                                    {(activeTab === 'resort' || activeTab === 'package') ? (
+                                        <div className="filter-input-group px-4 border-r border-white/5 col-span-2 md:col-span-1">
+                                            <label className="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest">Room Type</label>
+                                            <select 
+                                                value={resRoomType}
+                                                onChange={(e) => setResRoomType(e.target.value)}
+                                                className="bg-transparent border-none outline-none text-sm font-bold text-white w-full cursor-pointer appearance-none"
+                                            >
+                                                <option value="" className="bg-[#1e293b]">객실 선택</option>
+                                                {roomTypes.map(t => <option key={t} value={t} className="bg-[#1e293b]">{t}</option>)}
+                                            </select>
+                                        </div>
+                                    ) : (
+                                        <div className="filter-input-group px-4 border-r border-white/5 col-span-2 md:col-span-1">
+                                            <label className="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest">Time</label>
+                                            <select 
+                                                value={resTime}
+                                                onChange={(e) => setResTime(e.target.value)}
+                                                className="bg-transparent border-none outline-none text-sm font-bold text-white w-full cursor-pointer appearance-none"
+                                            >
+                                                <option value="" className="bg-[#1e293b]">시간 선택</option>
+                                                {timeSlots.map(t => <option key={t} value={t} className="bg-[#1e293b]">{t}</option>)}
+                                            </select>
+                                        </div>
+                                    )}
+                                    <div className="filter-input-group px-4">
+                                        <label className="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest">Location</label>
+                                        <select 
+                                            value={resLocation}
+                                            onChange={(e) => setResLocation(e.target.value)}
+                                            className="bg-transparent border-none outline-none text-sm font-bold text-white w-full cursor-pointer appearance-none"
+                                        >
+                                            {locations.map(loc => (
+                                                <option key={loc.value} value={loc.value} className="bg-[#1e293b]">{loc.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <button className="bg-[#38bdf8] text-[#0f172a] px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white transition-all w-full md:w-auto shadow-lg shadow-sky-400/10">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <main className="max-w-7xl mx-auto px-6 py-16 flex-grow w-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {getData().map(item => (
+                                <div key={item.id} className="bg-[#1e293b]/20 rounded-[2.5rem] overflow-hidden border border-white/5 group hover:border-[#38bdf8]/40 transition-all duration-500 flex flex-col h-full shadow-lg">
+                                    <div className="h-60 relative overflow-hidden">
+                                        <img src={item.image} className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-1000" alt={item.name} />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-transparent to-transparent opacity-80"></div>
+                                        <div className="absolute top-5 right-5">
+                                            {item.badge && <span className="bg-[#38bdf8] text-[#0f172a] text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-xl">{item.badge}</span>}
+                                        </div>
+                                        <div className="absolute bottom-6 left-7">
+                                            <h4 className="text-2xl font-black uppercase tracking-tight leading-tight">{item.name}</h4>
+                                        </div>
+                                    </div>
+                                    <div className="p-7 flex-grow flex flex-col justify-between">
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-1.5 text-slate-500 text-[10px] font-black uppercase tracking-widest">
+                                                <Icon name="MapPin" size={14} className="text-[#38bdf8]" /> {item.location || item.category}
+                                            </div>
+                                            <p className="text-slate-400 text-sm line-clamp-2 leading-relaxed font-light">{item.description}</p>
+                                        </div>
+                                        <div className="pt-6 mt-6 border-t border-white/5 flex items-center justify-between">
+                                            <div>
+                                                <p className="text-[9px] text-slate-500 font-black uppercase tracking-tighter">EST. PRICE</p>
+                                                <p className="text-2xl font-black text-[#38bdf8]">{item.price} <span className="text-xs font-bold text-slate-500">GLIL</span></p>
+                                            </div>
+                                            <button 
+                                                onClick={() => { setSelectedItem(item); setIsReservationMode(false); }}
+                                                className="bg-white/5 hover:bg-white hover:text-[#0f172a] px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border border-white/5"
+                                            >
+                                                DETAILS
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </main>
+
+                    {selectedItem && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-[#0f172a]/95 backdrop-blur-xl" onClick={closeAllModals}></div>
+                            <div className="bg-[#1e293b] w-full max-w-6xl h-[90vh] rounded-[3rem] overflow-hidden border border-white/10 relative z-10 flex flex-col shadow-2xl modal-animate">
+                                
+                                <div className="h-2/5 relative shrink-0">
+                                    <img src={selectedItem.image} className="w-full h-full object-cover" alt={selectedItem.name} />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] to-transparent"></div>
+                                    <button onClick={closeAllModals} className="absolute top-8 right-8 text-white/70 hover:text-white transition-all bg-black/20 hover:bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+                                        <Icon name="X" size={24} />
+                                    </button>
+                                    <div className="absolute bottom-8 left-12 space-y-2">
+                                        <h3 className="text-5xl font-black uppercase tracking-tighter leading-none">{selectedItem.name}</h3>
+                                        <div className="flex items-center gap-2 text-slate-400 text-sm font-medium">
+                                            <Icon name="MapPin" size={16} className="text-[#38bdf8]" /> {selectedItem.location || selectedItem.category}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex-grow overflow-y-auto custom-scrollbar p-12 flex flex-col lg:flex-row gap-16">
+                                    <div className="lg:w-2/3 space-y-12">
+                                        <section className="space-y-4">
+                                            <h4 className="text-xl font-bold text-white flex items-center gap-3">
+                                                <span className="w-1.5 h-6 bg-[#38bdf8] rounded-full"></span> OVERVIEW
+                                            </h4>
+                                            <p className="text-slate-400 text-lg leading-relaxed font-light italic">
+                                                {selectedItem.fullDescription || selectedItem.description}
+                                            </p>
+                                        </section>
+
+                                        <section className="space-y-6">
+                                            <h4 className="text-xl font-bold text-white flex items-center gap-3">
+                                                <span className="w-1.5 h-6 bg-[#38bdf8] rounded-full"></span> KEY HIGHLIGHTS
+                                            </h4>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                                {(selectedItem.features || ["발렛 서비스", "웰컴 드링크", "Wi-Fi"]).map((feature, idx) => (
+                                                    <div key={idx} className="bg-white/5 border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+                                                        <div className="bg-[#38bdf8]/10 p-3 rounded-xl text-[#38bdf8]"><Icon name="CheckCircle2" size={20} /></div>
+                                                        <span className="text-sm font-bold text-slate-300">{feature}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </section>
+
+                                        <section className="space-y-6">
+                                            <h4 className="text-xl font-bold text-white flex items-center gap-3">
+                                                <span className="w-1.5 h-6 bg-[#38bdf8] rounded-full"></span> 상세 안내
+                                            </h4>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {generalInfo.map((info, idx) => (
+                                                    <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-white/[0.03] border border-white/5">
+                                                        <div className="shrink-0 p-3 bg-white/5 rounded-xl text-[#38bdf8]">
+                                                            <Icon name={info.icon} size={20} />
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <h5 className="text-[11px] font-black text-slate-500 uppercase tracking-widest">{info.title}</h5>
+                                                            <p className="text-sm font-bold text-slate-200">{info.content}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </section>
+
+                                        <section className="space-y-6">
+                                            <button 
+                                                onClick={() => setShowMoreDetails(!showMoreDetails)}
+                                                className="w-full flex items-center justify-between group p-6 rounded-3xl bg-white/5 border border-white/5 hover:border-[#38bdf8]/30 transition-all"
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <span className="w-1.5 h-6 bg-[#38bdf8] rounded-full"></span>
+                                                    <h4 className="text-xl font-bold text-white">상세 정보 보기</h4>
+                                                </div>
+                                                <div className={`transition-transform duration-300 ${showMoreDetails ? 'rotate-180' : ''}`}>
+                                                    <Icon name="ChevronDown" size={24} className="text-[#38bdf8]" />
+                                                </div>
+                                            </button>
+
+                                            {showMoreDetails && (
+                                                <div className="space-y-4 animate-fadeIn">
+                                                    {commonPolicies.map((policy, idx) => (
+                                                        <div key={idx} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+                                                            <h5 className="text-sm font-black text-[#38bdf8] uppercase tracking-wider">{policy.title}</h5>
+                                                            <p className="text-sm text-slate-400 leading-relaxed">{policy.content}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </section>
+                                    </div>
+
+                                    <div className="lg:w-1/3">
+                                        <div className="bg-[#1e293b] border border-[#38bdf8]/20 rounded-3xl p-8 shadow-2xl sticky top-0 space-y-8">
+                                            {!isReservationMode ? (
+                                                <>
+                                                    <div className="space-y-6">
+                                                        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                                                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Pricing Summary</p>
+                                                            <div className="bg-[#38bdf8]/10 px-2 py-1 rounded text-[9px] font-black text-[#38bdf8] uppercase">Official Rate</div>
+                                                        </div>
+                                                        
+                                                        {(() => {
+                                                            const details = calculatePriceDetails(selectedItem.price);
+                                                            return (
+                                                                <div className="space-y-4">
+                                                                    <div className="flex justify-between items-center text-sm">
+                                                                        <span className="text-slate-400 font-medium">기본 요금</span>
+                                                                        <span className="font-bold text-slate-200">{details.base} GLIL</span>
+                                                                    </div>
+                                                                    <div className="flex justify-between items-center text-sm">
+                                                                        <span className="text-slate-400 font-medium">세금 (VAT 10%)</span>
+                                                                        <span className="font-bold text-slate-200">+{details.tax} GLIL</span>
+                                                                    </div>
+                                                                    {activeTab === 'restaurant' && (
+                                                                        <div className="flex justify-between items-center text-sm">
+                                                                            <span className="text-slate-400 font-medium">봉사료 (Service)</span>
+                                                                            <span className="font-bold text-slate-200">+{details.service} GLIL</span>
+                                                                        </div>
+                                                                    )}
+                                                                    <div className="pt-6 border-t border-white/10 flex justify-between items-end">
+                                                                        <div className="space-y-1">
+                                                                            <p className="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest">Total Amount</p>
+                                                                            <span className="text-4xl font-black text-white tracking-tighter">{details.total}</span>
+                                                                        </div>
+                                                                        <span className="text-sm font-bold text-slate-500 pb-1">GLIL</span>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })()}
+                                                    </div>
+
+                                                    {activeTab !== 'shop' && (
+                                                        <div className="bg-white/5 rounded-2xl p-4 space-y-4 border border-white/5">
+                                                            <div className="flex flex-col gap-1.5">
+                                                                <div className="flex items-center gap-2 text-slate-500 text-[10px] font-bold uppercase">
+                                                                    <Icon name="Calendar" size={12} />
+                                                                    <span>체크인 일정 변경</span>
+                                                                </div>
+                                                                <input 
+                                                                    type="date" 
+                                                                    value={resDate} 
+                                                                    onChange={(e) => setResDate(e.target.value)}
+                                                                    className="sidebar-date"
+                                                                />
+                                                            </div>
+
+                                                            <div className="grid grid-cols-2 gap-3">
+                                                                <div className="flex flex-col gap-1.5">
+                                                                    <div className="flex items-center gap-2 text-slate-500 text-[10px] font-bold uppercase">
+                                                                        <Icon name="Users" size={12} />
+                                                                        <span>인원</span>
+                                                                    </div>
+                                                                    <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-lg p-1 px-2">
+                                                                        <button onClick={() => setResGuests(Math.max(1, resGuests - 1))} className="text-slate-400 hover:text-white"><Icon name="Minus" size={12}/></button>
+                                                                        <span className="text-xs font-bold">{resGuests}명</span>
+                                                                        <button onClick={() => setResGuests(Math.min(10, resGuests + 1))} className="text-slate-400 hover:text-white"><Icon name="Plus" size={12}/></button>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="flex flex-col gap-1.5">
+                                                                    <div className="flex items-center gap-2 text-slate-500 text-[10px] font-bold uppercase">
+                                                                        <Icon name={activeTab === 'restaurant' ? 'Clock' : 'Key'} size={12} />
+                                                                        <span>{activeTab === 'restaurant' ? '시간' : '타입'}</span>
+                                                                    </div>
+                                                                    <select 
+                                                                        value={activeTab === 'restaurant' ? resTime : resRoomType}
+                                                                        onChange={(e) => activeTab === 'restaurant' ? setResTime(e.target.value) : setResRoomType(e.target.value)}
+                                                                        className="sidebar-select appearance-none"
+                                                                    >
+                                                                        <option value="">선택</option>
+                                                                        {(activeTab === 'restaurant' ? timeSlots : roomTypes).map(t => (
+                                                                            <option key={t} value={t} className="bg-[#1e293b]">{t}</option>
+                                                                        ))}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    <button 
+                                                        onClick={handleOrderClick}
+                                                        className="w-full bg-[#38bdf8] text-[#0f172a] py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-white transition-all shadow-xl shadow-sky-400/20 active:scale-[0.98]"
+                                                    >
+                                                        {(activeTab === 'restaurant' || activeTab === 'resort' || activeTab === 'package') ? 'CONFIRM & RESERVE' : 'ADD TO BASKET'}
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <div className="space-y-6">
+                                                    <div className="flex items-center justify-between">
+                                                        <h5 className="font-black text-lg tracking-tight">최종 예약 확인</h5>
+                                                        <button onClick={() => setIsReservationMode(false)} className="text-slate-500 hover:text-white transition-colors">
+                                                            <Icon name="ArrowLeft" size={18}/>
+                                                        </button>
+                                                    </div>
+                                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/5 space-y-4">
+                                                        <div className="space-y-2 pb-4 border-b border-white/5">
+                                                            <div className="flex justify-between text-xs">
+                                                                <span className="text-slate-500">일정</span>
+                                                                <span className="font-bold">{resDate} {resTime}</span>
+                                                            </div>
+                                                            <div className="flex justify-between text-xs">
+                                                                <span className="text-slate-500">상세</span>
+                                                                <span className="font-bold">{resGuests}명 / {resRoomType || '-'}</span>
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-xs text-slate-400 leading-relaxed text-center">
+                                                            결제 후 예약이 확정되며, 예약 내역은 이메일 및 카카오톡으로 즉시 발송됩니다.
+                                                        </p>
+                                                        <div className="flex justify-between items-center text-lg font-black pt-4 border-t border-white/5">
+                                                            <span>결제 총액</span>
+                                                            <span className="text-[#38bdf8]">{calculatePriceDetails(selectedItem.price).total} GLIL</span>
+                                                        </div>
+                                                    </div>
+                                                    <button onClick={handleReservationSubmit} className="w-full bg-[#38bdf8] text-[#0f172a] py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-white shadow-xl shadow-sky-400/20 active:scale-[0.98]">
+                                                        PAY NOW & FINISH
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <footer className="py-20 border-t border-white/5 text-center">
+                        <div className="text-xl font-black tracking-tighter opacity-40 mb-4">G L I</div>
+                        <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.5em]">© 2026 GLI Global Lifestyle. All rights reserved.</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const TabButton = ({ active, icon, label, desc, onClick }) => (
+            <button onClick={onClick} className={`group relative flex flex-col items-start gap-1 p-5 md:p-6 rounded-[2rem] transition-all duration-500 min-w-[140px] md:min-w-[170px] border ${active ? 'bg-[#1e293b] border-[#38bdf8]/50 scale-[1.05] z-10' : 'bg-white/[0.02] text-slate-500 border-white/5 hover:border-white/10'}`}>
+                <div className={`mb-2 transition-all ${active ? 'text-[#38bdf8] scale-110' : 'text-slate-600'}`}><Icon name={icon} size={22} /></div>
+                <div className="text-left">
+                    <span className={`block text-[12px] md:text-[13px] font-bold ${active ? 'text-white' : 'text-slate-500'}`}>{label}</span>
+                    <span className={`block text-[8px] font-black uppercase tracking-[0.15em] opacity-40 ${active ? 'text-[#38bdf8]' : 'text-slate-600'}`}>{desc}</span>
+                </div>
+            </button>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

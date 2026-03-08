@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLI 셀렉션 | 럭셔리 호텔 상세 정보</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-surface: #1e293b;
+            --accent-sky: #38bdf8;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-primary);
+            color: #f1f5f9;
+            scroll-behavior: smooth;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .room-card.selected {
+            border-color: var(--accent-sky);
+            background: rgba(56, 189, 248, 0.1);
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.2);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .info-card { transition: all 0.3s ease; }
+        .info-card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.3); }
+
+        #map-modal, #room-detail-modal, #gallery-modal {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #map-modal.active, #room-detail-modal.active, #gallery-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .map-container iframe {
+            filter: grayscale(1) invert(0.9) contrast(1.2);
+        }
+        
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 10px;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .review-bar {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .review-bar:hover {
+            background: rgba(56, 189, 248, 0.08);
+            transform: translateX(8px);
+        }
+        
+        /* Star Rating Styles */
+        .stars-container {
+            display: inline-flex;
+            gap: 2px;
+        }
+        .star-filled {
+            color: #38bdf8;
+        }
+        .star-empty {
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Checkbox Custom Style */
+        .custom-checkbox {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .custom-checkbox:checked {
+            background-color: #38bdf8;
+            border-color: #38bdf8;
+        }
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: #0f172a;
+            font-size: 12px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 내비게이션 -->
+    <nav class="fixed top-0 w-full z-[100] bg-[#0f172a]/80 backdrop-blur-lg border-b border-white/5 py-4 px-6 flex items-center justify-between">
+        <div class="text-xl font-black tracking-tighter cursor-pointer" onclick="window.scrollTo(0,0)">
+            G L I <span class="text-[#38bdf8]">SELECTION</span>
+        </div>
+        <div class="hidden lg:flex gap-8 text-[11px] font-bold tracking-widest text-slate-400">
+            <a href="#recommend" class="hover:text-white transition-colors">주요 특징</a>
+            <a href="#facilities" class="hover:text-white transition-colors">호텔 정보</a>
+            <a href="#location" class="hover:text-white transition-colors">위치 및 지도</a>
+            <a href="#rooms" class="hover:text-white transition-colors">객실 예약</a>
+            <a href="#reviews" class="hover:text-white transition-colors text-[#38bdf8]">투숙객 리뷰</a>
+        </div>
+        <button class="bg-[#38bdf8] text-[#0f172a] px-5 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest">
+            마이 페이지
+        </button>
+    </nav>
+
+    <main class="pt-20 pb-80 md:pb-60">
+        <!-- 히어로 섹션 -->
+        <section class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-4 gap-4 mt-8">
+            <div class="lg:col-span-3 h-[400px] md:h-[550px] relative rounded-[2.5rem] overflow-hidden group cursor-pointer" onclick="openGallery()">
+                <img id="main-image" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2000" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="호텔 메인 이미지">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a]/90 via-transparent to-transparent"></div>
+                <div class="absolute bottom-10 left-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-[#38bdf8] text-[#0f172a] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">5성급 럭셔리</span>
+                        <div class="flex text-[#38bdf8]">
+                            <i data-lucide="star" fill="currentColor" width="12"></i>
+                            <i data-lucide="star" fill="currentColor" width="12"></i>
+                            <i data-lucide="star" fill="currentColor" width="12"></i>
+                            <i data-lucide="star" fill="currentColor" width="12"></i>
+                            <i data-lucide="star" fill="currentColor" width="12"></i>
+                        </div>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-none">GLI 그랜드 아주르 <br><span class="gradient-text">리조트 & 스파</span></h1>
+                    <p class="mt-4 text-slate-400 flex items-center gap-2 text-sm"><i data-lucide="map-pin" width="16"></i> 몰디브, 아리 아톨 프라이빗 아일랜드</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-1 gap-4 h-full">
+                <div class="rounded-[2rem] overflow-hidden cursor-pointer border border-white/5 relative group" onclick="openGallery()">
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="호텔 전경 2">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+                </div>
+                <div class="rounded-[2rem] overflow-hidden cursor-pointer border border-white/5 relative group" onclick="openGallery()">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="호텔 전경 3">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center transition-all group-hover:bg-black/60">
+                        <span class="text-2xl md:text-3xl font-black text-white tracking-widest">+7</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 추천 포인트 -->
+        <section id="recommend" class="max-w-7xl mx-auto px-6 mt-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-8 rounded-[2rem] space-y-4">
+                    <div class="w-12 h-12 bg-[#38bdf8]/10 rounded-2xl flex items-center justify-center text-[#38bdf8]">
+                        <i data-lucide="award"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">독보적인 위치</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">아리 아톨의 가장 아름다운 산호초 군락지에 위치하여 객실에서 바로 스노클링이 가능합니다.</p>
+                </div>
+                <div class="glass-panel p-8 rounded-[2rem] space-y-4">
+                    <div class="w-12 h-12 bg-[#38bdf8]/10 rounded-2xl flex items-center justify-center text-[#38bdf8]">
+                        <i data-lucide="utensils"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">미쉐린 스타 다이닝</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">세계적인 셰프들이 선보이는 5개의 레스토랑에서 매일 다른 미식 경험을 제공합니다.</p>
+                </div>
+                <div class="glass-panel p-8 rounded-[2rem] space-y-4">
+                    <div class="w-12 h-12 bg-[#38bdf8]/10 rounded-2xl flex items-center justify-center text-[#38bdf8]">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">프라이빗 케어</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">모든 투숙객에게 24시간 전담 버틀러 서비스를 제공하여 완벽한 프라이버시를 보장합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 숙소 정보 -->
+        <section id="facilities" class="max-w-7xl mx-auto px-6 mt-40">
+            <div class="flex flex-col space-y-20">
+                <div class="max-w-4xl">
+                    <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-8">하루를 넘는 경험 <br><span class="gradient-text italic font-serif">자연 속에서 완성되는 휴식</span></h2>
+                    <p class="text-xl text-slate-300 font-light leading-relaxed">
+                        GLI 그랜드 아주르 리조트는 단순한 숙박을 넘어, 자연의 순수함과 현대적인 기술이 조화를 이루는 궁극의 휴양 공간을 지향합니다. 
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div class="space-y-12">
+                        <div class="info-card glass-panel p-10 rounded-[3rem] border border-white/5">
+                            <h4 class="text-2xl font-black text-[#38bdf8] mb-6 uppercase tracking-tight">브랜드 스토리 및 가치</h4>
+                            <div class="space-y-4 text-slate-300 leading-loose text-sm">
+                                <p>2018년 첫 문을 연 그랜드 아주르 리조트는 몰디브 최고의 지속 가능성 럭셔리 리조트로 자리 잡았습니다. 섬 고유의 식생을 그대로 보존하여 자연과 건축물이 하나가 되도록 설계되었습니다.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="glass-panel p-8 rounded-3xl border border-white/10 text-center flex flex-col items-center justify-center space-y-2">
+                                <i data-lucide="clock" class="text-[#38bdf8]" width="24"></i>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">체크인 시간</p>
+                                <p class="text-xl font-black italic">오후 14:00</p>
+                            </div>
+                            <div class="glass-panel p-8 rounded-3xl border border-white/10 text-center flex flex-col items-center justify-center space-y-2">
+                                <i data-lucide="log-out" class="text-slate-400" width="24"></i>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">체크아웃 시간</p>
+                                <p class="text-xl font-black italic">오전 12:00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-10">
+                        <div class="info-card glass-panel p-10 rounded-[3rem] border border-white/5 h-full">
+                            <h4 class="text-2xl font-black text-slate-100 mb-8 uppercase tracking-tight">편의 시설 및 서비스</h4>
+                            <div class="grid grid-cols-2 gap-y-10 gap-x-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="user-check" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">24시간 퍼스널 버틀러</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="cigarette-off" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">금연 객실</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="coffee" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">커피숍</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="palmtree" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">정원</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="car" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">무료 주차</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="wifi" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">무료 와이파이</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="waves" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">야외 수영장</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#38bdf8]">
+                                        <i data-lucide="utensils" width="20"></i>
+                                    </div>
+                                    <span class="font-bold text-sm text-slate-200">레스토랑</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 위치 정보 -->
+        <section id="location" class="max-w-7xl mx-auto px-6 mt-32">
+            <div class="glass-panel p-8 md:p-10 rounded-[3rem] border border-white/5 flex flex-col gap-8">
+                <div class="flex flex-col md:flex-row items-end justify-between gap-4">
+                    <div class="space-y-3">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#38bdf8]/10 text-[#38bdf8] text-[9px] font-black uppercase tracking-widest border border-[#38bdf8]/20">
+                            <i data-lucide="navigation" width="10"></i> 프라이빗 아일랜드 위치
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tighter italic leading-tight">우리만의 <span class="text-[#38bdf8]">프라이빗한 공간</span></h3>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-xl">
+                            말레 국제공항에서 수상 비행기로 단 35분 거리의 프라이빗한 섬에 위치하고 있습니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="map-container w-full h-60 md:h-80 rounded-[2rem] overflow-hidden border border-white/10 relative group shadow-inner">
+                    <iframe class="w-full h-full border-none" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15911.660144577237!2d72.8443!3d3.5937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x24b59ec011d17d5d%3A0x6b4034b172d76550!2sMaldives!5e0!3m2!1sen!2skr!4v1700000000000!5m2!1sen!2skr" allowfullscreen="" loading="lazy"></iframe>
+                    <div class="absolute inset-0 pointer-events-none border-[12px] border-[#1e293b]/10 rounded-[2rem]"></div>
+                </div>
+
+                <div class="flex justify-center md:justify-end">
+                    <button onclick="toggleMapModal(true)" class="flex items-center justify-center gap-3 bg-white/5 text-white px-8 py-4 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-[#38bdf8] hover:text-[#0f172a] transition-all border border-white/10 group">
+                        <i data-lucide="maximize-2" class="group-hover:scale-110 transition-transform" width="14"></i>
+                        상세 위치 크게 보기
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 객실 목록 -->
+        <section id="rooms" class="max-w-7xl mx-auto px-6 mt-40">
+            <div class="space-y-16">
+                <div class="flex flex-col items-center text-center space-y-4">
+                    <p class="text-[#38bdf8] font-black text-xs uppercase tracking-[0.3em]">마지막 단계</p>
+                    <h3 class="text-5xl font-black uppercase tracking-tighter">당신만의 <span class="gradient-text">프라이빗 안식처</span>를 선택하세요</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-12" id="room-list">
+                    <!-- JS에 의해 동적으로 렌더링됨 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 투숙객 전체 리뷰 섹션 (별점 추가됨) -->
+        <section id="reviews" class="max-w-7xl mx-auto px-6 mt-40 mb-20">
+            <div class="flex flex-col space-y-10">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/10 pb-10">
+                    <div class="space-y-4">
+                        <p class="text-[#38bdf8] font-black text-xs uppercase tracking-[0.3em]">VOICE OF GUESTS</p>
+                        <h3 class="text-5xl font-black uppercase tracking-tighter">투숙객 <span class="gradient-text">전체 리뷰</span></h3>
+                    </div>
+                    <div class="flex items-center gap-4">
+                         <div class="flex text-[#38bdf8]">
+                            <i data-lucide="star" fill="currentColor" width="16"></i>
+                            <i data-lucide="star" fill="currentColor" width="16"></i>
+                            <i data-lucide="star" fill="currentColor" width="16"></i>
+                            <i data-lucide="star" fill="currentColor" width="16"></i>
+                            <i data-lucide="star" fill="currentColor" width="16"></i>
+                        </div>
+                        <span class="text-2xl font-black">4.9</span>
+                        <span class="text-slate-500 text-sm font-bold uppercase tracking-widest border-l border-white/10 pl-4">총 1,240건</span>
+                    </div>
+                </div>
+
+                <!-- 바 형태의 리뷰 리스트 (3개) -->
+                <div class="flex flex-col gap-4" id="review-container">
+                    <!-- Review Bar 1 -->
+                    <div class="review-bar p-6 rounded-2xl border border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-6 flex-1 min-w-0">
+                            <div class="w-12 h-12 rounded-full bg-[#38bdf8]/10 flex items-center justify-center font-black text-[#38bdf8] text-sm shrink-0">JH</div>
+                            <div class="space-y-1 min-w-0">
+                                <p class="text-slate-200 font-bold text-base truncate">"꿈만 같았던 신혼여행이었습니다. 버틀러 서비스가 정말 완벽했어요."</p>
+                                <div class="flex items-center gap-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                    <span>김*훈</span>
+                                    <span>•</span>
+                                    <span class="text-[#38bdf8]/70">디럭스 오션 룸 투숙</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 shrink-0">
+                            <div class="stars-container">
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs text-slate-600 font-bold uppercase tracking-tighter">2024.01.15</span>
+                                <div class="bg-[#38bdf8]/20 px-3 py-1 rounded-full text-[#38bdf8] text-[10px] font-black">5.0 / 5.0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Bar 2 -->
+                    <div class="review-bar p-6 rounded-2xl border border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-6 flex-1 min-w-0">
+                            <div class="w-12 h-12 rounded-full bg-[#38bdf8]/10 flex items-center justify-center font-black text-[#38bdf8] text-sm shrink-0">EY</div>
+                            <div class="space-y-1 min-w-0">
+                                <p class="text-slate-200 font-bold text-base truncate">"가족 여행으로 다녀왔는데 아이들이 너무 좋아했습니다. 조식이 압권이네요."</p>
+                                <div class="flex items-center gap-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                    <span>이*영</span>
+                                    <span>•</span>
+                                    <span class="text-[#38bdf8]/70">아주르 패밀리 스위트 투숙</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 shrink-0">
+                            <div class="stars-container">
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled opacity-50" width="14"></i>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs text-slate-600 font-bold uppercase tracking-tighter">2024.02.01</span>
+                                <div class="bg-[#38bdf8]/20 px-3 py-1 rounded-full text-[#38bdf8] text-[10px] font-black">4.9 / 5.0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Bar 3 -->
+                    <div class="review-bar p-6 rounded-2xl border border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-6 flex-1 min-w-0">
+                            <div class="w-12 h-12 rounded-full bg-[#38bdf8]/10 flex items-center justify-center font-black text-[#38bdf8] text-sm shrink-0">PS</div>
+                            <div class="space-y-1 min-w-0">
+                                <p class="text-slate-200 font-bold text-base truncate">"완벽한 프라이버시가 보장되는 로열 클리프 빌라, 다시 가고 싶습니다."</p>
+                                <div class="flex items-center gap-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                    <span>Park *</span>
+                                    <span>•</span>
+                                    <span class="text-[#38bdf8]/70">로열 클리프 빌라 투숙</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 shrink-0">
+                            <div class="stars-container">
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                                <i data-lucide="star" fill="currentColor" class="star-filled" width="14"></i>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs text-slate-600 font-bold uppercase tracking-tighter">2024.02.10</span>
+                                <div class="bg-[#38bdf8]/20 px-3 py-1 rounded-full text-[#38bdf8] text-[10px] font-black">5.0 / 5.0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 전체 리뷰보기 버튼 -->
+                <div class="flex justify-center pt-6">
+                    <button class="w-full md:w-auto bg-white/5 hover:bg-white/10 text-white px-20 py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all border border-white/10">
+                        전체 리뷰보기 (1,240개)
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 지도 모달 -->
+    <div id="map-modal" class="fixed inset-0 z-[200] items-center justify-center p-4 md:p-10 bg-[#0f172a]/95 backdrop-blur-xl">
+        <div class="relative w-full max-w-6xl h-[80vh] bg-[#1e293b] rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 flex flex-col">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                <div>
+                    <h4 class="text-2xl font-black uppercase tracking-tight text-[#38bdf8]">상세 위치 안내</h4>
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">몰디브, 아리 아톨 프라이빗 아일랜드</p>
+                </div>
+                <button onclick="toggleMapModal(false)" class="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                    <i data-lucide="x" class="text-white"></i>
+                </button>
+            </div>
+            <div class="flex-1 bg-slate-900 map-container">
+                <iframe class="w-full h-full border-none" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15911.660144577237!2d72.8443!3d3.5937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x24b59ec011d17d5d%3A0x6b4034b172d76550!2sMaldives!5e0!3m2!1sen!2skr!4v1700000000000!5m2!1sen!2skr" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- 갤러리 모달 -->
+    <div id="gallery-modal" class="fixed inset-0 z-[200] items-center justify-center p-4 md:p-10 bg-[#0f172a]/98 backdrop-blur-2xl">
+        <div class="relative w-full max-w-7xl h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="text-2xl font-black uppercase tracking-tight text-white">전체 갤러리 <span class="text-[#38bdf8] ml-2">10장의 사진</span></h4>
+                <button onclick="closeGallery()" class="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                    <i data-lucide="x" class="text-white"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll pr-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
+                    <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 1">
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 2">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 3">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 4">
+                    <img src="https://images.unsplash.com/photo-1535827841776-24afc1e255ac?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 5">
+                    <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 6">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f261?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 7">
+                    <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 8">
+                    <img src="https://images.unsplash.com/photo-1444201983204-c43cbd584d93?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 9">
+                    <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1200" class="w-full h-72 object-cover rounded-3xl border border-white/5" alt="갤러리 10">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 객실 상세 정보 모달 -->
+    <div id="room-detail-modal" class="fixed inset-0 z-[200] items-center justify-center p-4 bg-[#0f172a]/95 backdrop-blur-xl">
+        <div id="room-detail-content" class="relative w-full max-w-4xl max-h-[90vh] bg-[#1e293b] rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 flex flex-col md:flex-row">
+            <!-- JS 동적 렌더링 영역 -->
+        </div>
+    </div>
+
+    <!-- 하단 예약 바 -->
+    <div class="fixed bottom-0 left-0 w-full z-[150] bg-[#1e293b]/95 backdrop-blur-3xl border-t border-white/10 p-6 md:p-8 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10">
+            <div class="flex flex-col sm:flex-row items-center gap-6 lg:gap-10 w-full lg:w-auto">
+                <div class="w-full sm:w-auto border-b sm:border-b-0 sm:border-r border-white/10 pb-4 sm:pb-0 sm:pr-10 text-center sm:text-left">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">선택된 객실</p>
+                    <p id="selected-room-name" class="font-bold text-sm text-[#38bdf8]">객실을 선택해주세요</p>
+                </div>
+                <div class="flex items-center gap-4 w-full sm:w-auto justify-center">
+                    <div class="flex flex-col">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">체크인</p>
+                        <input type="date" id="checkin-date" onchange="calculateDuration()" class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#38bdf8]">
+                    </div>
+                    <div class="pt-4 text-slate-500">
+                        <i data-lucide="arrow-right" width="14"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">체크아웃</p>
+                        <input type="date" id="checkout-date" onchange="calculateDuration()" class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#38bdf8]">
+                    </div>
+                    <div class="flex flex-col ml-2">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">인원수</p>
+                        <div class="flex items-center bg-white/5 border border-white/10 rounded-lg px-2 py-1">
+                            <button onclick="updateGuestCount(-1)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-[#38bdf8] transition-colors"><i data-lucide="minus" width="12"></i></button>
+                            <span id="guest-count" class="px-3 text-xs font-bold text-white min-w-[20px] text-center">1</span>
+                            <button onclick="updateGuestCount(1)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-[#38bdf8] transition-colors"><i data-lucide="plus" width="12"></i></button>
+                        </div>
+                    </div>
+                    <div class="ml-2 pt-4">
+                        <span id="stay-duration" class="bg-[#38bdf8]/10 text-[#38bdf8] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">1박</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-8 w-full lg:w-auto justify-between lg:justify-end">
+                <div class="text-right">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">결제 예정 금액 (<span id="summary-duration">1</span>박 기준)</p>
+                    <p class="text-3xl md:text-4xl font-black tracking-tighter text-white"><span id="total-price">0</span> <span class="text-[10px] font-bold text-slate-500 ml-1 uppercase">Glil</span></p>
+                </div>
+                <button onclick="handleReservation()" class="bg-[#38bdf8] text-[#0f172a] px-10 md:px-14 py-4 md:py-5 rounded-2xl font-black text-[12px] md:text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl shadow-[#38bdf8]/20 whitespace-nowrap">
+                    지금 예약하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const rooms = [
+            { 
+                id: 'deluxe', 
+                name: '디럭스 오션 룸', 
+                price: 450000, 
+                capacity: { adult: 2, child: 1 },
+                description: '끝없이 펼쳐지는 에메랄드빛 바다를 한눈에 담을 수 있는 실속형 럭셔리 객실입니다.', 
+                features: ['킹 사이즈 침대', '오션뷰 테라스', '대리석 마감 욕실'], 
+                amenities: { 
+                    bedding: ['400수 이집트산 면 시트', '맞춤형 베개 메뉴(6종)', '구스다운 이불'],
+                    tech: ['65인치 OLED 스마트 TV', '블루투스 스피커', '통합 제어 태블릿'],
+                    beverage: ['네스프레소 머신 & 캡슐', '고급 티 셀렉션', '데일리 생수 제공'],
+                    bathroom: ['바이레도(Byredo) 어메니티', '이탈리아산 대리석 욕조', '순면 가운 & 슬리퍼'],
+                    security: ['디지털 안전 금고', '24시간 보안 시스템']
+                }, 
+                image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1200' 
+            },
+            { 
+                id: 'suite', 
+                name: '아주르 가든 스위트', 
+                price: 780000, 
+                capacity: { adult: 2, child: 2 },
+                description: '프라이빗한 정원과 거실 공간이 분리되어 독립성을 강조한 스위트룸입니다.', 
+                features: ['거실 및 침실 분리', '전용 가든 테라스', '프리미엄 아일랜드 욕조'], 
+                amenities: { 
+                    bedding: ['600수 프리미엄 리넨', '구스다운 필로우 세트', '숙면 유도 아로마 키트'],
+                    tech: ['Bose 서라운드 사운드 시스템', 'AI 음성인식 객실 제어', '듀얼 스마트 TV'],
+                    beverage: ['개별 와인 셀러', '프리미엄 미니바(매일 리필)', '수공예 다기 세트'],
+                    bathroom: ['딥티크(Diptyque) 풀 세트', '대형 아일랜드 스파 욕조', '더블 세면대 & 파우더룸'],
+                    security: ['생체인식 금고', '전용 버틀러 호출 벨']
+                }, 
+                image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1200' 
+            },
+            { 
+                id: 'family', 
+                name: '아주르 패밀리 스위트', 
+                price: 950000, 
+                capacity: { adult: 4, child: 2 },
+                description: '가족 단위 여행객을 위한 넓은 공간과 아이들을 위한 특별한 어메니티가 준비된 패밀리 럭셔리 공간입니다.', 
+                features: ['2베드룸 + 2욕실', '커스텀 키즈 존', '오션뷰 파티오'], 
+                amenities: { 
+                    bedding: ['패밀리 사이즈 킹 베드 2개', '키즈 전용 캐릭터 침구', '추가 엑스트라 베드 가능'],
+                    tech: ['게이밍 콘솔(PS5/Switch 선택 가능)', '키즈 안심 채널 스트리밍', '멀티 충전 스테이션'],
+                    beverage: ['키즈 전용 간식 바', '유기농 주스 & 우유', '이유식 가열기(요청 시)'],
+                    bathroom: ['키즈 전용 저자극 어메니티', '유아용 발판 & 변기 커버', '패밀리 사이즈 대형 욕조'],
+                    security: ['가구 모서리 보호 처리', '동선 최적화 안전 조명']
+                }, 
+                image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200' 
+            },
+            { 
+                id: 'villa', 
+                name: '로열 클리프 빌라', 
+                price: 1350000, 
+                capacity: { adult: 4, child: 0 },
+                description: '절벽 끝에 위치해 최고의 프라이버시와 파노라마 뷰를 보장하는 최상급 빌라입니다.', 
+                features: ['개별 전용 인피니티 풀', '2베드룸 구성', '야외 레인 샤워 시설'], 
+                amenities: { 
+                    bedding: ['800수 최고급 실크 리넨', '천연 라텍스 매트리스', '실크 아이 마스크'],
+                    tech: ['프라이빗 야외 시네마 시설', '뱅앤올룹슨(B&O) 오디오', '전구역 무선 스마트 제어'],
+                    beverage: ['빈티지 와인 셀러', '인빌라 커피 바 스테이션', '프라이빗 칵테일 바'],
+                    bathroom: ['에르메스(Hermès) 바디 케어', '야외 프라이빗 레인 샤워', '히노끼 스파 공간'],
+                    security: ['최첨단 지능형 보안 시스템', '전담 보안 요원 호출 서비스']
+                }, 
+                image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200' 
+            },
+            { 
+                id: 'presidential', 
+                name: '프레지덴셜 오버워터 빌라', 
+                price: 2100000, 
+                capacity: { adult: 6, child: 2 },
+                description: '수면 위에 떠 있는 리조트 최고의 정점. 바닥의 통유리를 통해 바다를 감상할 수 있는 궁극의 빌라입니다.', 
+                features: ['워터 슬라이드 포함 개인 풀', '360도 오션 파노라마', '전용 영화 상영실'], 
+                amenities: { 
+                    bedding: ['1000수 맞춤 제작 침구', '숙면 전문가의 컨설팅 서비스', '전동 조절식 모션 베드'],
+                    tech: ['개별 전용 영화 상영실', '통유리 바닥 인터랙티브 디스플레이', '최첨단 헬스케어 시스템'],
+                    beverage: ['그랑 크뤼 급 와인 셀러', '전문 바리스타 기기', '상시 전담 셰프 대기'],
+                    bathroom: ['커스텀 향수 제조 어메니티', '순금 마감 수전 & 금박 욕조', '바다 직결 야외 자쿠지'],
+                    security: ['최상위 등 보안 구역 지정', '안면 인식 출입 시스템']
+                }, 
+                image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=1200' 
+            }
+        ];
+
+        let selectedRoomId = null;
+        let stayNights = 1;
+        let guestCount = 1;
+
+        function init() {
+            lucide.createIcons();
+            renderRooms();
+            setDefaultDates();
+        }
+
+        function setDefaultDates() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            document.getElementById('checkin-date').value = today.toISOString().split('T')[0];
+            document.getElementById('checkout-date').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('checkin-date').min = today.toISOString().split('T')[0];
+            calculateDuration();
+        }
+
+        function updateGuestCount(val) {
+            guestCount = Math.max(1, guestCount + val);
+            document.getElementById('guest-count').innerText = guestCount;
+        }
+
+        function calculateDuration() {
+            const checkinInput = document.getElementById('checkin-date').value;
+            const checkoutInput = document.getElementById('checkout-date').value;
+            if (!checkinInput || !checkoutInput) return;
+            const checkin = new Date(checkinInput);
+            let checkout = new Date(checkoutInput);
+            if (checkout <= checkin) {
+                checkout = new Date(checkin);
+                checkout.setDate(checkin.getDate() + 1);
+                document.getElementById('checkout-date').value = checkout.toISOString().split('T')[0];
+            }
+            const diffTime = Math.abs(checkout - checkin);
+            stayNights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('stay-duration').innerText = `${stayNights}박`;
+            document.getElementById('summary-duration').innerText = stayNights;
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            if (selectedRoomId) {
+                const room = rooms.find(r => r.id === selectedRoomId);
+                document.getElementById('total-price').innerText = (room.price * stayNights).toLocaleString();
+            }
+        }
+
+        function renderRooms() {
+            const list = document.getElementById('room-list');
+            list.innerHTML = rooms.map(room => `
+                <div id="room-${room.id}" onclick="selectRoom('${room.id}')" class="room-card glass-panel rounded-[3rem] overflow-hidden flex flex-col lg:flex-row cursor-pointer group transition-all duration-700 border border-white/5 hover:border-[#38bdf8]/30">
+                    <div class="lg:w-[480px] h-[350px] lg:h-auto overflow-hidden relative">
+                        <img src="${room.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                    </div>
+                    <div class="flex-1 p-10 lg:p-14 flex flex-col justify-center">
+                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-4">
+                            <div>
+                                <h4 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white group-hover:text-[#38bdf8] transition-colors">${room.name}</h4>
+                                <div class="flex flex-col gap-3 mt-3">
+                                    <p class="text-slate-500 font-light italic text-sm">"${room.description}"</p>
+                                    <div class="flex items-center gap-1.5 text-slate-300">
+                                        <i data-lucide="users" width="16" class="text-[#38bdf8]"></i>
+                                        <span class="text-xs font-bold uppercase tracking-wider">기준 ${room.capacity.adult}인 / 최대 ${room.capacity.adult + room.capacity.child}인</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-x-8 gap-y-4 mb-8">
+                            ${room.features.map(f => `<div class="flex items-center gap-2 text-sm text-slate-300 font-medium"><i data-lucide="check-circle-2" class="text-[#38bdf8]" width="16"></i> ${f}</div>`).join('')}
+                        </div>
+                        <div class="mb-6">
+                            <p class="text-3xl font-black text-white italic">${room.price.toLocaleString()} <span class="text-xs text-slate-500 font-bold ml-1 uppercase not-italic">Glil / 1박</span></p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="event.stopPropagation(); showRoomDetail('${room.id}')" class="bg-white/5 text-white px-8 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-white/10 border border-white/10 transition-all">
+                                자세히 보기
+                            </button>
+                            <button class="flex-1 bg-white/5 text-white/40 px-8 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest pointer-events-none border border-white/5">
+                                선택하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function showRoomDetail(id) {
+            const room = rooms.find(r => r.id === id);
+            const content = document.getElementById('room-detail-content');
+            
+            content.innerHTML = `
+                <button onclick="toggleRoomModal(false)" class="absolute top-6 right-6 z-[210] w-12 h-12 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-[#38bdf8] transition-colors">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="md:w-[40%] h-[300px] md:h-auto relative">
+                    <img src="${room.image}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#1e293b] via-transparent to-transparent"></div>
+                    <div class="absolute bottom-8 left-8">
+                        <h5 class="text-4xl font-black uppercase tracking-tight italic">${room.name}</h5>
+                        <div class="flex items-center gap-2 mt-2">
+                             <i data-lucide="users" width="14" class="text-[#38bdf8]"></i>
+                             <p class="text-[#38bdf8] font-bold uppercase tracking-widest text-[10px]">수용 인원: 성인 ${room.capacity.adult}명, 아동 ${room.capacity.child}명</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1 p-8 md:p-12 overflow-y-auto custom-scroll bg-[#1e293b]">
+                    <div class="space-y-10">
+                        <div class="space-y-8">
+                            <h6 class="text-[#38bdf8] text-[10px] font-black uppercase tracking-widest border-b border-[#38bdf8]/20 pb-2">침구 및 휴식 (Bedding & Comfort)</h6>
+                            <div class="grid grid-cols-1 gap-4">
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+                                    ${room.amenities.bedding.map(a => `<li class="text-sm text-slate-300 flex items-center gap-2"><div class="w-1.5 h-1.5 bg-[#38bdf8] rounded-full"></div> ${a}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <h6 class="text-[#38bdf8] text-[10px] font-black uppercase tracking-widest border-b border-[#38bdf8]/20 pb-2">스마트 시스템 및 테크 (Smart Technology)</h6>
+                            <div class="grid grid-cols-1 gap-4">
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+                                    ${room.amenities.tech.map(a => `<li class="text-sm text-slate-300 flex items-center gap-2"><div class="w-1.5 h-1.5 bg-[#38bdf8] rounded-full"></div> ${a}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <h6 class="text-[#38bdf8] text-[10px] font-black uppercase tracking-widest border-b border-[#38bdf8]/20 pb-2">식음료 미니바 (Bar & Beverage)</h6>
+                            <div class="grid grid-cols-1 gap-4">
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+                                    ${room.amenities.beverage.map(a => `<li class="text-sm text-slate-300 flex items-center gap-2"><div class="w-1.5 h-1.5 bg-[#38bdf8] rounded-full"></div> ${a}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <h6 class="text-[#38bdf8] text-[10px] font-black uppercase tracking-widest border-b border-[#38bdf8]/20 pb-2">욕실 비품 및 케어 (Bath & Wellness)</h6>
+                            <div class="grid grid-cols-1 gap-4">
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+                                    ${room.amenities.bathroom.map(a => `<li class="text-sm text-slate-300 flex items-center gap-2"><div class="w-1.5 h-1.5 bg-[#38bdf8] rounded-full"></div> ${a}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <h6 class="text-[#38bdf8] text-[10px] font-black uppercase tracking-widest border-b border-[#38bdf8]/20 pb-2">안전 및 시큐리티 (Safety & Security)</h6>
+                            <div class="grid grid-cols-1 gap-4">
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+                                    ${room.amenities.security.map(a => `<li class="text-sm text-slate-300 flex items-center gap-2"><div class="w-1.5 h-1.5 bg-[#38bdf8] rounded-full"></div> ${a}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-6">
+                            <button onclick="toggleRoomModal(false); selectRoom('${room.id}')" class="w-full bg-[#38bdf8] text-[#0f172a] py-5 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg shadow-[#38bdf8]/20 transition-transform active:scale-95">
+                                이 객실로 예약하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            toggleRoomModal(true);
+        }
+
+        function toggleRoomModal(show) {
+            const modal = document.getElementById('room-detail-modal');
+            if (show) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+            else { modal.classList.remove('active'); document.body.style.overflow = 'auto'; }
+        }
+
+        function selectRoom(id) {
+            selectedRoomId = id;
+            const room = rooms.find(r => r.id === id);
+            document.querySelectorAll('.room-card').forEach(el => {
+                el.classList.remove('selected');
+                const btn = el.querySelector('button:last-child');
+                if(btn) {
+                    btn.classList.add('text-white/40', 'pointer-events-none');
+                    btn.classList.remove('bg-[#38bdf8]/20', 'border-[#38bdf8]/50', 'text-white');
+                    btn.innerText = '선택하기';
+                }
+            });
+            const card = document.getElementById(`room-${id}`);
+            card.classList.add('selected');
+            const selectBtn = card.querySelector('button:last-child');
+            if(selectBtn) {
+                selectBtn.classList.remove('text-white/40', 'pointer-events-none');
+                selectBtn.classList.add('text-white', 'bg-[#38bdf8]/20', 'border-[#38bdf8]/50');
+                selectBtn.innerText = '선택됨';
+            }
+            document.getElementById('selected-room-name').innerText = room.name;
+            updateTotalPrice();
+        }
+
+        function openGallery() {
+            const modal = document.getElementById('gallery-modal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGallery() {
+            const modal = document.getElementById('gallery-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleMapModal(show) {
+            const modal = document.getElementById('map-modal');
+            if (show) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+            else { modal.classList.remove('active'); document.body.style.overflow = 'auto'; }
+        }
+
+        // 모달 체크박스 상태 감지 및 버튼 활성화 함수
+        window.validateAgreement = function() {
+            const checkbox = document.getElementById('terms-agree');
+            const confirmBtn = document.getElementById('confirm-reserve-btn');
+            if(checkbox.checked) {
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                confirmBtn.classList.add('hover:bg-white');
+            } else {
+                confirmBtn.disabled = true;
+                confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                confirmBtn.classList.remove('hover:bg-white');
+            }
+        }
+
+        function handleReservation() {
+            if(!selectedRoomId) {
+                const message = document.createElement('div');
+                message.className = "fixed top-24 left-1/2 -translate-x-1/2 z-[300] bg-red-500 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl";
+                message.innerText = "객실을 먼저 선택해주세요.";
+                document.body.appendChild(message);
+                setTimeout(() => message.remove(), 2000);
+                return;
+            }
+            const room = rooms.find(r => r.id === selectedRoomId);
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 z-[500] flex items-center justify-center bg-black/80 backdrop-blur-md p-6";
+            modal.id = "reservation-confirm-modal";
+            modal.innerHTML = `
+                <div class="bg-[#1e293b] p-8 md:p-10 rounded-[2.5rem] border border-[#38bdf8]/30 max-w-lg w-full text-center space-y-6 shadow-2xl overflow-y-auto max-h-[90vh] custom-scroll">
+                    <div class="w-16 h-16 bg-[#38bdf8]/10 rounded-full flex items-center justify-center text-[#38bdf8] mx-auto">
+                        <i data-lucide="calendar-check" width="32"></i>
+                    </div>
+                    <h2 class="text-2xl font-black uppercase tracking-tight text-white">예약 최종 확인</h2>
+                    
+                    <div class="text-left bg-white/5 p-5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">선택 객실</span>
+                            <span class="text-sm text-white font-bold">${room.name}</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">투숙 기간</span>
+                            <span class="text-sm text-white font-bold">${document.getElementById('checkin-date').value} - ${document.getElementById('checkout-date').value}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">총 결제 금액</span>
+                            <span class="text-lg text-[#38bdf8] font-black">${(room.price * stayNights).toLocaleString()} Glil</span>
+                        </div>
+                    </div>
+
+                    <!-- 취소 규정 및 이용 약관 -->
+                    <div class="text-left space-y-4">
+                        <div class="bg-black/20 p-4 rounded-xl space-y-3 border border-white/5">
+                            <div class="space-y-1">
+                                <p class="text-[10px] text-[#38bdf8] font-black uppercase tracking-widest">취소 및 환불 규정</p>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">
+                                    • 체크인 7일 전까지 무료 취소 가능<br>
+                                    • 체크인 3일 전 취소 시: 첫 1박 요금의 50% 부과<br>
+                                    • 당일 취소 및 No-Show: 환불 불가
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] text-[#38bdf8] font-black uppercase tracking-widest">이용 안내</p>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">
+                                    • 모든 객실은 금연 구역입니다.<br>
+                                    • 수상 비행기 송영 서비스는 별도 문의가 필요합니다.<br>
+                                    • 반려동물 동반 입실은 불가합니다.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <label class="flex items-start gap-3 cursor-pointer group">
+                            <input type="checkbox" id="terms-agree" onchange="validateAgreement()" class="custom-checkbox mt-1">
+                            <span class="text-[12px] text-slate-300 leading-tight group-hover:text-white transition-colors">
+                                상기 취소 규정 및 이용 약관을 모두 확인하였으며, 이에 동의합니다.
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+                        <button onclick="document.getElementById('reservation-confirm-modal').remove()" class="flex-1 py-4 bg-white/5 text-white rounded-xl font-bold hover:bg-white/10 transition-colors">취소</button>
+                        <button id="confirm-reserve-btn" onclick="location.reload()" disabled class="flex-1 py-4 bg-[#38bdf8] text-[#0f172a] rounded-xl font-bold transition-all shadow-lg shadow-[#38bdf8]/20 opacity-50 cursor-not-allowed">예약 확정</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            lucide.createIcons();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
