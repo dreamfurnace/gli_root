@@ -59,7 +59,7 @@ aws secretsmanager get-secret-value \
   "port": 5432,
   "dbname": "gli",
   "username": "glidbadmin",
-  "password": "GliStage2025SecureDB"
+  "password": "P7xhVZTxrDLySRwzsir8LG7T"
 }
 ```
 
@@ -93,7 +93,7 @@ DATABASE_HOST=gli-db-staging.cp4ems4wqez2.ap-northeast-2.rds.amazonaws.com \
 DATABASE_PORT=5432 \
 DATABASE_NAME=gli \
 DATABASE_USER=glidbadmin \
-DATABASE_PASSWORD=GliStage2025SecureDB \
+DATABASE_PASSWORD=P7xhVZTxrDLySRwzsir8LG7T \
 uv run python manage.py add_tier_data
 ```
 
@@ -125,7 +125,7 @@ DATABASE_HOST=gli-db-staging.cp4ems4wqez2.ap-northeast-2.rds.amazonaws.com \
 DATABASE_PORT=5432 \
 DATABASE_NAME=gli \
 DATABASE_USER=glidbadmin \
-DATABASE_PASSWORD=GliStage2025SecureDB \
+DATABASE_PASSWORD=P7xhVZTxrDLySRwzsir8LG7T \
 uv run python add_dao_participants.py
 ```
 
@@ -165,7 +165,7 @@ uv run python manage.py shell
 DATABASE_HOST=gli-db-staging.cp4ems4wqez2.ap-northeast-2.rds.amazonaws.com \
 DATABASE_PORT=5432 \
 DATABASE_USER=glidbadmin \
-DATABASE_PASSWORD=GliStage2025SecureDB \
+DATABASE_PASSWORD=P7xhVZTxrDLySRwzsir8LG7T \
 uv run python manage.py shell
 ```
 
@@ -284,7 +284,7 @@ DATABASE_HOST=gli-db-staging.cp4ems4wqez2.ap-northeast-2.rds.amazonaws.com \
 DATABASE_PORT=5432 \
 DATABASE_NAME=gli \
 DATABASE_USER=glidbadmin \
-DATABASE_PASSWORD=GliStage2025SecureDB \
+DATABASE_PASSWORD=P7xhVZTxrDLySRwzsir8LG7T \
 uv run python manage.py add_tier_data
 
 echo "✅ DB 동기화 완료!"
