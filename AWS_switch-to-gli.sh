@@ -6,7 +6,7 @@ echo "🔄 GLI AWS 계정으로 전환 중..."
 # GLI 키 설정 (gli 프로필 사용)
 unset AWS_ACCESS_KEY_ID
 unset AWS_SECRET_ACCESS_KEY
-export AWS_PROFILE=gli2
+export AWS_PROFILE=gli-secure
 export AWS_REGION=ap-northeast-2
 
 # 전환 확인
@@ -19,8 +19,8 @@ EXPECTED_ACCOUNT="917891822317"
 
 if [ "$ACCOUNT" = "$EXPECTED_ACCOUNT" ]; then
     echo "✅ GLI 계정 ($ACCOUNT)으로 전환 완료"
-    echo "   IAM 사용자: gli (ahn+gli@dreamfurnace.im)"
-    echo "   권한: AdministratorAccess"
+    echo "   IAM 사용자: gli-secure (보안 강화)"
+    echo "   권한: 최소 권한 (GLI 서비스만 허용)"
 else
     echo "❌ 전환 실패 - 현재 계정: ${ACCOUNT:-없음}"
     echo "   예상 계정: $EXPECTED_ACCOUNT"
