@@ -102,9 +102,9 @@ check_prerequisites() {
     show_success "로컬 DB 컨테이너 확인"
 
     # AWS CLI 확인
-    if ! aws s3 ls s3://$S3_BUCKET --profile gli > /dev/null 2>&1; then
+    if ! aws s3 ls s3://$S3_BUCKET --profile gli-secure > /dev/null 2>&1; then
         show_error "AWS CLI 설정 또는 S3 접근 권한 문제"
-        show_info "AWS CLI 설정을 확인하세요: aws configure --profile gli"
+        show_info "AWS CLI 설정을 확인하세요: aws configure --profile gli-secure"
         exit 1
     fi
     show_success "AWS S3 접근 권한 확인"
@@ -145,7 +145,7 @@ add_current_ip_to_rds() {
     # 보안 그룹에 현재 IP가 이미 있는지 확인
     EXISTING_RULE=$(aws ec2 describe-security-groups \
         --group-ids "$STAGING_SECURITY_GROUP" \
-        --profile gli \
+        --profile gli-secure \
         --query "SecurityGroups[0].IpPermissions[?FromPort==\`5432\`].IpRanges[?CidrIp==\`${CURRENT_IP}/32\`].CidrIp" \
         --output text)
 
@@ -158,13 +158,13 @@ add_current_ip_to_rds() {
             --protocol tcp \
             --port 5432 \
             --cidr "${CURRENT_IP}/32" \
-            --profile gli 2>/dev/null; then
+            --profile gli-secure 2>/dev/null; then
             show_success "현재 IP가 RDS 보안 그룹에 추가됨"
         else
             # 실패한 경우, 다시 확인해보기 (중복일 가능성)
             RECHECK_RULE=$(aws ec2 describe-security-groups \
                 --group-ids "$STAGING_SECURITY_GROUP" \
-                --profile gli \
+                --profile gli-secure \
                 --query "SecurityGroups[0].IpPermissions[?FromPort==\`5432\`].IpRanges[?CidrIp==\`${CURRENT_IP}/32\`].CidrIp" \
                 --output text 2>/dev/null)
 
@@ -236,12 +236,12 @@ step1_hybrid_dump() {
 
     # JSON 덤프 생성
     echo "   📦 JSON 데이터 덤프 생성 중..."
-    python manage.py sync_db --dump --s3-key "db-sync/local-to-staging-dump_${TIMESTAMP}.json.gz"
+    python3 manage.py sync_db --dump --s3-key "db-sync/local-to-staging-dump_${TIMESTAMP}.json.gz"
     show_success "JSON 덤프 생성 및 S3 업로드 완료"
 
     # SQL 덤프 S3 업로드
     echo "   ☁️  SQL 덤프 S3 업로드 중..."
-    aws s3 cp "${SQL_DUMP_FILE}.gz" "s3://$S3_BUCKET/db-sync/local-to-staging-schema_${TIMESTAMP}.sql.gz" --profile gli
+    aws s3 cp "${SQL_DUMP_FILE}.gz" "s3://$S3_BUCKET/db-sync/local-to-staging-schema_${TIMESTAMP}.sql.gz" --profile gli-secure
     show_success "SQL 덤프 S3 업로드 완료"
 
     # S3 키 저장
@@ -276,7 +276,7 @@ step2_schema_restore() {
     # S3에서 SQL 덤프 다운로드
     echo "   📥 S3에서 SQL 덤프 다운로드 중..."
     LOCAL_SQL_FILE="/tmp/schema_restore_${TIMESTAMP}.sql"
-    aws s3 cp "s3://$S3_BUCKET/$SCHEMA_S3_KEY" - --profile gli | gunzip > "$LOCAL_SQL_FILE"
+    aws s3 cp "s3://$S3_BUCKET/$SCHEMA_S3_KEY" - --profile gli-secure | gunzip > "$LOCAL_SQL_FILE"
     show_success "SQL 덤프 다운로드 완료"
 
     # 스키마 복원 실행
@@ -331,7 +331,7 @@ EOF
     echo "   📦 JSON 데이터 복원 중..."
     DJANGO_SETTINGS_MODULE="staging_settings_${TIMESTAMP}" \
     PYTHONPATH="/tmp:${PYTHONPATH:-}" \
-    python manage.py sync_db --load --s3-key "$DATA_S3_KEY" --force
+    python3 manage.py sync_db --load --s3-key "$DATA_S3_KEY" --force
 
     show_success "데이터 복원 완료"
 
