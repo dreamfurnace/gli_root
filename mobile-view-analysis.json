@@ -1,0 +1,202 @@
+{
+  "title": "GLI Platform",
+  "url": "http://localhost:3000/shopping/resort/36d0db85-dc1c-436c-b307-07bafb3b714c",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "documentSize": {
+    "width": 390,
+    "height": 8651
+  },
+  "hiddenElementsCount": 22,
+  "hiddenElements": [
+    {
+      "tag": "DIV",
+      "id": "",
+      "class": "navigation-section",
+      "display": "none",
+      "visibility": "visible",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "class": "dropdown-menu",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "0"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "class": "dropdown-menu",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "0"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "class": "dropdown-menu",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "0"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "class": "dropdown-menu",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "0"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "class": "dropdown-link",
+      "display": "block",
+      "visibility": "hidden",
+      "opacity": "1"
+    }
+  ],
+  "overflowElementsCount": 3,
+  "overflowElements": [
+    {
+      "tag": "ASIDE",
+      "id": "",
+      "class": "gli-right-panel collapsed",
+      "width": 390,
+      "right": 780,
+      "viewportWidth": 390
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "class": "panel-toggle",
+      "width": 60,
+      "right": 391,
+      "viewportWidth": 390
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "class": "toggle-btn",
+      "width": 60,
+      "right": 391,
+      "viewportWidth": 390
+    }
+  ]
+}
